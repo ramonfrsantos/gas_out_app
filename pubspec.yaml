@@ -32,15 +32,15 @@ dependencies:
   mobx:
   flutter_mobx: ^2.0.4
   get_it:
-  cloud_firestore: ^0.14.3
-  http: ^0.12.2
+  cloud_firestore: ^3.1.10
+  http: ^0.13.4
   mysql1:
-  intl: ^0.16.1
-  brasil_fields: ^0.6.0
-  firebase_core:
-  firebase_analytics:
-  firebase_messaging:
-  firebase_auth:
+  intl: ^0.17.0
+  brasil_fields: ^1.3.1
+  firebase_core: ^1.13.1
+  firebase_analytics: ^9.1.2
+  firebase_messaging: ^11.2.10
+  firebase_auth: ^3.3.10
   splashscreen:
   bordered_text:
 

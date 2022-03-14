@@ -50,7 +50,6 @@ ThemeData _buildShrineTheme() {
     buttonColor: shrinePurple900,
     scaffoldBackgroundColor: shrineBlack400,
     cardColor: shrineBlack400,
-    textSelectionColor: shrineBlack400,
     errorColor: shrineErrorRed,
     buttonTheme: const ButtonThemeData(
       colorScheme: _shrineColorScheme,
