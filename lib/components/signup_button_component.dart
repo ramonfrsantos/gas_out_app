@@ -18,7 +18,7 @@ class SingUpButton extends StatelessWidget {
           style: style,
           onPressed: () {
             Navigator.push(context,
-                MaterialPageRoute(builder: (context) => BaseScreen()));
+                MaterialPageRoute(builder: (context) => BaseScreen(title: 'Home Page',)));
           }),
     );
   }

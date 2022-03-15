@@ -40,9 +40,14 @@ dependencies:
   firebase_core: ^1.13.1
   firebase_analytics: ^9.1.2
   firebase_messaging: ^11.2.10
+  flutter_local_notifications: ^9.4.0
   firebase_auth: ^3.3.10
-  splashscreen:
+  flutter_native_splash: ^2.1.1
   bordered_text:
+
+flutter_native_splash:
+    image: assets/images/logoApp.png
+    color: "#ffffff"
 
 dev_dependencies:
   flutter_test:
@@ -62,7 +67,8 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
+  assets:
+    - assets/images/
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

@@ -1,7 +1,7 @@
 import 'package:bordered_text/bordered_text.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:gas_check_app/components/signup_button_component.dart';
 import 'package:gas_check_app/helpers/extensions.dart';
 
@@ -17,44 +17,41 @@ class Message {
 }
 
 class BaseScreen extends StatefulWidget {
+  const BaseScreen({Key? key, required this.title}) : super(key:key);
+
+  final String title;
+
   @override
   _BaseScreenState createState() => _BaseScreenState();
 }
 
 
 class _BaseScreenState extends State<BaseScreen> {
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-
-  _getToken() {
-    _firebaseMessaging
-        .getToken()
-        .then((deviceToken) => {print("DeviceToken: $deviceToken")});
-    _firebaseMessaging.subscribeToTopic('all');
-  }
-
-  _configureFirebaseListeners() {
-    _firebaseMessaging.configure(
-      onMessage: (Map<String, dynamic> message) async {
-        print('onMessage: $message');
-      },
-      onLaunch: (Map<String, dynamic> message) async {
-        print('onLaunch: $message');
-      },
-      onResume: (Map<String, dynamic> message) async {
-        print('onResume: $message');
-      },
-    );
-  }
 
   void initState() {
     super.initState();
-    _configureFirebaseListeners();
-    _getToken();
+    initialization();
+  }
+
+  void initialization() async {
+    // This is where you can initialize the resources needed by your app while
+    // the splash screen is displayed.  Remove the following example because
+    // delaying the user experience is a bad design practice!
+    // ignore_for_file: avoid_print
+
+    // print('ready in 3...');
+    // await Future.delayed(const Duration(seconds: 1));
+    // print('ready in 2...');
+    // await Future.delayed(const Duration(seconds: 1));
+    // print('ready in 1...');
+    // await Future.delayed(const Duration(seconds: 1));
+    // print('go!');
+    FlutterNativeSplash.remove();
   }
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: SystemUiOverlay.values);
 
     return Scaffold(
       appBar: AppBar(
@@ -65,7 +62,7 @@ class _BaseScreenState extends State<BaseScreen> {
           strokeWidth: 10.0,
           strokeColor: shrinePurple900,
           child: Text(
-            'Mon&Com',
+            widget.title,
             style: TextStyle(
               fontSize: 40,
               fontFamily: 'UniSans-Heavy',

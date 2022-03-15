@@ -10,12 +10,8 @@ extension StringExtension on String {
 
 const Color shrineBlack100 = Color(0xFF2c2f33);
 const Color shrineBlack400 = Color(0xFF23272a);
-
 const Color shrinePurple900 = Color(0xFF7289da);
-
 const Color shrineErrorRed = Colors.red;
-
 const Color shrineSurfaceWhite = Color(0xFFe9e9e9);
 const Color shrineBackgroundWhite = Colors.white;
-
 const defaultLetterSpacing = 0.03;
