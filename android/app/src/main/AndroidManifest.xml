@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.gascheck.app.br.gas_check_app">
+    package="com.gascheck.app.br.gas_out_app">
    <application
-        android:label="gas_check_app"
+        android:label="gas_out_app"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

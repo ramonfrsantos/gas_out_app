@@ -1,5 +1,5 @@
 import 'package:mobx/mobx.dart';
-import 'package:gas_check_app/helpers/extensions.dart';
+import 'package:gas_out_app/helpers/extensions.dart';
 
 part 'signup_store.g.dart';
 

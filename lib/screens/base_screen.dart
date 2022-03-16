@@ -1,9 +1,12 @@
-import 'package:bordered_text/bordered_text.dart';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:gas_check_app/components/signup_button_component.dart';
-import 'package:gas_check_app/helpers/extensions.dart';
+import 'package:gas_out_app/main.dart';
+import 'package:http/http.dart' as http;
+
+import '../model/notification_model.dart';
 
 class Message {
   String? title;
@@ -17,16 +20,47 @@ class Message {
 }
 
 class BaseScreen extends StatefulWidget {
-  const BaseScreen({Key? key, required this.title}) : super(key:key);
+  const BaseScreen({Key? key, required this.title, required this.token}) : super(key: key);
 
   final String title;
+  final String token;
 
   @override
   _BaseScreenState createState() => _BaseScreenState();
 }
 
+Future<NotificationModel?> create(
+    String title, String body) async {
+
+  var url = Uri.parse("https://fcm.googleapis.com/fcm/send");
+
+  final bodyJSON = jsonEncode({
+    "registration_ids": [ token ],
+    "notification": {"title": title, "body": body}
+  });
+
+  final response = await http.post(url,
+      body: bodyJSON,
+      headers: { 'Content-type': 'application/json',
+        'Accept': 'application/json',
+        "Authorization": "key=AAAASZ_kz40:APA91bHd7M5FzqhG1GoDKZilvUBHeaoB-YeHDbxtM8WyXrgtkZ8oFrt1us4wNcawELFZc1WFQusfpFWwyDRgUpWOtFEBSFnSBjBVrmnGqwA0Ojgbj5BoFUUeHfAfh8vgs5ieqm1mggHD"});
+
+  print(response.body);
+
+  if (response.statusCode == 200) {
+    final String responseString = response.body;
+
+    return notificationModelFromJson(responseString);
+  } else {
+    return null;
+  }
+}
 
 class _BaseScreenState extends State<BaseScreen> {
+  NotificationModel? _notification;
+
+  final TextEditingController successController = TextEditingController();
+  final TextEditingController messageIdController = TextEditingController();
 
   void initState() {
     super.initState();
@@ -34,11 +68,6 @@ class _BaseScreenState extends State<BaseScreen> {
   }
 
   void initialization() async {
-    // This is where you can initialize the resources needed by your app while
-    // the splash screen is displayed.  Remove the following example because
-    // delaying the user experience is a bad design practice!
-    // ignore_for_file: avoid_print
-
     // print('ready in 3...');
     // await Future.delayed(const Duration(seconds: 1));
     // print('ready in 2...');
@@ -51,26 +80,11 @@ class _BaseScreenState extends State<BaseScreen> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: SystemUiOverlay.values);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+        overlays: SystemUiOverlay.values);
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: shrineBlack400,
-        toolbarHeight: 100,
-        elevation: 0,
-        title: BorderedText(
-          strokeWidth: 10.0,
-          strokeColor: shrinePurple900,
-          child: Text(
-            widget.title,
-            style: TextStyle(
-              fontSize: 40,
-              fontFamily: 'UniSans-Heavy',
-            ),
-          ),
-        ),
-        centerTitle: true,
-      ),
+      appBar: AppBar(),
       body: _buildBaseBody(),
       floatingActionButton: _listaFloatingButton(),
     );
@@ -78,96 +92,40 @@ class _BaseScreenState extends State<BaseScreen> {
 
   Widget _buildBaseBody() {
     return Container(
-      margin: EdgeInsets.only(bottom: 100),
-      child: Center(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              SingUpButton(),
-              SizedBox(
-                height: 30,
-              ),
-              _buildCompartilhaButton(),
-              SizedBox(
-                height: 50,
-              ),
-              SizedBox(
-                height: 300,
-                width: 340,
-                child: Padding(
-                  padding: EdgeInsets.all(12),
-                  child: GestureDetector(
-                    onTap: (){},
-                    child: Card(
-                      margin: EdgeInsets.all(20),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(40.0),
-                      ),
-                      color: Colors.white,
-                      elevation: 10,
-                      clipBehavior: Clip.antiAlias,
-                      child: Container(
-                        padding: EdgeInsets.only(top: 15, right: 15),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(40),
-                            border:
-                            Border.all(width: 4, color: shrinePurple900),
-                            image: DecorationImage(
-                              image: AssetImage("assets/images/cardFundo.png"),
-                              colorFilter: new ColorFilter.mode(
-                                  Colors.black.withOpacity(0.3),
-                                  BlendMode.dstATop),
-                              fit: BoxFit.cover,
-                            )),
-                        child: Center(
-                          child: Image.asset(
-                            'assets/images/logoApp.png',
-                            width: 300,
-                            height: 300,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              GestureDetector(
-                onTap: () {},
-                child: Text(
-                  "Clique para monitorar",
-                  style: TextStyle(
-                    fontSize: 18,
-                  ),
-                ),
-              )
-            ],
+      padding: EdgeInsets.all(32),
+      child: Column(
+        children: [
+          Text(
+            "Teste de notificação",
           ),
-        ),
+          SizedBox(
+            height: 32,
+          ),
+          _notification == null
+              ? Text("A notificação NÃO foi enviada.")
+              : Text("A notificação foi enviada!!!")
+        ],
       ),
     );
   }
 
   Widget _listaFloatingButton() {
     return FloatingActionButton(
-      onPressed: () {},
+      onPressed: () async {
+        final String title = "Atualização de status...";
+        final String body = "Sem vazamento de gás no momento atual.";
+
+        final NotificationModel? notification =
+            await create(title, body);
+
+        setState(() {
+          _notification = notification;
+        });
+      },
       tooltip: 'Lista de clientes',
       child: Icon(
-        Icons.people,
+        Icons.message,
         size: 40,
-      ),
-    );
-  }
-
-  Widget _buildCompartilhaButton() {
-    return SizedBox(
-      width: 250,
-      height: 60,
-      child: ElevatedButton(
-        onPressed: () {},
-        child: Text(
-          'Compartilhamento',
-          style: TextStyle(fontSize: 20),
-        ),
       ),
     );
   }

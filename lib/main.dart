@@ -2,14 +2,16 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:gas_check_app/firebase_messaging/custom_firebase_messaging.dart';
-import 'package:gas_check_app/screens/base_screen.dart';
-import 'package:gas_check_app/stores/signup_store.dart';
+import 'package:gas_out_app/firebase_messaging/custom_firebase_messaging.dart';
+import 'package:gas_out_app/screens/base_screen.dart';
+import 'package:gas_out_app/stores/signup_store.dart';
 import 'package:get_it/get_it.dart';
 
 import 'helpers/extensions.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+String token = "";
 
 Future<void> main() async {
   setupLocators();
@@ -18,7 +20,12 @@ Future<void> main() async {
 
   await Firebase.initializeApp();
   await CustomFirebaseMessaging().initialize();
-  await CustomFirebaseMessaging().getTokenFirebase();
+  var getTokenString = await CustomFirebaseMessaging().getTokenFirebase();
+
+  if(getTokenString != null){
+    token = getTokenString;
+    print(token);
+  }
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) {
@@ -39,11 +46,11 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Gas Check!',
+      title: 'Gas OUT!',
       theme: _buildShrineTheme(),
       initialRoute: '/home',
       routes: {
-        '/home': (_) => BaseScreen(title: 'Home Page'),
+        '/home': (_) => BaseScreen(title: 'Home Page', token: token,),
         '/virtual': (_) => Scaffold(
           appBar: AppBar(),
           body: const SizedBox.expand(

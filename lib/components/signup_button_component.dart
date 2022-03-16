@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gas_check_app/screens/base_screen.dart';
 
 class SingUpButton extends StatelessWidget {
   @override
@@ -16,10 +15,8 @@ class SingUpButton extends StatelessWidget {
             style: TextStyle(fontSize: 20),
           ),
           style: style,
-          onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => BaseScreen(title: 'Home Page',)));
-          }),
+          onPressed: () {}
+      ),
     );
   }
 }

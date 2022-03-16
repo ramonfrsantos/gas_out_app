@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:316215185293:android:aa5ecc7a6cf906c05637c4",
         "android_client_info": {
-          "package_name": "com.gascheck.app.br.gas_check_app"
+          "package_name": "com.gascheck.app.br.gas_out_app"
         }
       },
       "oauth_client": [
@@ -17,7 +17,7 @@
           "client_id": "316215185293-j3ja92e0qejdk14rmo6t6fa6jsdtmo6f.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.gascheck.app.br.gas_check_app",
+            "package_name": "com.gascheck.app.br.gas_out_app",
             "certificate_hash": "860f3471ae2573d8f084f064c190d041801fbe11"
           }
         },
