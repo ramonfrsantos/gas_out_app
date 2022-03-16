@@ -31,25 +31,27 @@ class BaseScreen extends StatefulWidget {
 
 Future<NotificationModel?> create(
     String title, String body) async {
-
+  print(token);
   var url = Uri.parse("https://fcm.googleapis.com/fcm/send");
+
+  Map<String,String> headers = {'Content-Type':'application/json','Authorization':'key=AAAASZ_kz40:APA91bHd7M5FzqhG1GoDKZilvUBHeaoB-YeHDbxtM8WyXrgtkZ8oFrt1us4wNcawELFZc1WFQusfpFWwyDRgUpWOtFEBSFnSBjBVrmnGqwA0Ojgbj5BoFUUeHfAfh8vgs5ieqm1mggHD'};
 
   final bodyJSON = jsonEncode({
     "registration_ids": [ token ],
     "notification": {"title": title, "body": body}
   });
 
+  print(bodyJSON);
+  print(headers);
+
   final response = await http.post(url,
       body: bodyJSON,
-      headers: { 'Content-type': 'application/json',
-        'Accept': 'application/json',
-        "Authorization": "key=AAAASZ_kz40:APA91bHd7M5FzqhG1GoDKZilvUBHeaoB-YeHDbxtM8WyXrgtkZ8oFrt1us4wNcawELFZc1WFQusfpFWwyDRgUpWOtFEBSFnSBjBVrmnGqwA0Ojgbj5BoFUUeHfAfh8vgs5ieqm1mggHD"});
+      headers: headers);
 
   print(response.body);
 
   if (response.statusCode == 200) {
     final String responseString = response.body;
-
     return notificationModelFromJson(responseString);
   } else {
     return null;

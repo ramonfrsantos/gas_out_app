@@ -20,12 +20,12 @@ Future<void> main() async {
 
   await Firebase.initializeApp();
   await CustomFirebaseMessaging().initialize();
-  var getTokenString = await CustomFirebaseMessaging().getTokenFirebase();
-
-  if(getTokenString != null){
-    token = getTokenString;
-    print(token);
-  }
+  await CustomFirebaseMessaging().getTokenFirebase().then((getTokenString) {
+    if(getTokenString != null){
+      token = getTokenString;
+      print("TOKEN: " + token);
+    }
+  });
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) {
@@ -50,7 +50,7 @@ class _MyAppState extends State<MyApp> {
       theme: _buildShrineTheme(),
       initialRoute: '/home',
       routes: {
-        '/home': (_) => BaseScreen(title: 'Home Page', token: token,),
+        '/home': (_) => BaseScreen(title: 'Home Page', token: token),
         '/virtual': (_) => Scaffold(
           appBar: AppBar(),
           body: const SizedBox.expand(

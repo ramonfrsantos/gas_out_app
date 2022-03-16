@@ -29,5 +29,5 @@ class CustomFirebaseMessaging {
     });
   }
 
-  getTokenFirebase() async => debugPrint(await FirebaseMessaging.instance.getToken());
+  getTokenFirebase() async => await FirebaseMessaging.instance.getToken();
 }
