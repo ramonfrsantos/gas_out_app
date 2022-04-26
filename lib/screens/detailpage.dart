@@ -1,17 +1,22 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 class DetailPage extends StatefulWidget {
   final imgPath;
+  double averageValue;
+  double maxValue;
+  int totalHours;
+  bool sprinklersOn = false;
 
-  DetailPage({Key? key, this.imgPath}) : super(key: key);
+  DetailPage({Key? key, this.imgPath,  required this.averageValue, required this.maxValue, required this.totalHours}) : super(key: key);
 
   @override
   _DetailPageState createState() => _DetailPageState();
 }
 
 class _DetailPageState extends State<DetailPage> {
-
-  bool tempValue = false;
+  bool isMonitoring = false;
 
   @override
   Widget build(BuildContext context) {
@@ -52,18 +57,24 @@ class _DetailPageState extends State<DetailPage> {
                   topLeft: Radius.circular(40),
                   topRight: Radius.circular(40),
                 ),
-                color: Color.fromRGBO(255, 145, 77, 0.68),
+                color: Color.fromRGBO(250, 193, 157, 0.68),
               ),
               child: new Column(
                 children: <Widget>[
-                  SizedBox(height: 20),
+                  SizedBox(height: 16),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      listItemStats('images/creative.png',"6 Lights",true),
-                      listItemStats('images/air-conditioner.png',"Air Conditioner", false),
-                      listItemStats('images/washing-machine.png',"Washing Machine", false)
+                      listItemStats('images/notification.png',"Notificações",
+                          widget.averageValue > 0 ? true : false
+                      ),
+                      listItemStats('images/creative.png',"Alarme",
+                          widget.averageValue > 0 ? true : false
+                      ),
+                      listItemStats('images/sprinkler.png',"Sprinklers",
+                          widget.averageValue >= 50 ? true : false
+                      )
                     ],
                   ),
                   Padding(
@@ -75,31 +86,31 @@ class _DetailPageState extends State<DetailPage> {
                     padding: const EdgeInsets.only(left: 20, right: 20),
                     child: Row(
                       children: <Widget>[
-                        Text("Maximum Power", style: new TextStyle(color: Colors.white),),
+                        Text("Valor Máximo Atingido", style: new TextStyle(color: Colors.white),),
                         Spacer(),
-                        Text("60W", style: new TextStyle(color: Colors.white),),
+                        Text(widget.maxValue.toString() + "%", style: new TextStyle(color: Colors.white),),
                       ],
                     ),
                   ),
-                  SizedBox(height: 10),
+                  SizedBox(height: 5),
                   Padding(
                     padding: const EdgeInsets.only(left: 20, right: 20),
                     child: Row(
                       children: <Widget>[
-                        Text("Total Working Hours", style: new TextStyle(color: Colors.white),),
+                        Text("Total de Horas Monitoradas", style: new TextStyle(color: Colors.white),),
                         Spacer(),
-                        Text("145", style: new TextStyle(color: Colors.white),),
+                        Text(widget.totalHours.toString(), style: new TextStyle(color: Colors.white),),
                       ],
                     ),
                   ),
-                  SizedBox(height: 10),
+                  SizedBox(height: 5),
                   Padding(
                     padding: const EdgeInsets.only(left: 20, right: 20),
                     child: Row(
                       children: <Widget>[
-                        Text("Average Daily Working Hours", style: new TextStyle(color: Colors.white),),
+                        Text("Valor Médio Diário", style: new TextStyle(color: Colors.white),),
                         Spacer(),
-                        Text("5.6", style: new TextStyle(color: Colors.white),),
+                        Text(widget.averageValue.toString() + "%", style: new TextStyle(color: Colors.white),),
                       ],
                     ),
                   ),
@@ -111,17 +122,25 @@ class _DetailPageState extends State<DetailPage> {
                     padding: const EdgeInsets.only(left: 20, right: 10),
                     child: Row(
                       children: <Widget>[
-                        Text("Day Schedule", style: new TextStyle(color: Colors.white),),
+                        Text("Acionar monitoramento", style: new TextStyle(color: Colors.white),),
                         Spacer(),
                         Switch(
-                          value: tempValue,
+                          value: isMonitoring,
                           onChanged: (newVal){
                             setState(() {
-                              tempValue = newVal;
-                              print(newVal);
+                              isMonitoring = newVal;
+                              if(newVal == false){
+                                widget.totalHours = 0;
+                              }
+
+                              if(newVal == true){
+                                startTimer();
+                              }
+
+                              // print(newVal);
                             });
                           },
-                          activeColor: Colors.white,
+                          activeColor: Colors.lightGreen,
                         )
                       ],
                     ),
@@ -141,7 +160,8 @@ class _DetailPageState extends State<DetailPage> {
       height: 150,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(25),
-          color: value == true ? Colors.white : Color.fromRGBO(255, 230, 215, 0.8)
+          color: value == true ? Colors.white : Color.fromRGBO(
+              210, 153, 117, 0.75)
       ),
       child: Column(
         children: <Widget>[
@@ -153,15 +173,72 @@ class _DetailPageState extends State<DetailPage> {
           Switch(
             value: value,
             onChanged: (newVal){
-              setState(() {
+              // if(name.compareTo("Sprinklers") == 0 && newVal == true) {
+              //   setState(() {
+              //       showAlertDialog(context);
+              //       newVal = widget.sprinklersOn;
+              //       value = newVal;
+              //       print(value);
+              //   });
+              // } else{
                 value = newVal;
-                print(newVal);
-              });
+                // print(newVal);
+              // }
             },
-            activeColor: Colors.orangeAccent,
+            activeColor: Colors.lightGreen,
           )
         ],
       ),
+    );
+  }
+
+  showAlertDialog(BuildContext context) {
+    Widget cancelaButton = TextButton(
+      child: Text("Cancelar"),
+      onPressed:  () {
+        widget.sprinklersOn = false;
+        Navigator.of(context).pop();
+      },
+    );
+    Widget continuaButton = TextButton(
+      child: Text("Continar"),
+      onPressed:  () {
+        widget.sprinklersOn = true;
+        Navigator.of(context).pop();
+      },
+    );
+    //configura o AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("AlertDialog"),
+      content: Text("Deseja realmente acionar os sprinklers?"),
+      actions: [
+        cancelaButton,
+        continuaButton,
+      ],
+    );
+    //exibe o diálogo
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  late Timer _timer;
+  int _start = 0;
+
+  void startTimer() {
+    const oneHour = const Duration(seconds: 3600);
+    _timer = new Timer.periodic(
+      oneHour,
+          (Timer timer) {
+          setState(() {
+            _start++;
+            widget.totalHours = _start;
+            print(widget.totalHours);
+          });
+      },
     );
   }
 }

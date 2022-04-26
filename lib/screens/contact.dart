@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:kf_drawer/kf_drawer.dart';
 
-class Schedules extends KFDrawerContent {
-  Schedules({
+class Contact extends KFDrawerContent {
+  Contact({
     Key? key,
   });
 
   @override
-  _SchedulesState createState() => _SchedulesState();
+  _ContactState createState() => _ContactState();
 }
 
-class _SchedulesState extends State<Schedules> {
+class _ContactState extends State<Contact> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -39,7 +39,7 @@ class _SchedulesState extends State<Schedules> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Text('Schedules'),
+                  Text('Acionar whatsapp do técnico'),
                 ],
               ),
             ),

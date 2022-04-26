@@ -6,10 +6,10 @@ import 'package:gas_out_app/firebase_messaging/custom_firebase_messaging.dart';
 import 'package:gas_out_app/screens/home.dart';
 import 'package:gas_out_app/stores/signup_store.dart';
 import 'package:get_it/get_it.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:kf_drawer/kf_drawer.dart';
 import 'model/class_builder.dart';
-import 'screens/schedules.dart';
-import 'screens/settings.dart';
+import 'screens/contact.dart';
 import 'screens/stats.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -33,8 +33,8 @@ Future<void> main() async {
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) {
     ClassBuilder.registerClasses();
-    FlutterNativeSplash.remove();
     runApp(MyApp());
+    FlutterNativeSplash.remove();
   });
 }
 
@@ -53,6 +53,10 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       theme: ThemeData(
         primarySwatch: Colors.blue,
+      ).copyWith(
+        textTheme: GoogleFonts.firaCodeTextTheme(
+          Theme.of(context).textTheme,
+        ),
       ),
       debugShowCheckedModeBanner: false,
       home: MainWidget(title: 'Gas Out',),
@@ -116,19 +120,11 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
         ),
         KFDrawerItem.initWithPage(
           text: Text(
-            'Calendário',
+            'Acionar técnico',
             style: TextStyle(color: Colors.white, fontSize: 18),
           ),
-          icon: Icon(Icons.av_timer, color: Colors.white),
-          page: Schedules(),
-        ),
-        KFDrawerItem.initWithPage(
-          text: Text(
-            'Configurações',
-            style: TextStyle(color: Colors.white, fontSize: 18),
-          ),
-          icon: Icon(Icons.settings, color: Colors.white),
-          page: Settings(),
+          icon: Icon(Icons.message, color: Colors.white),
+          page: Contact(),
         ),
       ],
     );
@@ -146,22 +142,23 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
               width:200,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                    image: AssetImage('images/logoPequena.png'),
+                    image: AssetImage('images/logoPequenaBranco.png'),
                     fit: BoxFit.fitHeight,
                     opacity: 1.0),
               ),
             ),SizedBox(
               width: 150,
-              height: 90,
+              height: 95,
             )
           ],
         ),
         footer: Container(),
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Color.fromRGBO(255, 145, 77, 1.0), Color.fromRGBO(255, 255, 255, 1.0)],
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+            colors: [Color.fromRGBO(199, 86, 17, 1.0), Color.fromRGBO(
+                246, 172, 140, 1.0)],
             tileMode: TileMode.repeated,
           ),
         ),

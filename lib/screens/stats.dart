@@ -39,7 +39,7 @@ class _StatsState extends State<Stats> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Text('Stats'),
+                  Text('Análise Geral'),
                 ],
               ),
             ),

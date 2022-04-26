@@ -35,7 +35,7 @@ class _NotificationsState extends State<Notifications> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Text('Notifications'),
+                  Text('Notificações'),
                 ],
               ),
             ),

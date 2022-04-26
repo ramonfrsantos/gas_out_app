@@ -1,4 +1,7 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:kf_drawer/kf_drawer.dart';
 import 'detailpage.dart';
 
@@ -43,23 +46,25 @@ class _HomeState extends State<Home> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        Text("Bem vindo!", style: TextStyle(fontSize: 17)),
-                      ],
+                    Container(
+                      alignment: Alignment.center,
+                      child: Image(
+                          image: AssetImage('images/logoPequena.png'),
+                        width: 250,
+                      ),
                     ),
-                    SizedBox(height: 30),
-                    Text("Relatório de monitoramento",
+                    SizedBox(height: 50),
+                    Text("Sobre o APP:",
                         style: TextStyle(
                             fontSize: 19, fontWeight: FontWeight.bold)),
                     SizedBox(height: 15),
                     Text(
-                      "Aqui está um relatório completo sobre possíveis vazamentos de gás na sua residência."
+                      "No GasOut apresentamos um relatório completo sobre possíveis vazamentos de gás na sua residência."
                       " Sugerimos seguir as recomendações em caso de alterações ou resultados indesejados.",
                       style: TextStyle(color: Colors.grey),
                     ),
                     SizedBox(height: 30),
-                    Text("Cômodos",
+                    Text("Escolha um cômodo:",
                         style: TextStyle(
                             fontSize: 19, fontWeight: FontWeight.bold)),
                     SizedBox(height: 15),
@@ -69,13 +74,13 @@ class _HomeState extends State<Home> {
                         child: ListView(
                           scrollDirection: Axis.horizontal,
                           children: <Widget>[
-                            listItem('images/quarto.jpg', 'Quarto'),
+                            listItem('images/quarto.jpg', 'Quarto', 10, 14.7, 2),
                             new SizedBox(width: 15),
-                            listItem('images/cozinha.jpg', 'Cozinha'),
+                            listItem('images/cozinha.jpg', 'Cozinha', 51.3, 62.5, 12),
                             new SizedBox(width: 15),
-                            listItem('images/sala.jpg', 'Sala de estar'),
+                            listItem('images/sala.jpg', 'Sala de estar', 8, 6, 5),
                             new SizedBox(width: 15),
-                            listItem('images/banheiro.jpg', 'Banheiro'),
+                            listItem('images/banheiro.jpg', 'Banheiro', 0, 2, 8),
                           ],
                         )),
                     SizedBox(height: 15),
@@ -89,13 +94,16 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget listItem(String imgpath, String stringPath) {
+  Widget listItem(String imgpath, String stringPath, double averageValue, double maxValue, int totalHours) {
         return Stack(children: [
           InkWell(
             onTap: () {
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => DetailPage(
                         imgPath: imgpath,
+                        averageValue: averageValue,
+                        maxValue: maxValue,
+                        totalHours: totalHours,
                       )));
             },
             child: Stack(alignment: Alignment.center, children: [
@@ -106,7 +114,7 @@ class _HomeState extends State<Home> {
                   image: DecorationImage(
                       image: AssetImage(imgpath),
                       fit: BoxFit.cover,
-                      opacity: 0.85),
+                      opacity: 0.96),
                 ),
               ),
               Text(stringPath,
