@@ -3,11 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:gas_out_app/firebase_messaging/custom_firebase_messaging.dart';
-import 'package:gas_out_app/screens/base_screen.dart';
+import 'package:gas_out_app/screens/home.dart';
 import 'package:gas_out_app/stores/signup_store.dart';
 import 'package:get_it/get_it.dart';
-
-import 'helpers/extensions.dart';
+import 'package:kf_drawer/kf_drawer.dart';
+import 'model/class_builder.dart';
+import 'screens/schedules.dart';
+import 'screens/settings.dart';
+import 'screens/stats.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -29,6 +32,8 @@ Future<void> main() async {
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) {
+    ClassBuilder.registerClasses();
+    FlutterNativeSplash.remove();
     runApp(MyApp());
   });
 }
@@ -46,101 +51,121 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Gas OUT!',
-      theme: _buildShrineTheme(),
-      initialRoute: '/home',
-      routes: {
-        '/home': (_) => BaseScreen(title: 'Home Page', token: token),
-        '/virtual': (_) => Scaffold(
-          appBar: AppBar(),
-          body: const SizedBox.expand(
-            child: Center(child: Text('Virtual Page')),
-          ),
-        )
-      },
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      debugShowCheckedModeBanner: false,
+      home: MainWidget(title: 'Gas Out',),
     );
+
+
+    // return MaterialApp(
+    //   title: 'Gas OUT!',
+    //   theme: _buildShrineTheme(),
+    //   initialRoute: '/home',
+    //   routes: {
+    //     '/home': (_) => BaseScreen(title: 'Home Page', token: token),
+    //     '/virtual': (_) => Scaffold(
+    //       appBar: AppBar(),
+    //       body: const SizedBox.expand(
+    //         child: Center(child: Text('Virtual Page')),
+    //       ),
+    //     )
+    //   },
+    // );
   }
 }
 
-IconThemeData _customIconTheme(IconThemeData original) {
-  return original.copyWith(color: shrinePurple900);
+class MainWidget extends StatefulWidget {
+  MainWidget({Key? key, required this.title}) : super(key: key);
+  final String title;
+
+  @override
+  _MainWidgetState createState() => _MainWidgetState();
 }
 
-ThemeData _buildShrineTheme() {
-  final ThemeData base = ThemeData.dark();
-  return base.copyWith(
-    primaryColor: shrineBlack100,
-    scaffoldBackgroundColor: shrineBlack400,
-    cardColor: shrineBlack400,
-    errorColor: shrineErrorRed,
-    buttonTheme: const ButtonThemeData(
-      colorScheme: _shrineColorScheme,
-      textTheme: ButtonTextTheme.normal,
-    ),
-    primaryIconTheme: _customIconTheme(base.iconTheme),
-    textTheme: _buildShrineTextTheme(base.textTheme),
-    primaryTextTheme: _buildShrineTextTheme(base.primaryTextTheme),
-    iconTheme: _customIconTheme(base.iconTheme), colorScheme: _shrineColorScheme.copyWith(secondary: shrinePurple900),
-  );
-}
+class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
+  late KFDrawerController _drawerController;
 
-const ColorScheme _shrineColorScheme = ColorScheme(
-  primary: shrinePurple900,
-  secondary: shrinePurple900,
-  surface: shrineBlack400,
-  background: shrineBlack400,
-  error: shrineErrorRed,
-  onPrimary: shrinePurple900,
-  onSecondary: Colors.white,
-  onSurface: shrinePurple900,
-  onBackground: shrinePurple900,
-  onError: shrineBlack400,
-  brightness: Brightness.dark,
-);
+  @override
+  void initState() {
+    super.initState();
+    _drawerController = KFDrawerController(
+      initialPage: ClassBuilder.fromString('Home'),
+      items: [
+        KFDrawerItem.initWithPage(
+          text: Text('Página Inicial', style: TextStyle(color: Colors.white, fontSize: 18)),
+          icon: Icon(Icons.home, color: Colors.white),
+          page: Home(),
+        ),
+        KFDrawerItem.initWithPage(
+          text: Text(
+            'Notificações',
+            style: TextStyle(color: Colors.white, fontSize: 18),
+          ),
+          icon: Icon(Icons.notifications_active, color: Colors.white),
+          page: ClassBuilder.fromString('Notifications'),
+        ),
+        KFDrawerItem.initWithPage(
+          text: Text(
+            'Análise Geral',
+            style: TextStyle(color: Colors.white, fontSize: 18),
+          ),
+          icon: Icon(Icons.trending_up, color: Colors.white),
+          page: Stats(),
+        ),
+        KFDrawerItem.initWithPage(
+          text: Text(
+            'Calendário',
+            style: TextStyle(color: Colors.white, fontSize: 18),
+          ),
+          icon: Icon(Icons.av_timer, color: Colors.white),
+          page: Schedules(),
+        ),
+        KFDrawerItem.initWithPage(
+          text: Text(
+            'Configurações',
+            style: TextStyle(color: Colors.white, fontSize: 18),
+          ),
+          icon: Icon(Icons.settings, color: Colors.white),
+          page: Settings(),
+        ),
+      ],
+    );
+  }
 
-TextTheme _buildShrineTextTheme(TextTheme base) {
-  return base
-      .copyWith(
-    headline5: base.headline5!.copyWith(
-      fontWeight: FontWeight.w900,
-      letterSpacing: defaultLetterSpacing,
-    ),
-    headline6: base.headline6!.copyWith(
-      fontWeight: FontWeight.w900,
-      fontSize: 18,
-      letterSpacing: defaultLetterSpacing,
-    ),
-    caption: base.caption!.copyWith(
-      fontWeight: FontWeight.w400,
-      fontSize: 14,
-      letterSpacing: defaultLetterSpacing,
-    ),
-    bodyText1: base.bodyText1!.copyWith(
-      fontWeight: FontWeight.w900,
-      fontSize: 16,
-      letterSpacing: defaultLetterSpacing,
-    ),
-    bodyText2: base.bodyText2!.copyWith(
-      fontWeight: FontWeight.w900,
-      letterSpacing: defaultLetterSpacing,
-    ),
-    subtitle1: base.subtitle1!.copyWith(
-      fontWeight: FontWeight.w900,
-      letterSpacing: defaultLetterSpacing,
-    ),
-    headline4: base.headline4!.copyWith(
-      fontWeight: FontWeight.w900,
-      letterSpacing: defaultLetterSpacing,
-    ),
-    button: base.button!.copyWith(
-      fontWeight: FontWeight.w900,
-      fontSize: 14,
-      letterSpacing: defaultLetterSpacing,
-    ),
-  )
-      .apply(
-    fontFamily: 'UniSans-Thin',
-    displayColor: shrinePurple900,
-    bodyColor: shrineSurfaceWhite,
-  );
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: KFDrawer(
+        controller: _drawerController,
+        header: Row(
+          children: [
+            Container(
+              height: 50,
+              width:200,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage('images/logoPequena.png'),
+                    fit: BoxFit.fitHeight,
+                    opacity: 1.0),
+              ),
+            ),SizedBox(
+              width: 150,
+              height: 90,
+            )
+          ],
+        ),
+        footer: Container(),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Color.fromRGBO(255, 145, 77, 1.0), Color.fromRGBO(255, 255, 255, 1.0)],
+            tileMode: TileMode.repeated,
+          ),
+        ),
+      ),
+    );
+  }
 }
