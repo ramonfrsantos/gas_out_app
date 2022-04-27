@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gas_out_app/helpers/global.dart';
 import 'package:gas_out_app/stores/detailpage_store.dart';
 import 'package:get_it/get_it.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class DetailPage extends StatefulWidget {
   final imgPath;
@@ -114,15 +115,19 @@ class _DetailPageState extends State<DetailPage> {
                           name: "Sprinklers",
                           value: sprinklersValue,
                           onChanged: (value) {
-                            sprinklersValue == false
-                                ? showAlertDialog(context, () {
-                                    setState(() {
-                                      sprinklersValue = value;
-                                    });
-                                  })
-                                : setState(() {
-                                    sprinklersValue = value;
-                                  });
+                            if (widget.averageValue >= 50){
+                              sprinklersValue == false
+                                  ? showAlertDialog(context, () {
+                                setState(() {
+                                  sprinklersValue = value;
+                                });
+                              })
+                                  : setState(() {
+                                sprinklersValue = value;
+                              });
+                            } else {
+                              value = false;
+                            }
                           },
                         ),
                       ],
@@ -257,37 +262,6 @@ class _DetailPageState extends State<DetailPage> {
           Switch(
             value: value,
             onChanged: onChanged,
-            // onChanged: (fuck) {
-            //   // print(value);
-            //   setState(() {
-            //     value = fuck;
-            //     showAlertDialog(context, () {});
-            //   });
-            //   // showAlertDialog(context, (){
-            //   // setState(() {
-            //   // value = newVal;
-            //   // });
-            //   // });
-
-            //   // print(newVal);
-            //   // value = newVal;
-            //   // if (name.compareTo("Sprinklers") == 0 &&
-            //   //     widget.averageValue >= 50 &&
-            //   //     value == false) {
-            //   //   setState(() {
-            //   //     // showAlertDialog(context, (){
-            //   //     // setState(() {
-            //   //     // value = newVal;
-            //   //     value = false;
-            //   //     // });
-            //   //     // });
-
-            //   //     // print(newVal);
-            //   //     // value = newVal;
-            //   //   });
-            //   // }
-            //   // // print(newVal);
-            // },
             activeColor: Colors.lightGreen,
           )
         ],
@@ -297,13 +271,13 @@ class _DetailPageState extends State<DetailPage> {
 
   showAlertDialog(BuildContext context, Function funcao) {
     Widget cancelaButton = TextButton(
-      child: Text("Cancelar"),
+      child: Text("Cancelar", style: GoogleFonts.roboto()),
       onPressed: () {
         Navigator.of(context).pop();
       },
     );
     Widget continuaButton = TextButton(
-      child: Text("Continuar"),
+      child: Text("Continuar", style: GoogleFonts.roboto()),
       onPressed: () {
         Navigator.of(context).pop();
         funcao();
@@ -311,8 +285,10 @@ class _DetailPageState extends State<DetailPage> {
     );
     //configura o AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("AlertDialog"),
-      content: Text("Deseja realmente acionar os sprinklers?"),
+      title: Text("Atenção!", style: GoogleFonts.roboto(
+        fontSize: 24
+      )),
+      content: Text("Deseja realmente acionar os sprinklers?", style: GoogleFonts.roboto()),
       actions: [
         cancelaButton,
         continuaButton,
