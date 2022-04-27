@@ -11,6 +11,7 @@ import 'package:kf_drawer/kf_drawer.dart';
 import 'model/class_builder.dart';
 import 'screens/contact.dart';
 import 'screens/stats.dart';
+import 'package:gas_out_app/helpers/dependency_injection.dart' as di;
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -20,11 +21,11 @@ Future<void> main() async {
   setupLocators();
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-
+  di.init();
   await Firebase.initializeApp();
   await CustomFirebaseMessaging().initialize();
   await CustomFirebaseMessaging().getTokenFirebase().then((getTokenString) {
-    if(getTokenString != null){
+    if (getTokenString != null) {
       token = getTokenString;
       print("TOKEN: " + token);
     }
@@ -59,9 +60,10 @@ class _MyAppState extends State<MyApp> {
         ),
       ),
       debugShowCheckedModeBanner: false,
-      home: MainWidget(title: 'Gas Out',),
+      home: MainWidget(
+        title: 'Gas Out',
+      ),
     );
-
 
     // return MaterialApp(
     //   title: 'Gas OUT!',
@@ -98,7 +100,8 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
       initialPage: ClassBuilder.fromString('Home'),
       items: [
         KFDrawerItem.initWithPage(
-          text: Text('Página Inicial', style: TextStyle(color: Colors.white, fontSize: 18)),
+          text: Text('Página Inicial',
+              style: TextStyle(color: Colors.white, fontSize: 18)),
           icon: Icon(Icons.home, color: Colors.white),
           page: Home(),
         ),
@@ -139,14 +142,15 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
           children: [
             Container(
               height: 50,
-              width:200,
+              width: 200,
               decoration: BoxDecoration(
                 image: DecorationImage(
                     image: AssetImage('images/logoPequenaBranco.png'),
                     fit: BoxFit.fitHeight,
                     opacity: 1.0),
               ),
-            ),SizedBox(
+            ),
+            SizedBox(
               width: 150,
               height: 95,
             )
@@ -157,8 +161,10 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
           gradient: LinearGradient(
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
-            colors: [Color.fromRGBO(199, 86, 17, 1.0), Color.fromRGBO(
-                246, 172, 140, 1.0)],
+            colors: [
+              Color.fromRGBO(199, 86, 17, 1.0),
+              Color.fromRGBO(246, 172, 140, 1.0)
+            ],
             tileMode: TileMode.repeated,
           ),
         ),

@@ -49,7 +49,7 @@ class _HomeState extends State<Home> {
                     Container(
                       alignment: Alignment.center,
                       child: Image(
-                          image: AssetImage('images/logoPequena.png'),
+                        image: AssetImage('images/logoPequena.png'),
                         width: 250,
                       ),
                     ),
@@ -74,13 +74,17 @@ class _HomeState extends State<Home> {
                         child: ListView(
                           scrollDirection: Axis.horizontal,
                           children: <Widget>[
-                            listItem('images/quarto.jpg', 'Quarto', 10, 14.7, 2),
+                            listItem(
+                                'images/quarto.jpg', 'Quarto', 10, 14.7, 2),
                             new SizedBox(width: 15),
-                            listItem('images/cozinha.jpg', 'Cozinha', 51.3, 62.5, 12),
+                            listItem('images/cozinha.jpg', 'Cozinha', 51.3,
+                                62.5, 12),
                             new SizedBox(width: 15),
-                            listItem('images/sala.jpg', 'Sala de estar', 8, 6, 5),
+                            listItem(
+                                'images/sala.jpg', 'Sala de estar', 8, 6, 5),
                             new SizedBox(width: 15),
-                            listItem('images/banheiro.jpg', 'Banheiro', 0, 2, 8),
+                            listItem(
+                                'images/banheiro.jpg', 'Banheiro', 0, 2, 8),
                           ],
                         )),
                     SizedBox(height: 15),
@@ -94,44 +98,43 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget listItem(String imgpath, String stringPath, double averageValue, double maxValue, int totalHours) {
-        return Stack(children: [
-          InkWell(
-            onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => DetailPage(
-                        imgPath: imgpath,
-                        averageValue: averageValue,
-                        maxValue: maxValue,
-                        totalHours: totalHours,
-                      )));
-            },
-            child: Stack(alignment: Alignment.center, children: [
-              Container(
-                width: 325,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(25),
-                  image: DecorationImage(
-                      image: AssetImage(imgpath),
-                      fit: BoxFit.cover,
-                      opacity: 0.96),
-                ),
-              ),
-              Text(stringPath,
-                  style: TextStyle(
-                      fontSize: 36,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      shadows: [
-                        Shadow(
-                          color: Colors.black.withOpacity(1.0),
-                          offset: Offset(0.0, 0.0),
-                          blurRadius: 30.0,
-                        ),
-                      ])),
-            ]),
-          )
-        ]);
+  Widget listItem(String imgpath, String stringPath, double averageValue,
+      double maxValue, int totalHours) {
+    return Stack(children: [
+      InkWell(
+        onTap: () {
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => DetailPage(
+                    imgPath: imgpath,
+                    averageValue: averageValue,
+                    maxValue: maxValue,
+                    totalHours: totalHours,
+                  )));
+        },
+        child: Stack(alignment: Alignment.center, children: [
+          Container(
+            width: 325,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(25),
+              image: DecorationImage(
+                  image: AssetImage(imgpath), fit: BoxFit.cover, opacity: 0.96),
+            ),
+          ),
+          Text(stringPath,
+              style: TextStyle(
+                  fontSize: 36,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  shadows: [
+                    Shadow(
+                      color: Colors.black.withOpacity(1.0),
+                      offset: Offset(0.0, 0.0),
+                      blurRadius: 30.0,
+                    ),
+                  ])),
+        ]),
+      )
+    ]);
   }
 
   Widget listItemStats(String imgpath, String name, bool value) {

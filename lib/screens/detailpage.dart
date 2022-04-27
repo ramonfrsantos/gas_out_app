@@ -1,11 +1,14 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:gas_out_app/helpers/global.dart';
+import 'package:gas_out_app/stores/detailpage_store.dart';
+import 'package:get_it/get_it.dart';
 
 class DetailPage extends StatefulWidget {
   final imgPath;
-  double averageValue;
-  double maxValue;
+  final double averageValue;
+  final double maxValue;
   int totalHours;
 
   DetailPage(
@@ -21,7 +24,22 @@ class DetailPage extends StatefulWidget {
 }
 
 class _DetailPageState extends State<DetailPage> {
-  bool isMonitoring = false;
+  bool sprinklersValue = false;
+  bool alarmValue = false;
+  bool notificationValue = false;
+
+  @override
+  void initState() {
+    setValues();
+    super.initState();
+  }
+
+  setValues() {
+    widget.averageValue > 0 ? alarmValue = true : alarmValue = false;
+    widget.averageValue > 0
+        ? notificationValue = true
+        : notificationValue = false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +63,7 @@ class _DetailPageState extends State<DetailPage> {
                     color: Colors.white,
                   ),
                   onPressed: () {
-                    Navigator.of(context).pop();
+                    Navigator.pop(context, false);
                   },
                 ),
                 SizedBox(width: 15)
@@ -71,12 +89,42 @@ class _DetailPageState extends State<DetailPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        listItemStats('images/notification.png', "Notificações",
-                            widget.averageValue > 0 ? true : false),
-                        listItemStats('images/creative.png', "Alarme",
-                            widget.averageValue > 0 ? true : false),
-                        listItemStats('images/sprinkler.png', "Sprinklers",
-                           false)
+                        listItemStats(
+                          imgpath: 'images/notification.png',
+                          name: "Notificações",
+                          value: notificationValue,
+                          onChanged: (value) {
+                            setState(() {
+                              notificationValue = value;
+                            });
+                          },
+                        ),
+                        listItemStats(
+                          imgpath: 'images/creative.png',
+                          name: "Alarme",
+                          value: alarmValue,
+                          onChanged: (value) {
+                            setState(() {
+                              alarmValue = value;
+                            });
+                          },
+                        ),
+                        listItemStats(
+                          imgpath: 'images/sprinkler.png',
+                          name: "Sprinklers",
+                          value: sprinklersValue,
+                          onChanged: (value) {
+                            sprinklersValue == false
+                                ? showAlertDialog(context, () {
+                                    setState(() {
+                                      sprinklersValue = value;
+                                    });
+                                  })
+                                : setState(() {
+                                    sprinklersValue = value;
+                                  });
+                          },
+                        ),
                       ],
                     ),
                     Padding(
@@ -150,10 +198,10 @@ class _DetailPageState extends State<DetailPage> {
                           ),
                           Spacer(),
                           Switch(
-                            value: isMonitoring,
+                            value: detailPageStore.activeMonitoring,
                             onChanged: (newVal) {
                               setState(() {
-                                isMonitoring = newVal;
+                                detailPageStore.activeMonitoring = newVal;
                                 if (newVal == false) {
                                   widget.totalHours = 0;
                                 }
@@ -178,7 +226,12 @@ class _DetailPageState extends State<DetailPage> {
     );
   }
 
-  Widget listItemStats(String imgpath, String name, bool value) {
+  Widget listItemStats({
+    required String imgpath,
+    required String name,
+    required bool value,
+    Function(bool value)? onChanged,
+  }) {
     return Container(
       width: 110,
       height: 150,
@@ -203,24 +256,38 @@ class _DetailPageState extends State<DetailPage> {
           SizedBox(height: 5),
           Switch(
             value: value,
-            onChanged: (newVal) {
+            onChanged: onChanged,
+            // onChanged: (fuck) {
+            //   // print(value);
+            //   setState(() {
+            //     value = fuck;
+            //     showAlertDialog(context, () {});
+            //   });
+            //   // showAlertDialog(context, (){
+            //   // setState(() {
+            //   // value = newVal;
+            //   // });
+            //   // });
 
-              // print(value);
-                if(name.compareTo("Sprinklers") == 0 && widget.averageValue >= 50 && value == false){
-                  setState(() {
-                  // showAlertDialog(context, (){
-                    // setState(() {
-                      value = newVal;
-                    // });
-                  // });
+            //   // print(newVal);
+            //   // value = newVal;
+            //   // if (name.compareTo("Sprinklers") == 0 &&
+            //   //     widget.averageValue >= 50 &&
+            //   //     value == false) {
+            //   //   setState(() {
+            //   //     // showAlertDialog(context, (){
+            //   //     // setState(() {
+            //   //     // value = newVal;
+            //   //     value = false;
+            //   //     // });
+            //   //     // });
 
-                  // print(newVal);
-                  // value = newVal;
-                  });
-                }
-              // print(newVal);
-
-            },
+            //   //     // print(newVal);
+            //   //     // value = newVal;
+            //   //   });
+            //   // }
+            //   // // print(newVal);
+            // },
             activeColor: Colors.lightGreen,
           )
         ],

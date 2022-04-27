@@ -38,7 +38,7 @@ mixin _$SignUpStore on _SignUpStore, Store {
               name: '_SignUpStore.isFormValid'))
           .value;
 
-  final _$nameAtom = Atom(name: '_SignUpStore.name');
+  late final _$nameAtom = Atom(name: '_SignUpStore.name', context: context);
 
   @override
   String get name {
@@ -53,7 +53,7 @@ mixin _$SignUpStore on _SignUpStore, Store {
     });
   }
 
-  final _$emailAtom = Atom(name: '_SignUpStore.email');
+  late final _$emailAtom = Atom(name: '_SignUpStore.email', context: context);
 
   @override
   String get email {
@@ -68,7 +68,7 @@ mixin _$SignUpStore on _SignUpStore, Store {
     });
   }
 
-  final _$phoneAtom = Atom(name: '_SignUpStore.phone');
+  late final _$phoneAtom = Atom(name: '_SignUpStore.phone', context: context);
 
   @override
   String get phone {
@@ -83,7 +83,8 @@ mixin _$SignUpStore on _SignUpStore, Store {
     });
   }
 
-  final _$_SignUpStoreActionController = ActionController(name: '_SignUpStore');
+  late final _$_SignUpStoreActionController =
+      ActionController(name: '_SignUpStore', context: context);
 
   @override
   void setName(String value) {
