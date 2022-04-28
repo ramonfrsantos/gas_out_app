@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -64,21 +66,6 @@ class _MyAppState extends State<MyApp> {
         title: 'Gas Out',
       ),
     );
-
-    // return MaterialApp(
-    //   title: 'Gas OUT!',
-    //   theme: _buildShrineTheme(),
-    //   initialRoute: '/home',
-    //   routes: {
-    //     '/home': (_) => BaseScreen(title: 'Home Page', token: token),
-    //     '/virtual': (_) => Scaffold(
-    //       appBar: AppBar(),
-    //       body: const SizedBox.expand(
-    //         child: Center(child: Text('Virtual Page')),
-    //       ),
-    //     )
-    //   },
-    // );
   }
 }
 
@@ -123,7 +110,7 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
         ),
         KFDrawerItem.initWithPage(
           text: Text(
-            'Acionar técnico',
+            'Acionar suporte',
             style: TextStyle(color: Colors.white, fontSize: 18),
           ),
           icon: Icon(Icons.message, color: Colors.white),
@@ -135,6 +122,9 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+        overlays: SystemUiOverlay.values);
+
     return Scaffold(
       body: KFDrawer(
         controller: _drawerController,

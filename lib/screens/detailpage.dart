@@ -1,12 +1,15 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:gas_out_app/helpers/global.dart';
-import 'package:gas_out_app/stores/detailpage_store.dart';
-import 'package:get_it/get_it.dart';
+import 'package:http/http.dart' as http;
 import 'package:google_fonts/google_fonts.dart';
 
-class DetailPage extends StatefulWidget {
+import '../main.dart';
+import '../model/notification_model.dart';
+
+ class DetailPage extends StatefulWidget {
   final imgPath;
   final double averageValue;
   final double maxValue;
@@ -29,9 +32,12 @@ class _DetailPageState extends State<DetailPage> {
   bool alarmValue = false;
   bool notificationValue = false;
 
+  NotificationModel? _notification;
+
   @override
   void initState() {
     setValues();
+    _generateNotification();
     super.initState();
   }
 
@@ -55,7 +61,7 @@ class _DetailPageState extends State<DetailPage> {
                     image: AssetImage(widget.imgPath), fit: BoxFit.cover)),
           ),
           new Padding(
-            padding: EdgeInsets.only(top: 25),
+            padding: EdgeInsets.only(top: 15),
             child: new Row(
               children: <Widget>[
                 new IconButton(
@@ -75,7 +81,7 @@ class _DetailPageState extends State<DetailPage> {
             alignment: Alignment.bottomCenter,
             child: Container(
                 width: MediaQuery.of(context).size.width,
-                height: 340,
+                height: 360,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(40),
@@ -85,7 +91,7 @@ class _DetailPageState extends State<DetailPage> {
                 ),
                 child: new Column(
                   children: <Widget>[
-                    SizedBox(height: 16),
+                    SizedBox(height: 22),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -238,7 +244,7 @@ class _DetailPageState extends State<DetailPage> {
     Function(bool value)? onChanged,
   }) {
     return Container(
-      width: 110,
+      width: 120,
       height: 150,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(25),
@@ -247,7 +253,7 @@ class _DetailPageState extends State<DetailPage> {
               : Color.fromRGBO(210, 153, 117, 0.75)),
       child: Column(
         children: <Widget>[
-          SizedBox(height: 20),
+          SizedBox(height: 15),
           Image(
               image: AssetImage(imgpath),
               width: 45,
@@ -258,7 +264,6 @@ class _DetailPageState extends State<DetailPage> {
               style: TextStyle(
                   fontSize: 13,
                   color: value == true ? Colors.black : Colors.white)),
-          SizedBox(height: 5),
           Switch(
             value: value,
             onChanged: onChanged,
@@ -318,5 +323,57 @@ class _DetailPageState extends State<DetailPage> {
         });
       },
     );
+  }
+
+  Future<void> _generateNotification() async {
+    String title = "";
+    String body = "";
+
+    if(widget.averageValue == 0) {
+      title = "Apenas atualização de status...";
+      body = "Sem vazamento de gás no momento atual.";
+    } else if(widget.averageValue > 0 && widget.averageValue < 50){
+      title = "Verifique as opções de monitoramento";
+      body = "Detectamos níveis baixos de vazamento em sua residência.";
+    } else if (widget.averageValue >= 50) {
+      title = "Nível ALTO de vazamento em sua residência!";
+      body = "Entre agora em opções de monitoramento para acionamento dos sprinkles ou chame um técnico.";
+    }
+
+    final NotificationModel? notification =
+        await create(title, body);
+
+    setState(() {
+      _notification = notification;
+    });
+  }
+
+  Future<NotificationModel?> create(
+      String title, String body) async {
+    print(token);
+    var url = Uri.parse("https://fcm.googleapis.com/fcm/send");
+
+    Map<String,String> headers = {'Content-Type':'application/json','Authorization':'key=AAAASZ_kz40:APA91bHd7M5FzqhG1GoDKZilvUBHeaoB-YeHDbxtM8WyXrgtkZ8oFrt1us4wNcawELFZc1WFQusfpFWwyDRgUpWOtFEBSFnSBjBVrmnGqwA0Ojgbj5BoFUUeHfAfh8vgs5ieqm1mggHD'};
+
+    final bodyJSON = jsonEncode({
+      "registration_ids": [ token ],
+      "notification": {"title": title, "body": body}
+    });
+
+    print(bodyJSON);
+    print(headers);
+
+    final response = await http.post(url,
+        body: bodyJSON,
+        headers: headers);
+
+    print(response.body);
+
+    if (response.statusCode == 200) {
+      final String responseString = response.body;
+      return notificationModelFromJson(responseString);
+    } else {
+      return null;
+    }
   }
 }

@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:kf_drawer/kf_drawer.dart';
 import 'detailpage.dart';
 
@@ -105,11 +104,11 @@ class _HomeState extends State<Home> {
         onTap: () {
           Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => DetailPage(
-                    imgPath: imgpath,
-                    averageValue: averageValue,
-                    maxValue: maxValue,
-                    totalHours: totalHours,
-                  )));
+                imgPath: imgpath,
+                averageValue: averageValue,
+                maxValue: maxValue,
+                totalHours: totalHours,
+              )));
         },
         child: Stack(alignment: Alignment.center, children: [
           Container(
@@ -120,58 +119,62 @@ class _HomeState extends State<Home> {
                   image: AssetImage(imgpath), fit: BoxFit.cover, opacity: 0.96),
             ),
           ),
-          Text(stringPath,
-              style: TextStyle(
-                  fontSize: 36,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  shadows: [
-                    Shadow(
-                      color: Colors.black.withOpacity(1.0),
-                      offset: Offset(0.0, 0.0),
-                      blurRadius: 30.0,
-                    ),
-                  ])),
+          Container(
+            alignment: Alignment.center,
+            width: 200,
+            child: Text(stringPath,
+                style: TextStyle(
+                    fontSize: 36,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    shadows: [
+                      Shadow(
+                        color: Colors.black.withOpacity(1.0),
+                        offset: Offset(0.0, 0.0),
+                        blurRadius: 30.0,
+                      ),
+                    ])),
+          ),
         ]),
       )
     ]);
   }
 
-  Widget listItemStats(String imgpath, String name, bool value) {
-    return Container(
-      width: 110,
-      height: 150,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(25),
-          color: value == true
-              ? Colors.white
-              : Color.fromRGBO(255, 230, 215, 0.6)),
-      child: Column(
-        children: <Widget>[
-          SizedBox(height: 20),
-          Image(
-              image: AssetImage(imgpath),
-              width: 45,
-              height: 45,
-              color: value == true ? Colors.black : Colors.white),
-          SizedBox(height: 15),
-          Text(name,
-              style: TextStyle(
-                  fontSize: 13,
-                  color: value == true ? Colors.black : Colors.white)),
-          SizedBox(height: 5),
-          Switch(
-            value: value,
-            onChanged: (newVal) {
-              setState(() {
-                value = newVal;
-                print(newVal);
-              });
-            },
-            activeColor: Colors.orange,
-          )
-        ],
-      ),
-    );
-  }
+  // Widget listItemStats(String imgpath, String name, bool value) {
+  //   return Container(
+  //     width: 110,
+  //     height: 150,
+  //     decoration: BoxDecoration(
+  //         borderRadius: BorderRadius.circular(25),
+  //         color: value == true
+  //             ? Colors.white
+  //             : Color.fromRGBO(255, 230, 215, 0.6)),
+  //     child: Column(
+  //       children: <Widget>[
+  //         SizedBox(height: 20),
+  //         Image(
+  //             image: AssetImage(imgpath),
+  //             width: 45,
+  //             height: 45,
+  //             color: value == true ? Colors.black : Colors.white),
+  //         SizedBox(height: 15),
+  //         Text(name,
+  //             style: TextStyle(
+  //                 fontSize: 13,
+  //                 color: value == true ? Colors.black : Colors.white)),
+  //         SizedBox(height: 5),
+  //         Switch(
+  //           value: value,
+  //           onChanged: (newVal) {
+  //             setState(() {
+  //               value = newVal;
+  //               print(newVal);
+  //             });
+  //           },
+  //           activeColor: Colors.orange,
+  //         )
+  //       ],
+  //     ),
+  //   );
+  // }
 }

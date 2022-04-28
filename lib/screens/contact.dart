@@ -39,7 +39,7 @@ class _ContactState extends State<Contact> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Text('Acionar whatsapp do técnico'),
+                  Text('Whatsapp suporte'),
                 ],
               ),
             ),
