@@ -2,12 +2,12 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:gas_out_app/helpers/global.dart';
 import 'package:http/http.dart' as http;
 import 'package:google_fonts/google_fonts.dart';
 
-import '../main.dart';
-import '../model/notification_model.dart';
+import '../../data/model/notification_model.dart';
+import '../../main.dart';
+import '../helpers/global.dart';
 
  class DetailPage extends StatefulWidget {
   final imgPath;
@@ -346,8 +346,28 @@ class _DetailPageState extends State<DetailPage> {
     setState(() {
       _notification = notification;
     });
+  }
 
+  void createNotificationMessage(String message) async {
+    var urlLocal = Uri.parse("http://192.168.100.93/notification/create");
+    Map<String,String> headers = {
+      'Content-Type': 'application/json; charset=UTF-8',
+    };
 
+    final bodyJSON = jsonEncode({
+      "message": message
+    });
+
+    final response = await http.post(urlLocal,
+        body: bodyJSON,
+        headers: headers);
+
+    if (response.statusCode == 200) {
+      print("bbbbbbbbbbbbbbbbbbbbb");
+      print(response.body);
+    } else {
+      print('A network error occurred');
+    }
   }
 
   Future<NotificationModel?> create(
@@ -372,6 +392,8 @@ class _DetailPageState extends State<DetailPage> {
     print(response.body);
 
     if (response.statusCode == 200) {
+      createNotificationMessage(body);
+
       final String responseString = response.body;
       return notificationModelFromJson(responseString);
     } else {

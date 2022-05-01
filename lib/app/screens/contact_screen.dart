@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:gas_out_app/components/whatsapp_button_component.dart';
 import 'package:kf_drawer/kf_drawer.dart';
+
+import '../components/whatsapp_button_component.dart';
 
 class Contact extends KFDrawerContent {
   Contact({

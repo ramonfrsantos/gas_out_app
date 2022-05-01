@@ -1,26 +1,22 @@
-import 'dart:convert';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:gas_out_app/firebase_messaging/custom_firebase_messaging.dart';
-import 'package:gas_out_app/screens/home.dart';
-import 'package:gas_out_app/stores/signup_store.dart';
-import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kf_drawer/kf_drawer.dart';
-import 'model/class_builder.dart';
-import 'screens/contact.dart';
-import 'screens/stats.dart';
-import 'package:gas_out_app/helpers/dependency_injection.dart' as di;
+import 'package:gas_out_app/app/helpers/dependency_injection.dart' as di;
+
+import 'app/screens/contact_screen.dart';
+import 'app/screens/home_screen.dart';
+import 'app/screens/stats_screen.dart';
+import 'data/firebase_messaging/custom_firebase_messaging.dart';
+import 'data/model/class_builder_model.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 String token = "";
 
 Future<void> main() async {
-  setupLocators();
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   di.init();
@@ -39,10 +35,6 @@ Future<void> main() async {
     runApp(MyApp());
     FlutterNativeSplash.remove();
   });
-}
-
-void setupLocators() {
-  GetIt.I.registerSingleton(SignUpStore());
 }
 
 class MyApp extends StatefulWidget {

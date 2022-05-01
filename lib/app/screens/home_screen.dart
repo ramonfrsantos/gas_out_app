@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:kf_drawer/kf_drawer.dart';
-import 'detailpage.dart';
+import 'detailpage_screen.dart';
 
 class Home extends KFDrawerContent {
   Home({

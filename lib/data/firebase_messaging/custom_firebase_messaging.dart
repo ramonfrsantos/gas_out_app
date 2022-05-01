@@ -1,6 +1,5 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/cupertino.dart';
-import '../main.dart';
+import '../../main.dart';
 import 'custom_local_notification.dart';
 
 class CustomFirebaseMessaging {

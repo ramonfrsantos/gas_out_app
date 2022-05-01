@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kf_drawer/kf_drawer.dart';
 
-import '../model/notification_model.dart';
+import '../../data/model/notification_model.dart';
 
 class Notifications extends KFDrawerContent {
   @override

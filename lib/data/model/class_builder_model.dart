@@ -1,7 +1,7 @@
-import '../screens/notifications.dart';
-import '../screens/home.dart';
-import '../screens/contact.dart';
-import '../screens/stats.dart';
+import '../../app/screens/contact_screen.dart';
+import '../../app/screens/home_screen.dart';
+import '../../app/screens/notifications_screen.dart';
+import '../../app/screens/stats_screen.dart';
 
 typedef T Constructor<T>();
 
