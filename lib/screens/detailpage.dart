@@ -346,6 +346,8 @@ class _DetailPageState extends State<DetailPage> {
     setState(() {
       _notification = notification;
     });
+
+
   }
 
   Future<NotificationModel?> create(

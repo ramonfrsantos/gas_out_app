@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gas_out_app/components/whatsapp_button_component.dart';
 import 'package:kf_drawer/kf_drawer.dart';
 
 class Contact extends KFDrawerContent {
@@ -39,7 +40,7 @@ class _ContactState extends State<Contact> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Text('Whatsapp suporte'),
+                  WhatsAppButton(),
                 ],
               ),
             ),
