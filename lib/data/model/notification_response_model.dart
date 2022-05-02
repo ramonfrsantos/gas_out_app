@@ -1,37 +1,37 @@
-// To parse this JSON data, do
-//
-//     final notificationResponseModel = notificationResponseModelFromJson(jsonString);
-
 import 'dart:convert';
 
-NotificationResponseModel notificationResponseModelFromJson(String str) => NotificationResponseModel.fromJson(json.decode(str));
-
-String notificationResponseModelToJson(NotificationResponseModel data) => json.encode(data.toJson());
-
 class NotificationResponseModel {
-  final int? id;
-  final DateTime? date;
-  final String? message;
-  final String? title;
-
+  final int id;
+  final String title;
+  final String message;
+  final String date;
   NotificationResponseModel({
     required this.id,
-    required this.date,
+    required this.title,
     required this.message,
-    required this.title
+    required this.date,
   });
 
-  factory NotificationResponseModel.fromJson(Map<String, dynamic> json) => NotificationResponseModel(
-    id: json["id"] == null ? null : json["id"],
-    date: json["date"] == null ? null : json["date"],
-    message: json["message"] == null ? null : json["message"],
-    title: json["title"] == null ? null : json["title"],
-  );
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'title': title,
+      'message': message,
+      'date': date,
+    };
+  }
 
-  Map<String, dynamic> toJson() => {
-    "id": id == null ? null : id,
-    "date": date == null ? null : date,
-    "message": message == null ? null : message,
-    "title": title == null ? null : title,
-  };
+  factory NotificationResponseModel.fromMap(Map<String, dynamic> map) {
+    return NotificationResponseModel(
+      id: map['id']?.toInt() ?? 0,
+      title: map['title'] ?? '',
+      message: map['message'] ?? '',
+      date: map['date'] ?? '',
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory NotificationResponseModel.fromJson(String source) =>
+      NotificationResponseModel.fromMap(json.decode(source));
 }

@@ -104,11 +104,11 @@ class _HomeState extends State<Home> {
         onTap: () {
           Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => DetailPage(
-                imgPath: imgpath,
-                averageValue: averageValue,
-                maxValue: maxValue,
-                totalHours: totalHours,
-              )));
+                    imgPath: imgpath,
+                    averageValue: averageValue,
+                    maxValue: maxValue,
+                    totalHours: totalHours,
+                  )));
         },
         child: Stack(alignment: Alignment.center, children: [
           Container(
