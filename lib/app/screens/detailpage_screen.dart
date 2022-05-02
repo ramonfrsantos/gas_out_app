@@ -348,14 +348,15 @@ class _DetailPageState extends State<DetailPage> {
     });
   }
 
-  void createNotificationMessage(String message) async {
-    var urlLocal = Uri.parse("http://192.168.100.93/notification/create");
+  void createNotificationMessage(String message, String title) async {
+    var urlLocal = Uri.parse("https://gas-out-api.herokuapp.com/notification/create");
     Map<String,String> headers = {
       'Content-Type': 'application/json; charset=UTF-8',
     };
 
     final bodyJSON = jsonEncode({
-      "message": message
+      "message": message,
+      "title": title
     });
 
     final response = await http.post(urlLocal,
@@ -363,7 +364,6 @@ class _DetailPageState extends State<DetailPage> {
         headers: headers);
 
     if (response.statusCode == 200) {
-      print("bbbbbbbbbbbbbbbbbbbbb");
       print(response.body);
     } else {
       print('A network error occurred');
@@ -392,7 +392,7 @@ class _DetailPageState extends State<DetailPage> {
     print(response.body);
 
     if (response.statusCode == 200) {
-      createNotificationMessage(body);
+      createNotificationMessage(body, title);
 
       final String responseString = response.body;
       return notificationModelFromJson(responseString);

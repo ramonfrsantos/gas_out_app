@@ -16,6 +16,9 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 String token = "";
 
+Color primaryColor = Color.fromRGBO(199, 86, 17, 1.0);
+Color secondaryColor = Color.fromRGBO(246, 172, 140, 1.0);
+
 Future<void> main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
@@ -47,7 +50,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.orange,
       ).copyWith(
         textTheme: GoogleFonts.firaCodeTextTheme(
           Theme.of(context).textTheme,
@@ -144,8 +147,8 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
             colors: [
-              Color.fromRGBO(199, 86, 17, 1.0),
-              Color.fromRGBO(246, 172, 140, 1.0)
+              primaryColor,
+              secondaryColor
             ],
             tileMode: TileMode.repeated,
           ),
