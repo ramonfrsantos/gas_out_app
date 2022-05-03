@@ -5,7 +5,6 @@ import 'package:gas_out_app/main.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kf_drawer/kf_drawer.dart';
 import '../components/notification_tiles_component.dart';
-import 'package:http/http.dart' as http;
 
 class Notifications extends KFDrawerContent {
   @override
@@ -14,13 +13,11 @@ class Notifications extends KFDrawerContent {
 
 class _NotificationsState extends State<Notifications> {
   NotificationsStore _store = NotificationsStore();
-  late GlobalKey<RefreshIndicatorState> refreshKey;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    refreshKey = GlobalKey<RefreshIndicatorState>();
   }
 
   @override
@@ -61,13 +58,8 @@ class _NotificationsState extends State<Notifications> {
               ),
               Expanded(
                 child: Scaffold(
-                  body: RefreshIndicator(
-                    key: refreshKey,
-                    child: _buildBaseBody(),
-                    onRefresh: () async {
-                      await refreshList();
-                    },
-                  ),
+                  key: _scaffoldKey,
+                  body: _buildBaseBody(),
                 ),
               ),
             ],
@@ -78,89 +70,66 @@ class _NotificationsState extends State<Notifications> {
   }
 
   Widget _buildBaseBody() {
-    if (_store.model == null) {
+    if (_store.notificationList == null) {
       return Center(
         child: const CircularProgressIndicator(),
       );
     } else {
       return ListView(
-          physics: ClampingScrollPhysics(),
-          padding: EdgeInsets.zero,
-          children: _store.model!
-              .map(
-                (notification) => Dismissible(
+              physics: ClampingScrollPhysics(),
+              padding: EdgeInsets.zero,
+              children: _store.notificationList!
+                  .map(
+                    (notification) => Dismissible(
+                  direction: DismissDirection.startToEnd,
                   key: Key(notification.message),
                   child: Card(
                     child: NotificationTiles(
-                        title: notification.title, body: notification.message),
+                        title: notification.title, body: notification.message, date: notification.date),
                   ),
                   onDismissed: (direction) {
                     var notificationChosen = notification;
-                    showAlertDialog(context, deleteNotification(notificationChosen.id));
+                    _showAlertDialog(context, notificationChosen.id);
                   },
-                  background: deleteBgItem(),
-                  secondaryBackground: deleteBgItem(),
-                ),
-              )
-              .toList());
+                  background: _deleteBgItem()
+                )
+              ).toList());
     }
   }
 
-  Future<void> deleteNotification(int id) async {
-     var urlLocal = Uri.parse(
-       "https://gas-out-api.herokuapp.com/notification/delete/" +
-             id.toString());
-     Map<String, String> headers = {
-       'Content-Type': 'application/json; charset=UTF-8',
-     };
-
-     final response =
-         await http.delete(urlLocal, headers: headers);
-
-     if (response.statusCode == 200) {
-       print('Exclusão bem sucedida!');
-     } else {
-       print('Erro na requisição.');
-     }
-  }
-
-  Future<Null> refreshList() async {
-    await Future.delayed(Duration(seconds: 1));
-    _buildBaseBody();
-    return null;
-  }
-
-  Widget deleteBgItem(){
+  Widget _deleteBgItem() {
     return Container(
-      alignment: Alignment.centerRight,
-      padding: EdgeInsets.only(right: 20),
+      alignment: Alignment.centerLeft,
+      padding: EdgeInsets.only(left: 20),
       color: Colors.red,
       child: Icon(
-        Icons.delete, color: Colors.white,
+        Icons.delete,
+        color: Colors.white,
       ),
     );
   }
 
-  showAlertDialog(BuildContext context, Future<void> function) {
+  _showAlertDialog(BuildContext context, int id) {
     Widget cancelaButton = TextButton(
-      child: Text("Cancelar", style: GoogleFonts.roboto()),
+      child: Text("Não", style: GoogleFonts.roboto()),
       onPressed: () {
         Navigator.of(context).pop();
+        _buildBaseBody();
       },
     );
     Widget continuaButton = TextButton(
-      child: Text("Continuar", style: GoogleFonts.roboto()),
+      child: Text("Sim", style: GoogleFonts.roboto()),
       onPressed: () {
-        function;
+        _store.deleteNotification(id);
         Navigator.of(context).pop();
+        _buildBaseBody();
       },
     );
     //configura o AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Atenção!", style: GoogleFonts.roboto(
-          fontSize: 24
-      )),
-      content: Text("Deseja realmente excluir a notificação?", style: GoogleFonts.roboto()),
+      title: Text("Atenção!", style: GoogleFonts.roboto(fontSize: 24)),
+      content: Text("Deseja realmente excluir a notificação?",
+          style: GoogleFonts.roboto()),
       actions: [
         cancelaButton,
         continuaButton,
@@ -174,50 +143,4 @@ class _NotificationsState extends State<Notifications> {
       },
     );
   }
-
-  // Widget _buildBaseBody(BuildContext context) {
-  //   return FutureBuilder(
-  //     future: _repository.getNotifications(),
-  //     builder: (BuildContext context, AsyncSnapshot snapshot) {
-  //       if (snapshot.hasData == false) {
-  //         return Center(
-  //           child: const CircularProgressIndicator(),
-  //         );
-  //       } else {
-  //         return ListView(
-  //           physics: ClampingScrollPhysics(),
-  //           padding: EdgeInsets.zero,
-  //           children: snapshot.data
-  //               .map(
-  //                 (e) => NotificationTiles(
-  //                     title: e.title, body: e.message, onLongPress: () {}),
-  //               )
-  //               .toList(),
-  //           // final notification = snapshot.data[index];
-  //           // print(notification);
-
-  //           //  NotificationTiles(
-  //           //   title: notifications.title,
-  //           //   body: notification.message,
-  //           //   onLongPress: () async {
-  //           //     // var urlLocal = Uri.parse(
-  //           //     //     "https://gas-out-api.herokuapp.com/notification/delete" +
-  //           //     //         notification.id.toString());
-  //           //     // Map<String, String> headers = {
-  //           //     //   'Content-Type': 'application/json; charset=UTF-8',
-  //           //     // };
-
-  //           //     // final response =
-  //           //     //     await http.delete(urlLocal, headers: headers);
-
-  //           //     // if (response.statusCode == 200) {
-  //           //     //   print('Exclusão bem sucedida!');
-  //           //     // } else {
-  //           //     //   print('Erro na requisição.');
-  //           //     // }
-  //         );
-  //       }
-  //     },
-  //   );
-  // }
 }

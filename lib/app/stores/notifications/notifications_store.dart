@@ -13,11 +13,16 @@ abstract class _NotificationsStoreBase with Store {
   NotificationsRepository _repository = NotificationsRepository();
 
   @observable
-  List<NotificationResponseModel>? model;
+  List<NotificationResponseModel>? notificationList;
 
   @action
   getNotifications() async {
-    model = await _repository.getNotifications();
-    print(model);
+    notificationList = await _repository.getNotifications();
+    print(notificationList);
+  }
+
+  @action
+  deleteNotification(int id) async {
+    await _repository.deleteNotification(id);
   }
 }

@@ -21,4 +21,22 @@ class NotificationsRepository {
 
     return list;
   }
+
+  Future<void> deleteNotification(int id) async {
+    var urlLocal = Uri.parse(
+        "https://gas-out-api.herokuapp.com/notification/delete/" +
+            id.toString());
+    Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=UTF-8',
+    };
+
+    final response =
+    await http.delete(urlLocal, headers: headers);
+
+    if (response.statusCode == 200) {
+      print('Exclusão bem sucedida!');
+    } else {
+      print('Erro na requisição.');
+    }
+  }
 }
