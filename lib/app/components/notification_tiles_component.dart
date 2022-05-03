@@ -4,10 +4,9 @@ import 'package:google_fonts/google_fonts.dart';
 class NotificationTiles extends StatelessWidget {
   final String? title;
   final String? body;
-  final Function onLongPress;
 
   NotificationTiles({
-    Key? key, required this.title, required this.body, required this.onLongPress
+    Key? key, required this.title, required this.body
   }): super(key: key);
 
   @override
@@ -27,7 +26,6 @@ class NotificationTiles extends StatelessWidget {
       subtitle: Text(body!, style: GoogleFonts.roboto(
           color: Colors.black54
       ),),
-      onLongPress: onLongPress(),
     );
   }
 }

@@ -1,13 +1,11 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:gas_out_app/app/stores/notifications/notifications_store.dart';
-import 'package:gas_out_app/data/repositories/notifications_repository.dart';
 import 'package:gas_out_app/main.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kf_drawer/kf_drawer.dart';
 import '../components/notification_tiles_component.dart';
+import 'package:http/http.dart' as http;
 
 class Notifications extends KFDrawerContent {
   @override
@@ -16,6 +14,14 @@ class Notifications extends KFDrawerContent {
 
 class _NotificationsState extends State<Notifications> {
   NotificationsStore _store = NotificationsStore();
+  late GlobalKey<RefreshIndicatorState> refreshKey;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    refreshKey = GlobalKey<RefreshIndicatorState>();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,10 +61,15 @@ class _NotificationsState extends State<Notifications> {
               ),
               Expanded(
                 child: Scaffold(
-                  body: _buildBaseBody(),
+                  body: RefreshIndicator(
+                    key: refreshKey,
+                    child: _buildBaseBody(),
+                    onRefresh: () async {
+                      await refreshList();
+                    },
+                  ),
                 ),
               ),
-
             ],
           ),
         ),
@@ -77,11 +88,91 @@ class _NotificationsState extends State<Notifications> {
           padding: EdgeInsets.zero,
           children: _store.model!
               .map(
-                (e) => NotificationTiles(
-                    title: e.title, body: e.message, onLongPress: () {}),
+                (notification) => Dismissible(
+                  key: Key(notification.message),
+                  child: Card(
+                    child: NotificationTiles(
+                        title: notification.title, body: notification.message),
+                  ),
+                  onDismissed: (direction) {
+                    var notificationChosen = notification;
+                    showAlertDialog(context, deleteNotification(notificationChosen.id));
+                  },
+                  background: deleteBgItem(),
+                  secondaryBackground: deleteBgItem(),
+                ),
               )
               .toList());
     }
+  }
+
+  Future<void> deleteNotification(int id) async {
+     var urlLocal = Uri.parse(
+       "https://gas-out-api.herokuapp.com/notification/delete/" +
+             id.toString());
+     Map<String, String> headers = {
+       'Content-Type': 'application/json; charset=UTF-8',
+     };
+
+     final response =
+         await http.delete(urlLocal, headers: headers);
+
+     if (response.statusCode == 200) {
+       print('Exclusão bem sucedida!');
+     } else {
+       print('Erro na requisição.');
+     }
+  }
+
+  Future<Null> refreshList() async {
+    await Future.delayed(Duration(seconds: 1));
+    _buildBaseBody();
+    return null;
+  }
+
+  Widget deleteBgItem(){
+    return Container(
+      alignment: Alignment.centerRight,
+      padding: EdgeInsets.only(right: 20),
+      color: Colors.red,
+      child: Icon(
+        Icons.delete, color: Colors.white,
+      ),
+    );
+  }
+
+  showAlertDialog(BuildContext context, Future<void> function) {
+    Widget cancelaButton = TextButton(
+      child: Text("Cancelar", style: GoogleFonts.roboto()),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+    Widget continuaButton = TextButton(
+      child: Text("Continuar", style: GoogleFonts.roboto()),
+      onPressed: () {
+        function;
+        Navigator.of(context).pop();
+      },
+    );
+    //configura o AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Atenção!", style: GoogleFonts.roboto(
+          fontSize: 24
+      )),
+      content: Text("Deseja realmente excluir a notificação?", style: GoogleFonts.roboto()),
+      actions: [
+        cancelaButton,
+        continuaButton,
+      ],
+    );
+    //exibe o diálogo
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 
   // Widget _buildBaseBody(BuildContext context) {
