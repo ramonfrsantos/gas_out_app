@@ -13,7 +13,6 @@ class Notifications extends KFDrawerContent {
 
 class _NotificationsState extends State<Notifications> {
   NotificationsStore _store = NotificationsStore();
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -58,7 +57,6 @@ class _NotificationsState extends State<Notifications> {
               ),
               Expanded(
                 child: Scaffold(
-                  key: _scaffoldKey,
                   body: _buildBaseBody(),
                 ),
               ),
@@ -75,26 +73,37 @@ class _NotificationsState extends State<Notifications> {
         child: const CircularProgressIndicator(),
       );
     } else {
-      return ListView(
-              physics: ClampingScrollPhysics(),
-              padding: EdgeInsets.zero,
-              children: _store.notificationList!
-                  .map(
-                    (notification) => Dismissible(
-                  direction: DismissDirection.startToEnd,
-                  key: Key(notification.message),
-                  child: Card(
-                    child: NotificationTiles(
-                        title: notification.title, body: notification.message, date: notification.date),
-                  ),
-                  onDismissed: (direction) {
-                    var notificationChosen = notification;
-                    _showAlertDialog(context, notificationChosen.id);
-                  },
-                  background: _deleteBgItem()
-                )
-              ).toList());
+      return RefreshIndicator(
+        child: ListView(
+                padding: EdgeInsets.zero,
+                children: _store.notificationList!
+                    .map(
+                      (notification) => Dismissible(
+                    direction: DismissDirection.startToEnd,
+                    key: UniqueKey(),
+                    child: Card(
+                      child: NotificationTiles(
+                          title: notification.title, body: notification.message, date: notification.date),
+                    ),
+                    onDismissed: (direction) {
+                      var notificationChosen = notification;
+                      _showAlertDialog(context, notificationChosen.id);
+                    },
+                    background: _deleteBgItem()
+                  )
+                ).toList()),
+        onRefresh: _refresh,
+      );
     }
+  }
+
+  Future<void> _refresh() async {
+    setState(() {
+      _store.notificationList;
+    });
+    return Future.delayed(Duration(
+      seconds: 1
+    ));
   }
 
   Widget _deleteBgItem() {
