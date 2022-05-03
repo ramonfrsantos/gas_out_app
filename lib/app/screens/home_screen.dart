@@ -1,10 +1,14 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:kf_drawer/kf_drawer.dart';
+import '../helpers/global.dart';
 import 'detailpage_screen.dart';
 
 class Home extends KFDrawerContent {
+  late int totalHours;
+
   Home({
     Key? key,
   });
@@ -73,20 +77,53 @@ class _HomeState extends State<Home> {
                         child: ListView(
                           scrollDirection: Axis.horizontal,
                           children: <Widget>[
-                            listItem(
-                                'images/quarto.jpg', 'Quarto', 10, 14.7, 2),
+                            _listItem(
+                                'images/quarto.jpg', 'Quarto', 10, 14.7),
                             new SizedBox(width: 15),
-                            listItem('images/cozinha.jpg', 'Cozinha', 51.3,
-                                62.5, 12),
+                            _listItem('images/cozinha.jpg', 'Cozinha', 51.3,
+                                62.5),
                             new SizedBox(width: 15),
-                            listItem(
-                                'images/sala.jpg', 'Sala de estar', 8, 6, 5),
+                            _listItem(
+                                'images/sala.jpg', 'Sala de estar', 8, 6),
                             new SizedBox(width: 15),
-                            listItem(
-                                'images/banheiro.jpg', 'Banheiro', 0, 2, 8),
+                            _listItem(
+                                'images/banheiro.jpg', 'Banheiro', 0, 2),
                           ],
                         )),
-                    SizedBox(height: 15),
+                    SizedBox(height: 30),
+                    Padding(
+                        padding: EdgeInsets.only(top: 5, left: 20, right: 20),
+                        child: Divider(
+                          color: Colors.black54,
+                        )),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20, right: 10),
+                      child: Row(
+                        children: <Widget>[
+                          Text(
+                            "Acionar monitoramento",
+                            style: new TextStyle(color: Colors.black87),
+                          ),
+                          Spacer(),
+                          Switch(
+                            value: detailPageStore.activeMonitoring,
+                            onChanged: (newVal) {
+                              setState(() {
+                                widget.totalHours = 0;
+                                detailPageStore.activeMonitoring = newVal;
+
+                                if (newVal == true) {
+                                  _setTimer(detailPageStore.activeMonitoring);
+                                }
+
+                                print(detailPageStore.activeMonitoring);
+                              });
+                            },
+                            activeColor: Colors.lightGreen,
+                          )
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -97,8 +134,32 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget listItem(String imgpath, String stringPath, double averageValue,
-      double maxValue, int totalHours) {
+  Timer? _timer;
+  int _start = 0;
+
+  void _setTimer(bool activeMonitoring) {
+    int _totalHours = 0;
+    const oneHour = const Duration(seconds: 2);
+
+    _timer = new Timer.periodic(
+      oneHour,
+          (Timer timer) {
+        if(!activeMonitoring) {
+          _timer = null;
+        } else {
+          setState(() {
+            _start++;
+            _totalHours = _start;
+            widget.totalHours = _totalHours;
+            print(_totalHours);
+          });
+        }
+      },
+    );
+  }
+
+  Widget _listItem(String imgpath, String stringPath, double averageValue,
+      double maxValue) {
     return Stack(children: [
       InkWell(
         onTap: () {
@@ -107,7 +168,7 @@ class _HomeState extends State<Home> {
                     imgPath: imgpath,
                     averageValue: averageValue,
                     maxValue: maxValue,
-                    totalHours: totalHours,
+                    totalHours: widget.totalHours,
                   )));
         },
         child: Stack(alignment: Alignment.center, children: [
@@ -139,42 +200,4 @@ class _HomeState extends State<Home> {
       )
     ]);
   }
-
-  // Widget listItemStats(String imgpath, String name, bool value) {
-  //   return Container(
-  //     width: 110,
-  //     height: 150,
-  //     decoration: BoxDecoration(
-  //         borderRadius: BorderRadius.circular(25),
-  //         color: value == true
-  //             ? Colors.white
-  //             : Color.fromRGBO(255, 230, 215, 0.6)),
-  //     child: Column(
-  //       children: <Widget>[
-  //         SizedBox(height: 20),
-  //         Image(
-  //             image: AssetImage(imgpath),
-  //             width: 45,
-  //             height: 45,
-  //             color: value == true ? Colors.black : Colors.white),
-  //         SizedBox(height: 15),
-  //         Text(name,
-  //             style: TextStyle(
-  //                 fontSize: 13,
-  //                 color: value == true ? Colors.black : Colors.white)),
-  //         SizedBox(height: 5),
-  //         Switch(
-  //           value: value,
-  //           onChanged: (newVal) {
-  //             setState(() {
-  //               value = newVal;
-  //               print(newVal);
-  //             });
-  //           },
-  //           activeColor: Colors.orange,
-  //         )
-  //       ],
-  //     ),
-  //   );
-  // }
 }

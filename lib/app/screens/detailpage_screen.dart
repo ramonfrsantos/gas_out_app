@@ -194,41 +194,6 @@ class _DetailPageState extends State<DetailPage> {
                         ],
                       ),
                     ),
-                    Padding(
-                        padding: EdgeInsets.only(top: 5, left: 20, right: 20),
-                        child: Divider(
-                          color: Colors.white,
-                        )),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 20, right: 10),
-                      child: Row(
-                        children: <Widget>[
-                          Text(
-                            "Acionar monitoramento",
-                            style: new TextStyle(color: Colors.white),
-                          ),
-                          Spacer(),
-                          Switch(
-                            value: detailPageStore.activeMonitoring,
-                            onChanged: (newVal) {
-                              setState(() {
-                                detailPageStore.activeMonitoring = newVal;
-                                if (newVal == false) {
-                                  widget.totalHours = 0;
-                                }
-
-                                if (newVal == true) {
-                                  startTimer();
-                                }
-
-                                // print(newVal);
-                              });
-                            },
-                            activeColor: Colors.lightGreen,
-                          )
-                        ],
-                      ),
-                    ),
                   ],
                 )),
           )
@@ -304,23 +269,6 @@ class _DetailPageState extends State<DetailPage> {
       context: context,
       builder: (BuildContext context) {
         return alert;
-      },
-    );
-  }
-
-  late Timer _timer;
-  int _start = 0;
-
-  void startTimer() {
-    const oneHour = const Duration(seconds: 3600);
-    _timer = new Timer.periodic(
-      oneHour,
-      (Timer timer) {
-        setState(() {
-          _start++;
-          widget.totalHours = _start;
-          print(widget.totalHours);
-        });
       },
     );
   }
