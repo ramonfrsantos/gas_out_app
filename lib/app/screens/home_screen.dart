@@ -1,18 +1,10 @@
-import 'dart:async';
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:kf_drawer/kf_drawer.dart';
 import '../helpers/global.dart';
 import 'detailpage_screen.dart';
 
 class Home extends KFDrawerContent {
-  late int totalHours;
-
-  Home({
-    Key? key,
-  });
-
   @override
   _HomeState createState() => _HomeState();
 }
@@ -78,16 +70,28 @@ class _HomeState extends State<Home> {
                           scrollDirection: Axis.horizontal,
                           children: <Widget>[
                             _listItem(
-                                'images/quarto.jpg', 'Quarto', 10, 14.7),
-                            new SizedBox(width: 15),
-                            _listItem('images/cozinha.jpg', 'Cozinha', 51.3,
-                                62.5),
-                            new SizedBox(width: 15),
-                            _listItem(
-                                'images/sala.jpg', 'Sala de estar', 8, 6),
+                              'images/quarto.jpg',
+                              'Quarto',
+                              10,
+                              14.7,
+                            ),
                             new SizedBox(width: 15),
                             _listItem(
-                                'images/banheiro.jpg', 'Banheiro', 0, 2),
+                                'images/cozinha.jpg', 'Cozinha', 51.3, 62.5),
+                            new SizedBox(width: 15),
+                            _listItem(
+                              'images/sala.jpg',
+                              'Sala de estar',
+                              8,
+                              6,
+                            ),
+                            new SizedBox(width: 15),
+                            _listItem(
+                              'images/banheiro.jpg',
+                              'Banheiro',
+                              0,
+                              2,
+                            ),
                           ],
                         )),
                     SizedBox(height: 30),
@@ -105,22 +109,25 @@ class _HomeState extends State<Home> {
                             style: new TextStyle(color: Colors.black87),
                           ),
                           Spacer(),
-                          Switch(
-                            value: detailPageStore.activeMonitoring,
-                            onChanged: (newVal) {
-                              setState(() {
-                                widget.totalHours = 0;
-                                detailPageStore.activeMonitoring = newVal;
+                          Observer(builder: (_) {
+                            return Switch(
+                              value: monitoringController.activeMonitoring,
+                              onChanged: monitoringController.setValue,
+                              // onChanged: (newVal) {
+                              //   // setState(() {
+                              //   //   widget.totalHours = 0;
+                              //   //   detailPageStore.activeMonitoring = newVal;
 
-                                if (newVal == true) {
-                                  _setTimer(detailPageStore.activeMonitoring);
-                                }
+                              //   //   if (newVal == true) {
+                              //   //     _setTimer(detailPageStore.activeMonitoring);
+                              //   //   }
 
-                                print(detailPageStore.activeMonitoring);
-                              });
-                            },
-                            activeColor: Colors.lightGreen,
-                          )
+                              //   //   print(detailPageStore.activeMonitoring);
+                              //   // });
+                              // },
+                              activeColor: Colors.lightGreen,
+                            );
+                          })
                         ],
                       ),
                     ),
@@ -134,32 +141,32 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Timer? _timer;
-  int _start = 0;
+  // Timer? _timer;
+  // int _start = 0;
 
-  void _setTimer(bool activeMonitoring) {
-    int _totalHours = 0;
-    const oneHour = const Duration(seconds: 2);
+  // void _setTimer(bool activeMonitoring) {
+  //   int _totalHours = 0;
+  //   const oneHour = const Duration(seconds: 2);
 
-    _timer = new Timer.periodic(
-      oneHour,
-          (Timer timer) {
-        if(!activeMonitoring) {
-          _timer = null;
-        } else {
-          setState(() {
-            _start++;
-            _totalHours = _start;
-            widget.totalHours = _totalHours;
-            print(_totalHours);
-          });
-        }
-      },
-    );
-  }
+  //   _timer = new Timer.periodic(
+  //     oneHour,
+  //     (Timer timer) {
+  //       if (!activeMonitoring) {
+  //         _timer = null;
+  //       } else {
+  //         setState(() {
+  //           _start++;
+  //           _totalHours = _start;
+  //           widget.totalHours = _totalHours;
+  //           print(_totalHours);
+  //         });
+  //       }
+  //     },
+  //   );
+  // }
 
-  Widget _listItem(String imgpath, String stringPath, double averageValue,
-      double maxValue) {
+  Widget _listItem(
+      String imgpath, String stringPath, double averageValue, double maxValue) {
     return Stack(children: [
       InkWell(
         onTap: () {
@@ -168,7 +175,7 @@ class _HomeState extends State<Home> {
                     imgPath: imgpath,
                     averageValue: averageValue,
                     maxValue: maxValue,
-                    totalHours: widget.totalHours,
+                    totalHours: monitoringController.monitoringTotalHours,
                   )));
         },
         child: Stack(alignment: Alignment.center, children: [

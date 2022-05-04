@@ -1,19 +1,16 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:google_fonts/google_fonts.dart';
-
 import '../../data/model/notification_model.dart';
 import '../../main.dart';
-import '../helpers/global.dart';
 
- class DetailPage extends StatefulWidget {
+class DetailPage extends StatefulWidget {
   final imgPath;
   final double averageValue;
   final double maxValue;
-  int totalHours;
+  final int totalHours;
 
   DetailPage(
       {Key? key,
@@ -121,16 +118,16 @@ class _DetailPageState extends State<DetailPage> {
                           name: "Sprinklers",
                           value: sprinklersValue,
                           onChanged: (value) {
-                            if (widget.averageValue >= 50){
+                            if (widget.averageValue >= 50) {
                               sprinklersValue == false
                                   ? showAlertDialog(context, () {
-                                setState(() {
-                                  sprinklersValue = value;
-                                });
-                              })
+                                      setState(() {
+                                        sprinklersValue = value;
+                                      });
+                                    })
                                   : setState(() {
-                                sprinklersValue = value;
-                              });
+                                      sprinklersValue = value;
+                                    });
                             } else {
                               value = false;
                             }
@@ -255,10 +252,9 @@ class _DetailPageState extends State<DetailPage> {
     );
     //configura o AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Atenção!", style: GoogleFonts.roboto(
-        fontSize: 24
-      )),
-      content: Text("Deseja realmente acionar os sprinklers?", style: GoogleFonts.roboto()),
+      title: Text("Atenção!", style: GoogleFonts.roboto(fontSize: 24)),
+      content: Text("Deseja realmente acionar os sprinklers?",
+          style: GoogleFonts.roboto()),
       actions: [
         cancelaButton,
         continuaButton,
@@ -277,19 +273,19 @@ class _DetailPageState extends State<DetailPage> {
     String title = "";
     String body = "";
 
-    if(widget.averageValue == 0) {
+    if (widget.averageValue == 0) {
       title = "Apenas atualização de status...";
       body = "Sem vazamento de gás no momento atual.";
-    } else if(widget.averageValue > 0 && widget.averageValue < 50){
+    } else if (widget.averageValue > 0 && widget.averageValue < 50) {
       title = "Verifique as opções de monitoramento";
       body = "Detectamos níveis baixos de vazamento em sua residência.";
     } else if (widget.averageValue >= 50) {
       title = "Nível ALTO de vazamento em sua residência!";
-      body = "Entre agora em opções de monitoramento para acionamento dos sprinkles ou chame um técnico.";
+      body =
+          "Entre agora em opções de monitoramento para acionamento dos sprinkles ou chame um técnico.";
     }
 
-    final NotificationModel? notification =
-        await create(title, body);
+    final NotificationModel? notification = await create(title, body);
 
     setState(() {
       _notification = notification;
@@ -297,19 +293,16 @@ class _DetailPageState extends State<DetailPage> {
   }
 
   void createNotificationMessage(String message, String title) async {
-    var urlLocal = Uri.parse("https://gas-out-api.herokuapp.com/notification/create");
-    Map<String,String> headers = {
+    var urlLocal =
+        Uri.parse("https://gas-out-api.herokuapp.com/notification/create");
+    Map<String, String> headers = {
       'Content-Type': 'application/json; charset=UTF-8',
     };
 
-    final bodyJSON = jsonEncode({
-      "message": message,
-      "title": title
-    });
+    final bodyJSON = jsonEncode({"message": message, "title": title});
 
-    final response = await http.post(urlLocal,
-        body: bodyJSON,
-        headers: headers);
+    final response =
+        await http.post(urlLocal, body: bodyJSON, headers: headers);
 
     if (response.statusCode == 200) {
       print(response.body);
@@ -318,24 +311,25 @@ class _DetailPageState extends State<DetailPage> {
     }
   }
 
-  Future<NotificationModel?> create(
-      String title, String body) async {
+  Future<NotificationModel?> create(String title, String body) async {
     print(token);
     var url = Uri.parse("https://fcm.googleapis.com/fcm/send");
 
-    Map<String,String> headers = {'Content-Type':'application/json','Authorization':'key=AAAASZ_kz40:APA91bHd7M5FzqhG1GoDKZilvUBHeaoB-YeHDbxtM8WyXrgtkZ8oFrt1us4wNcawELFZc1WFQusfpFWwyDRgUpWOtFEBSFnSBjBVrmnGqwA0Ojgbj5BoFUUeHfAfh8vgs5ieqm1mggHD'};
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'Authorization':
+          'key=AAAASZ_kz40:APA91bHd7M5FzqhG1GoDKZilvUBHeaoB-YeHDbxtM8WyXrgtkZ8oFrt1us4wNcawELFZc1WFQusfpFWwyDRgUpWOtFEBSFnSBjBVrmnGqwA0Ojgbj5BoFUUeHfAfh8vgs5ieqm1mggHD'
+    };
 
     final bodyJSON = jsonEncode({
-      "registration_ids": [ token ],
+      "registration_ids": [token],
       "notification": {"title": title, "body": body}
     });
 
     print(bodyJSON);
     print(headers);
 
-    final response = await http.post(url,
-        body: bodyJSON,
-        headers: headers);
+    final response = await http.post(url, body: bodyJSON, headers: headers);
 
     print(response.body);
 
