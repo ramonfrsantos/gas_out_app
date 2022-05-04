@@ -113,18 +113,6 @@ class _HomeState extends State<Home> {
                             return Switch(
                               value: monitoringController.activeMonitoring,
                               onChanged: monitoringController.setValue,
-                              // onChanged: (newVal) {
-                              //   // setState(() {
-                              //   //   widget.totalHours = 0;
-                              //   //   detailPageStore.activeMonitoring = newVal;
-
-                              //   //   if (newVal == true) {
-                              //   //     _setTimer(detailPageStore.activeMonitoring);
-                              //   //   }
-
-                              //   //   print(detailPageStore.activeMonitoring);
-                              //   // });
-                              // },
                               activeColor: Colors.lightGreen,
                             );
                           })
@@ -140,30 +128,6 @@ class _HomeState extends State<Home> {
       ),
     );
   }
-
-  // Timer? _timer;
-  // int _start = 0;
-
-  // void _setTimer(bool activeMonitoring) {
-  //   int _totalHours = 0;
-  //   const oneHour = const Duration(seconds: 2);
-
-  //   _timer = new Timer.periodic(
-  //     oneHour,
-  //     (Timer timer) {
-  //       if (!activeMonitoring) {
-  //         _timer = null;
-  //       } else {
-  //         setState(() {
-  //           _start++;
-  //           _totalHours = _start;
-  //           widget.totalHours = _totalHours;
-  //           print(_totalHours);
-  //         });
-  //       }
-  //     },
-  //   );
-  // }
 
   Widget _listItem(
       String imgpath, String stringPath, double averageValue, double maxValue) {

@@ -120,7 +120,7 @@ class _DetailPageState extends State<DetailPage> {
                           onChanged: (value) {
                             if (widget.averageValue >= 50) {
                               sprinklersValue == false
-                                  ? showAlertDialog(context, () {
+                                  ? _showAlertDialog(context, () {
                                       setState(() {
                                         sprinklersValue = value;
                                       });
@@ -236,7 +236,7 @@ class _DetailPageState extends State<DetailPage> {
     );
   }
 
-  showAlertDialog(BuildContext context, Function funcao) {
+  _showAlertDialog(BuildContext context, Function funcao) {
     Widget cancelaButton = TextButton(
       child: Text("Cancelar", style: GoogleFonts.roboto()),
       onPressed: () {
@@ -260,7 +260,6 @@ class _DetailPageState extends State<DetailPage> {
         continuaButton,
       ],
     );
-    //exibe o diálogo
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -285,14 +284,14 @@ class _DetailPageState extends State<DetailPage> {
           "Entre agora em opções de monitoramento para acionamento dos sprinkles ou chame um técnico.";
     }
 
-    final NotificationModel? notification = await create(title, body);
+    final NotificationModel? notification = await _createNotificationFirebase(title, body);
 
     setState(() {
       _notification = notification;
     });
   }
 
-  void createNotificationMessage(String message, String title) async {
+  void _createNotificationApp(String message, String title) async {
     var urlLocal =
         Uri.parse("https://gas-out-api.herokuapp.com/notification/create");
     Map<String, String> headers = {
@@ -311,7 +310,7 @@ class _DetailPageState extends State<DetailPage> {
     }
   }
 
-  Future<NotificationModel?> create(String title, String body) async {
+  Future<NotificationModel?> _createNotificationFirebase(String title, String body) async {
     print(token);
     var url = Uri.parse("https://fcm.googleapis.com/fcm/send");
 
@@ -334,7 +333,7 @@ class _DetailPageState extends State<DetailPage> {
     print(response.body);
 
     if (response.statusCode == 200) {
-      createNotificationMessage(body, title);
+      _createNotificationApp(body, title);
 
       final String responseString = response.body;
       return notificationModelFromJson(responseString);

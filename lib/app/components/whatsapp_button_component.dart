@@ -5,7 +5,7 @@ class WhatsAppButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String message = "Olá, gostaria de falar com o suporte.";
-    String phone = "+5531996676802"; // telefone do suporte
+    String phone = "+553186294593"; // telefone do suporte
 
     return SizedBox(
       width: 300,
@@ -26,6 +26,7 @@ class WhatsAppButton extends StatelessWidget {
               'SUPORTE',
               style: TextStyle(
                 fontSize: 19,
+                color: Colors.white
               ),
             ),
             SizedBox(

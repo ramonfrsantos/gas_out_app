@@ -12,7 +12,7 @@ abstract class _MonitoringControllerBase with Store {
 
 //TODO: setar o valor desejado
   @observable
-  int monitoringTotalHours = 10;
+  int monitoringTotalHours = 2;
 
   @action
   setValue(bool value) {
@@ -28,7 +28,7 @@ abstract class _MonitoringControllerBase with Store {
   @action
   setTimer(bool isActive) {
     //TODO: setar o tempo desejado
-    const oneHour = const Duration(minutes: 1);
+    const oneHour = const Duration(seconds: 5);
     Timer.periodic(
       oneHour,
       (Timer timer) {

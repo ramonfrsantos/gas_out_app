@@ -98,11 +98,14 @@ class _NotificationsState extends State<Notifications> {
   }
 
   Future<void> _refresh() async {
+    await _store.getNotifications();
+
     setState(() {
       _store.notificationList;
     });
+
     return Future.delayed(Duration(
-      seconds: 1
+        seconds: 1
     ));
   }
 
@@ -120,31 +123,35 @@ class _NotificationsState extends State<Notifications> {
 
   _showAlertDialog(BuildContext context, int id) {
     Widget cancelaButton = TextButton(
-      child: Text("Não", style: GoogleFonts.roboto()),
+      child: Text("NÃO", style: GoogleFonts.roboto(
+          fontSize: 16,
+      )),
       onPressed: () {
         Navigator.of(context).pop();
-        _buildBaseBody();
       },
     );
     Widget continuaButton = TextButton(
-      child: Text("Sim", style: GoogleFonts.roboto()),
-      onPressed: () {
-        _store.deleteNotification(id);
+      child: Text("SIM", style: GoogleFonts.roboto(
+          fontSize: 16,
+      )),
+      onPressed: () async {
+        await _store.deleteNotification(id);
         Navigator.of(context).pop();
-        _buildBaseBody();
       },
     );
-    //configura o AlertDialog
+
     AlertDialog alert = AlertDialog(
-      title: Text("Atenção!", style: GoogleFonts.roboto(fontSize: 24)),
-      content: Text("Deseja realmente excluir a notificação?",
-          style: GoogleFonts.roboto()),
+      title: Text("Atenção!", style: GoogleFonts.roboto(
+          fontSize: 24
+      )),
+      content: Text("Você deseja realmente excluir essa notificação?", style: GoogleFonts.roboto(
+          fontSize: 18
+      )),
       actions: [
         cancelaButton,
         continuaButton,
       ],
     );
-    //exibe o diálogo
     showDialog(
       context: context,
       builder: (BuildContext context) {
