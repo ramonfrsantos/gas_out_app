@@ -1,10 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:gas_out_app/data/repositories/notification/notification_repository.dart';
 import 'package:http/http.dart' as http;
 import 'package:google_fonts/google_fonts.dart';
-import '../../data/model/notification_model.dart';
-import '../../main.dart';
+import '../../data/model/notiification/notification_firebase_model.dart';
+import '../../main_dev.dart';
 
 class DetailPage extends StatefulWidget {
   final imgPath;
@@ -30,6 +31,7 @@ class _DetailPageState extends State<DetailPage> {
   bool notificationValue = false;
 
   NotificationModel? _notification;
+  final NotificationRepository notificationRepository = NotificationRepository();
 
   @override
   void initState() {
@@ -271,6 +273,7 @@ class _DetailPageState extends State<DetailPage> {
   Future<void> _generateNotification() async {
     String title = "";
     String body = "";
+    String email = "ramonfrsantos@gmail.com";
 
     if (widget.averageValue == 0) {
       title = "Apenas atualização de status...";
@@ -284,61 +287,10 @@ class _DetailPageState extends State<DetailPage> {
           "Entre agora em opções de monitoramento para acionamento dos sprinkles ou chame um técnico.";
     }
 
-    final NotificationModel? notification = await _createNotificationFirebase(title, body);
+    final NotificationModel? notification = await notificationRepository.createNotificationFirebase(title, body, email, token);
 
     setState(() {
       _notification = notification;
     });
-  }
-
-  void _createNotificationApp(String message, String title) async {
-    var urlLocal =
-        Uri.parse("https://gas-out-api.herokuapp.com/notification/create");
-    Map<String, String> headers = {
-      'Content-Type': 'application/json; charset=UTF-8',
-    };
-
-    final bodyJSON = jsonEncode({"message": message, "title": title});
-
-    final response =
-        await http.post(urlLocal, body: bodyJSON, headers: headers);
-
-    if (response.statusCode == 200) {
-      print(response.body);
-    } else {
-      print('A network error occurred');
-    }
-  }
-
-  Future<NotificationModel?> _createNotificationFirebase(String title, String body) async {
-    print(token);
-    var url = Uri.parse("https://fcm.googleapis.com/fcm/send");
-
-    Map<String, String> headers = {
-      'Content-Type': 'application/json',
-      'Authorization':
-          'key=AAAASZ_kz40:APA91bHd7M5FzqhG1GoDKZilvUBHeaoB-YeHDbxtM8WyXrgtkZ8oFrt1us4wNcawELFZc1WFQusfpFWwyDRgUpWOtFEBSFnSBjBVrmnGqwA0Ojgbj5BoFUUeHfAfh8vgs5ieqm1mggHD'
-    };
-
-    final bodyJSON = jsonEncode({
-      "registration_ids": [token],
-      "notification": {"title": title, "body": body}
-    });
-
-    print(bodyJSON);
-    print(headers);
-
-    final response = await http.post(url, body: bodyJSON, headers: headers);
-
-    print(response.body);
-
-    if (response.statusCode == 200) {
-      _createNotificationApp(body, title);
-
-      final String responseString = response.body;
-      return notificationModelFromJson(responseString);
-    } else {
-      return null;
-    }
   }
 }

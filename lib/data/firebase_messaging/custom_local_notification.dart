@@ -9,7 +9,7 @@ class CustomLocalNotification {
     channel = const AndroidNotificationChannel(
       'high_importance_channel',
       'High importance Notifications',
-      description: 'This channel is used for important notifications.',
+      description: 'This channel is used for important notification.',
       importance: Importance.max,
     );
 

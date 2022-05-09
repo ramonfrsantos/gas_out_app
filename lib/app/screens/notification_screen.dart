@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:gas_out_app/app/stores/notifications/notifications_store.dart';
-import 'package:gas_out_app/main.dart';
+import 'package:gas_out_app/app/constants/gasout_constants.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kf_drawer/kf_drawer.dart';
 import '../components/notification_tiles_component.dart';
+import '../stores/notification/notification_store.dart';
 
 class Notifications extends KFDrawerContent {
   @override
@@ -12,7 +12,7 @@ class Notifications extends KFDrawerContent {
 }
 
 class _NotificationsState extends State<Notifications> {
-  NotificationsStore _store = NotificationsStore();
+  NotificationStore _store = NotificationStore();
 
   @override
   void initState() {
@@ -49,7 +49,7 @@ class _NotificationsState extends State<Notifications> {
                     'Notificações',
                     style: GoogleFonts.roboto(
                       fontSize: 22,
-                      color: primaryColor,
+                      color: ConstantColors.primaryColor,
                       fontWeight: FontWeight.w400,
                     ),
                   )

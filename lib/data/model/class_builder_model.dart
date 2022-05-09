@@ -1,6 +1,5 @@
-import '../../app/screens/contact_screen.dart';
 import '../../app/screens/home_screen.dart';
-import '../../app/screens/notifications_screen.dart';
+import '../../app/screens/notification_screen.dart';
 import '../../app/screens/stats_screen.dart';
 
 typedef T Constructor<T>();
@@ -16,7 +15,6 @@ class ClassBuilder {
     register<Home>(() => Home());
     register<Notifications>(() => Notifications());
     register<Stats>(() => Stats());
-    register<Contact>(() => Contact());
   }
 
   static dynamic fromString(String type) {

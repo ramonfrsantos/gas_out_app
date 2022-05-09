@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'notifications_store.dart';
+part of 'notification_store.dart';
 
 // **************************************************************************
 // StoreGenerator
@@ -8,9 +8,9 @@ part of 'notifications_store.dart';
 
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
-mixin _$NotificationsStore on _NotificationsStoreBase, Store {
+mixin _$NotificationStore on _NotificationStoreBase, Store {
   late final _$notificationListAtom =
-      Atom(name: '_NotificationsStoreBase.notificationList', context: context);
+      Atom(name: '_NotificationStoreBase.notificationList', context: context);
 
   @override
   List<NotificationResponseModel>? get notificationList {
@@ -26,7 +26,7 @@ mixin _$NotificationsStore on _NotificationsStoreBase, Store {
   }
 
   late final _$getNotificationsAsyncAction =
-      AsyncAction('_NotificationsStoreBase.getNotifications', context: context);
+      AsyncAction('_NotificationStoreBase.getNotifications', context: context);
 
   @override
   Future getNotifications() {
@@ -34,7 +34,7 @@ mixin _$NotificationsStore on _NotificationsStoreBase, Store {
   }
 
   late final _$deleteNotificationAsyncAction = AsyncAction(
-      '_NotificationsStoreBase.deleteNotification',
+      '_NotificationStoreBase.deleteNotification',
       context: context);
 
   @override

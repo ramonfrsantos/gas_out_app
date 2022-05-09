@@ -1,10 +1,10 @@
 class Message {
   String? title;
-  String? body;
   String? message;
-  Message(title, body, message) {
+  String? email;
+  Message(title, message, email) {
     this.title = title;
-    this.body = body;
     this.message = message;
+    this.email = email;
   }
 }

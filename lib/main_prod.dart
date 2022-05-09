@@ -5,8 +5,11 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kf_drawer/kf_drawer.dart';
 import 'package:gas_out_app/app/helpers/dependency_injection.dart' as di;
+import 'package:url_launcher/url_launcher_string.dart';
 
-import 'app/screens/contact_screen.dart';
+import 'app/config/app_config.dart';
+import 'app/config/environments.dart';
+import 'app/constants/gasout_constants.dart';
 import 'app/screens/home_screen.dart';
 import 'app/screens/stats_screen.dart';
 import 'data/firebase_messaging/custom_firebase_messaging.dart';
@@ -21,6 +24,9 @@ Color secondaryColor = Color.fromRGBO(246, 172, 140, 1.0);
 
 Future<void> main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+
+  AppConfig.getInstance(config: Environment.prod);
+
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   di.init();
   await Firebase.initializeApp();
@@ -108,8 +114,16 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
             'Acionar suporte',
             style: TextStyle(color: Colors.white, fontSize: 18),
           ),
-          icon: Icon(Icons.message, color: Colors.white),
-          page: Contact(),
+          icon: Image.asset(
+            "images/icWhatsApp.png",
+            color: Colors.white,
+            width: 26,
+            height: 26,
+          ),
+          onPressed: () {
+            String url = 'whatsapp://send?phone=${ConstantsSupport.phone}&text=${ConstantsSupport.message}';
+            launchUrlString(url);
+          },
         ),
       ],
     );
@@ -147,8 +161,8 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
             colors: [
-              primaryColor,
-              secondaryColor
+              ConstantColors.primaryColor,
+              ConstantColors.secondaryColor
             ],
             tileMode: TileMode.repeated,
           ),
