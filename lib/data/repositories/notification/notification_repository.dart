@@ -35,6 +35,8 @@ class NotificationRepository {
         );
       }).toList();
 
+      print(list);
+
       return list;
     } catch (e) {
       print(e.toString());
@@ -47,7 +49,7 @@ class NotificationRepository {
     print(url);
 
     try {
-      await client.delete(
+      var response = await client.delete(
         url,
         options: Options(
           headers: {
@@ -56,13 +58,16 @@ class NotificationRepository {
           },
         ),
       );
+      if(response.statusCode == 200){
+        print('Notificação de id: $id excluida com sucesso.');
+      }
     } catch (e) {
       print(e.toString());
       throw ('Erro na conexão');
     }
   }
 
-  Future<NotificationResponseModel?> createNotificationApp(String title, String body, String email) async {
+  Future<void> createNotificationApp(String title, String body, String email) async {
     final String url = '${baseUrl}notification/create';
     print(url);
 
@@ -82,10 +87,12 @@ class NotificationRepository {
           },
         ),
       );
+
+      if(response.statusCode == 200){
+        print(response.data);
+      }
       // var jsonData = json.decode(response.data);
       // print(jsonData);
-
-      return NotificationResponseModel.fromJson(response.data);
     } catch (e) {
       print(e.toString());
       throw ('Erro na conexão');
