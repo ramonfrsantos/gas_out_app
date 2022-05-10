@@ -31,7 +31,8 @@ class _DetailPageState extends State<DetailPage> {
   bool notificationValue = false;
 
   NotificationModel? _notification;
-  final NotificationRepository notificationRepository = NotificationRepository();
+  final NotificationRepository notificationRepository =
+      NotificationRepository();
 
   @override
   void initState() {
@@ -287,7 +288,8 @@ class _DetailPageState extends State<DetailPage> {
           "Entre agora em opções de monitoramento para acionamento dos sprinkles ou chame um técnico.";
     }
 
-    final NotificationModel? notification = await notificationRepository.createNotificationFirebase(title, body, email, token);
+    final NotificationModel? notification = await notificationRepository
+        .createNotificationFirebase(title, body, email, token);
 
     setState(() {
       _notification = notification;

@@ -45,7 +45,7 @@ class NotificationRepository {
     final String url = '${baseUrl}notification/delete/${id.toString()}';
     print(url);
 
-    try{
+    try {
       await client.delete(
         url,
         options: Options(
@@ -54,7 +54,7 @@ class NotificationRepository {
           },
         ),
       );
-    }catch(e){
+    } catch (e) {
       print(e.toString());
       throw ('Erro na conexão');
     }
@@ -64,7 +64,7 @@ class NotificationRepository {
     final String url = '${baseUrl}notification/delete/${id.toString()}';
     print(url);
 
-    try{
+    try {
       await client.delete(
         url,
         options: Options(
@@ -73,7 +73,7 @@ class NotificationRepository {
           },
         ),
       );
-    }catch(e){
+    } catch (e) {
       print(e.toString());
       throw ('Erro na conexão');
     }
@@ -83,7 +83,8 @@ class NotificationRepository {
     final String url = '${baseUrl}notification/create';
     print(url);
 
-    final bodyJSON = jsonEncode({"message": body, "title": title, "email": email});
+    final bodyJSON =
+        jsonEncode({"message": body, "title": title, "email": email});
 
     try {
       var response = await client.post(
@@ -103,17 +104,21 @@ class NotificationRepository {
     }
   }
 
-  Future<NotificationModel?> createNotificationFirebase(String title, String body, String email, String token) async {
+  Future<NotificationModel?> createNotificationFirebase(
+      String title, String body, String email, String token) async {
     print(token);
 
     final String url = 'https://fcm.googleapis.com/fcm/send';
     print(url);
 
-    final bodyJSON = jsonEncode({
-      "registration_ids": [token],
-      "notification": {"title": title, "body": body}
-    });
+    final bodyJSON = jsonEncode(
+      {
+        "registration_ids": [token],
+        "notification": {"title": title, "body": body}
+      },
+    );
 
+    print(bodyJSON);
     try {
       var response = await client.post(
         url,
@@ -122,16 +127,18 @@ class NotificationRepository {
           headers: {
             'Content-Type': 'application/json',
             'Authorization':
-            'key=AAAASZ_kz40:APA91bHd7M5FzqhG1GoDKZilvUBHeaoB-YeHDbxtM8WyXrgtkZ8oFrt1us4wNcawELFZc1WFQusfpFWwyDRgUpWOtFEBSFnSBjBVrmnGqwA0Ojgbj5BoFUUeHfAfh8vgs5ieqm1mggHD'
+                'key=AAAASZ_kz40:APA91bHd7M5FzqhG1GoDKZilvUBHeaoB-YeHDbxtM8WyXrgtkZ8oFrt1us4wNcawELFZc1WFQusfpFWwyDRgUpWOtFEBSFnSBjBVrmnGqwA0Ojgbj5BoFUUeHfAfh8vgs5ieqm1mggHD'
           },
         ),
       );
-      var jsonData = json.decode(response.data);
-      print(jsonData);
+
+      // var jsonData = json.decode(response.data);
+
+      // print(jsonData.toString());
 
       createNotificationApp(title, body, email);
 
-      return jsonData;
+      return NotificationModel.fromJson(response.data);
     } catch (e) {
       print(e.toString());
       throw ('Erro na conexão');
