@@ -24,12 +24,12 @@ class NotificationRepository {
           },
         ),
       );
-      var jsonData = json.decode(response.data);
-      print(jsonData);
+      // var jsonData = json.decode(response.data);
+      // print(jsonData);
 
       List<NotificationResponseModel> list = [];
 
-      jsonData.map((el) {
+      response.data.map((el) {
         list.add(
           NotificationResponseModel.fromMap(el),
         );
@@ -62,7 +62,7 @@ class NotificationRepository {
     }
   }
 
-  void createNotificationApp(String title, String body, String email) async {
+  Future<NotificationResponseModel?> createNotificationApp(String title, String body, String email) async {
     final String url = '${baseUrl}notification/create';
     print(url);
 
@@ -82,8 +82,10 @@ class NotificationRepository {
           },
         ),
       );
-      var jsonData = json.decode(response.data);
-      print(jsonData);
+      // var jsonData = json.decode(response.data);
+      // print(jsonData);
+
+      return NotificationResponseModel.fromJson(response.data);
     } catch (e) {
       print(e.toString());
       throw ('Erro na conexão');
@@ -113,7 +115,7 @@ class NotificationRepository {
           headers: {
             'Content-Type': 'application/json',
             'Authorization':
-                'key=AAAASZ_kz40:APA91bHd7M5FzqhG1GoDKZilvUBHeaoB-YeHDbxtM8WyXrgtkZ8oFrt1us4wNcawELFZc1WFQusfpFWwyDRgUpWOtFEBSFnSBjBVrmnGqwA0Ojgbj5BoFUUeHfAfh8vgs5ieqm1mggHD'
+            ConstantToken.tokenFirebase
           },
         ),
       );
