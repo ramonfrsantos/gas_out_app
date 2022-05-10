@@ -19,7 +19,8 @@ class NotificationRepository {
         url,
         options: Options(
           headers: {
-            'Authorization': 'Bearer ${ConstantToken.tokenRequests}',
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': 'Bearer ${ConstantToken.tokenRequests}'
           },
         ),
       );
@@ -50,26 +51,8 @@ class NotificationRepository {
         url,
         options: Options(
           headers: {
-            'Authorization': 'Bearer ${ConstantToken.tokenRequests}',
-          },
-        ),
-      );
-    } catch (e) {
-      print(e.toString());
-      throw ('Erro na conexão');
-    }
-  }
-
-  Future<void> createNotification(int id) async {
-    final String url = '${baseUrl}notification/delete/${id.toString()}';
-    print(url);
-
-    try {
-      await client.delete(
-        url,
-        options: Options(
-          headers: {
-            'Authorization': 'Bearer ${ConstantToken.tokenRequests}',
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': 'Bearer ${ConstantToken.tokenRequests}'
           },
         ),
       );
@@ -93,6 +76,7 @@ class NotificationRepository {
         options: Options(
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': 'Bearer ${ConstantToken.tokenRequests}'
           },
         ),
       );
