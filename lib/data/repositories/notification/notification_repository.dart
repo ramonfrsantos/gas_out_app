@@ -69,6 +69,8 @@ class NotificationRepository {
     final bodyJSON =
         jsonEncode({"message": body, "title": title, "email": email});
 
+    print(bodyJSON);
+
     try {
       var response = await client.post(
         url,
