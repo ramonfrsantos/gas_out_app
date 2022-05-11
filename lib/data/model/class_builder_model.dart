@@ -1,6 +1,6 @@
-import '../../app/screens/home_screen.dart';
-import '../../app/screens/notification_screen.dart';
-import '../../app/screens/stats_screen.dart';
+import '../../app/screens/home/home_screen.dart';
+import '../../app/screens/notification/notification_screen.dart';
+import '../../app/screens/stats/stats_screen.dart';
 
 typedef T Constructor<T>();
 

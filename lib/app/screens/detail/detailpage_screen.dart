@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:gas_out_app/data/repositories/notification/notification_repository.dart';
 import 'package:http/http.dart' as http;
 import 'package:google_fonts/google_fonts.dart';
-import '../../data/model/notiification/notification_firebase_model.dart';
-import '../../main_dev.dart';
+import '../../../data/model/notiification/notification_firebase_model.dart';
+import '../../../main_dev.dart';
 
 class DetailPage extends StatefulWidget {
   final imgPath;

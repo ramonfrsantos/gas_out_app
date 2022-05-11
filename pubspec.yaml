@@ -51,6 +51,8 @@ dependencies:
   flutter_modular: ^4.5.1+1
   flutter_launcher_icons: ^0.9.2
   shared_preferences: ^2.0.13
+  font_awesome_flutter:
+  simple_animations:
 
 flutter_native_splash:
   image: "images/logo.png"

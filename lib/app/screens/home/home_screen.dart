@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:kf_drawer/kf_drawer.dart';
-import '../helpers/global.dart';
-import 'detailpage_screen.dart';
+import '../../helpers/global.dart';
+import '../detail/detailpage_screen.dart';
 
 class Home extends KFDrawerContent {
   @override

@@ -3,8 +3,8 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:gas_out_app/app/constants/gasout_constants.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kf_drawer/kf_drawer.dart';
-import '../components/notification_tiles_component.dart';
-import '../stores/notification/notification_store.dart';
+import '../../components/notification/notification_tiles_component.dart';
+import '../../stores/notification/notification_store.dart';
 
 class Notifications extends KFDrawerContent {
   @override

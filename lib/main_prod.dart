@@ -10,17 +10,14 @@ import 'package:url_launcher/url_launcher_string.dart';
 import 'app/config/app_config.dart';
 import 'app/config/environments.dart';
 import 'app/constants/gasout_constants.dart';
-import 'app/screens/home_screen.dart';
-import 'app/screens/stats_screen.dart';
+import 'app/screens/home/home_screen.dart';
+import 'app/screens/stats/stats_screen.dart';
 import 'data/firebase_messaging/custom_firebase_messaging.dart';
 import 'data/model/class_builder_model.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 String token = "";
-
-Color primaryColor = Color.fromRGBO(199, 86, 17, 1.0);
-Color secondaryColor = Color.fromRGBO(246, 172, 140, 1.0);
 
 Future<void> main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();

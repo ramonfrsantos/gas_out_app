@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:gas_out_app/app/screens/login/login_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kf_drawer/kf_drawer.dart';
 import 'package:gas_out_app/app/helpers/dependency_injection.dart' as di;
@@ -10,8 +11,8 @@ import 'package:url_launcher/url_launcher_string.dart';
 import 'app/config/app_config.dart';
 import 'app/config/environments.dart';
 import 'app/constants/gasout_constants.dart';
-import 'app/screens/home_screen.dart';
-import 'app/screens/stats_screen.dart';
+import 'app/screens/home/home_screen.dart';
+import 'app/screens/stats/stats_screen.dart';
 import 'data/firebase_messaging/custom_firebase_messaging.dart';
 import 'data/model/class_builder_model.dart';
 
@@ -55,14 +56,15 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         primarySwatch: Colors.orange,
       ).copyWith(
-        textTheme: GoogleFonts.firaCodeTextTheme(
+        textTheme: GoogleFonts.muliTextTheme(
           Theme.of(context).textTheme,
         ),
       ),
       debugShowCheckedModeBanner: false,
-      home: MainWidget(
-        title: 'Gas Out',
-      ),
+      home: LoginScreen()
+      // MainWidget(
+      //   title: 'Gas Out',
+      // ),
     );
   }
 }
