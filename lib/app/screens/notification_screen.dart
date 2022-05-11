@@ -13,6 +13,7 @@ class Notifications extends KFDrawerContent {
 
 class _NotificationsState extends State<Notifications> {
   NotificationStore _store = NotificationStore();
+  String email = "ramonfrsantos@outlook.com";
 
   @override
   void initState() {
@@ -87,7 +88,7 @@ class _NotificationsState extends State<Notifications> {
                     ),
                     onDismissed: (direction) {
                       var notificationChosen = notification;
-                      _showAlertDialog(context, notificationChosen.id);
+                      _showAlertDialog(context, notificationChosen.id, email);
                     },
                     background: _deleteBgItem()
                   )
@@ -98,7 +99,7 @@ class _NotificationsState extends State<Notifications> {
   }
 
   Future<void> _refresh() async {
-    await _store.getNotifications();
+    await _store.getUserNotifications(email);
 
     setState(() {
       _store.notificationList;
@@ -121,7 +122,7 @@ class _NotificationsState extends State<Notifications> {
     );
   }
 
-  _showAlertDialog(BuildContext context, int id) {
+  _showAlertDialog(BuildContext context, int id, String email) {
     Widget cancelaButton = TextButton(
       child: Text("NÃO", style: GoogleFonts.roboto(
           fontSize: 16,
@@ -135,7 +136,7 @@ class _NotificationsState extends State<Notifications> {
           fontSize: 16,
       )),
       onPressed: () async {
-        await _store.deleteNotification(id);
+        await _store.deleteNotification(id, email);
         Navigator.of(context).pop();
       },
     );

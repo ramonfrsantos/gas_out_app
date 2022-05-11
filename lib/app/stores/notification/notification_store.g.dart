@@ -25,12 +25,24 @@ mixin _$NotificationStore on _NotificationStoreBase, Store {
     });
   }
 
-  late final _$getNotificationsAsyncAction =
-      AsyncAction('_NotificationStoreBase.getNotifications', context: context);
+  late final _$getAllNotificationsAsyncAction = AsyncAction(
+      '_NotificationStoreBase.getAllNotifications',
+      context: context);
 
   @override
-  Future getNotifications() {
-    return _$getNotificationsAsyncAction.run(() => super.getNotifications());
+  Future getAllNotifications() {
+    return _$getAllNotificationsAsyncAction
+        .run(() => super.getAllNotifications());
+  }
+
+  late final _$getUserNotificationsAsyncAction = AsyncAction(
+      '_NotificationStoreBase.getUserNotifications',
+      context: context);
+
+  @override
+  Future getUserNotifications(String login) {
+    return _$getUserNotificationsAsyncAction
+        .run(() => super.getUserNotifications(login));
   }
 
   late final _$deleteNotificationAsyncAction = AsyncAction(
@@ -38,9 +50,9 @@ mixin _$NotificationStore on _NotificationStoreBase, Store {
       context: context);
 
   @override
-  Future deleteNotification(int id) {
+  Future deleteNotification(int id, String email) {
     return _$deleteNotificationAsyncAction
-        .run(() => super.deleteNotification(id));
+        .run(() => super.deleteNotification(id, email));
   }
 
   @override

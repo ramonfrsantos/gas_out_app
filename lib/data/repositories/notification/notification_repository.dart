@@ -11,8 +11,8 @@ class NotificationRepository {
 
   String baseUrl = AppConfig.getInstance()!.apiBaseUrl;
 
-  Future<List<NotificationResponseModel>> getNotifications() async {
-    final String url = '${baseUrl}notification/find-all-recent';
+  Future<List<NotificationResponseModel>> getAllNotifications() async {
+    final String url = '${baseUrl}notification/find-all';
     print(url);
     try {
       var response = await client.get(
@@ -24,6 +24,47 @@ class NotificationRepository {
           },
         ),
       );
+
+      if(response.statusCode == 200){
+        print(response.data);
+      }
+
+      // var jsonData = json.decode(response.data);
+      // print(jsonData);
+
+      List<NotificationResponseModel> list = [];
+
+      response.data.map((el) {
+        list.add(
+          NotificationResponseModel.fromMap(el),
+        );
+      }).toList();
+
+      return list;
+    } catch (e) {
+      print(e.toString());
+      throw ('Erro na conexão');
+    }
+  }
+
+  Future<List<NotificationResponseModel>> getUserNotifications(String login) async {
+    final String url = '${baseUrl}notification/find-all-recent/$login';
+    print(url);
+    try {
+      var response = await client.get(
+        url,
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': 'Bearer ${ConstantToken.tokenRequests}'
+          },
+        ),
+      );
+
+      if(response.statusCode == 200){
+        print(response.data);
+      }
+
       // var jsonData = json.decode(response.data);
       // print(jsonData);
 
@@ -44,8 +85,8 @@ class NotificationRepository {
     }
   }
 
-  Future<void> deleteNotification(int id) async {
-    final String url = '${baseUrl}notification/delete/${id.toString()}';
+  Future<void> deleteNotification(int id, String email) async {
+    final String url = '${baseUrl}notification/delete/$email/${id.toString()}';
     print(url);
 
     try {

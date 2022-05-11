@@ -7,7 +7,7 @@ class NotificationStore = _NotificationStoreBase with _$NotificationStore;
 
 abstract class _NotificationStoreBase with Store {
   _NotificationStoreBase() {
-    getNotifications();
+    getAllNotifications();
   }
 
   NotificationRepository _repository = NotificationRepository();
@@ -16,13 +16,19 @@ abstract class _NotificationStoreBase with Store {
   List<NotificationResponseModel>? notificationList;
 
   @action
-  getNotifications() async {
-    notificationList = await _repository.getNotifications();
+  getAllNotifications() async {
+    notificationList = await _repository.getAllNotifications();
     print(notificationList);
   }
 
   @action
-  deleteNotification(int id) async {
-    await _repository.deleteNotification(id);
+  getUserNotifications(String login) async {
+    notificationList = await _repository.getUserNotifications(login);
+    print(notificationList);
+  }
+
+  @action
+  deleteNotification(int id, String email) async {
+    await _repository.deleteNotification(id, email);
   }
 }
