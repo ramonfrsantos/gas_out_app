@@ -25,16 +25,6 @@ mixin _$NotificationStore on _NotificationStoreBase, Store {
     });
   }
 
-  late final _$getAllNotificationsAsyncAction = AsyncAction(
-      '_NotificationStoreBase.getAllNotifications',
-      context: context);
-
-  @override
-  Future getAllNotifications() {
-    return _$getAllNotificationsAsyncAction
-        .run(() => super.getAllNotifications());
-  }
-
   late final _$getUserNotificationsAsyncAction = AsyncAction(
       '_NotificationStoreBase.getUserNotifications',
       context: context);

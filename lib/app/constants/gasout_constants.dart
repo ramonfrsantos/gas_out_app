@@ -18,5 +18,5 @@ class ConstantsSupport {
 }
 
 class ConstantUser {
-  static const String email = "ramonfrsantos@outlook.com";
+  static const String email = "ramonfrsantos@gmail.com";
 }

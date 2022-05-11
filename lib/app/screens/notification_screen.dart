@@ -12,7 +12,7 @@ class Notifications extends KFDrawerContent {
 }
 
 class _NotificationsState extends State<Notifications> {
-  NotificationStore _store = NotificationStore();
+  NotificationStore _store = NotificationStore(ConstantUser.email);
 
   @override
   void initState() {

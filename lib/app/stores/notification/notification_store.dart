@@ -6,8 +6,8 @@ part 'notification_store.g.dart';
 class NotificationStore = _NotificationStoreBase with _$NotificationStore;
 
 abstract class _NotificationStoreBase with Store {
-  _NotificationStoreBase() {
-    getAllNotifications();
+  _NotificationStoreBase(String login) {
+    getUserNotifications(login);
   }
 
   NotificationRepository _repository = NotificationRepository();
@@ -15,11 +15,11 @@ abstract class _NotificationStoreBase with Store {
   @observable
   List<NotificationResponseModel>? notificationList;
 
-  @action
-  getAllNotifications() async {
-    notificationList = await _repository.getAllNotifications();
-    print(notificationList);
-  }
+  //@action
+  //getAllNotifications() async {
+  // notificationList = await _repository.getAllNotifications();
+  // print(notificationList);
+  //}
 
   @action
   getUserNotifications(String login) async {
