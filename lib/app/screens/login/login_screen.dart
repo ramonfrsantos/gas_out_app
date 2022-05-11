@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:gas_out_app/app/constants/gasout_constants.dart';
+import 'package:gas_out_app/data/repositories/user/user_repository.dart';
 import 'package:gas_out_app/main_prod.dart';
-import 'package:simple_animations/multi_tween/multi_tween.dart';
 import 'package:simple_animations/simple_animations.dart';
+
+import '../../stores/controller/login/login_controller.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -40,6 +42,15 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    UserRepository userRepository = UserRepository();
+    LoginController loginController = LoginController();
+
+    TextEditingController emailController = TextEditingController();
+    TextEditingController nameController = TextEditingController();
+    TextEditingController passwordController = TextEditingController();
+    TextEditingController confirmPasswordController = TextEditingController();
+
+    _keyboardVisible = MediaQuery.of(context).viewInsets.bottom != 0;
     windowHeight = MediaQuery.of(context).size.height;
     windowWidth = MediaQuery.of(context).size.width;
 
@@ -72,7 +83,7 @@ class _LoginScreenState extends State<LoginScreen> {
         _loginWidth = windowWidth;
         _loginOpacity = 1;
 
-        _loginYOffset = _keyboardVisible ? 40 : 190;
+        _loginYOffset = _keyboardVisible ? 0 : 190;
         _loginHeight = _keyboardVisible ? windowHeight : windowHeight - 190;
 
         _loginXOffset = 0;
@@ -88,27 +99,27 @@ class _LoginScreenState extends State<LoginScreen> {
         _loginWidth = windowWidth - 40;
         _loginOpacity = 0.5;
 
-        _loginYOffset = _keyboardVisible ? 30 : 190;
+        _loginYOffset = _keyboardVisible ? 0 : 190;
         _loginHeight = _keyboardVisible ? windowHeight : windowHeight - 190;
 
         _loginXOffset = 20;
-        _registerYOffset = _keyboardVisible ? 55 : 190;
+        _registerYOffset = _keyboardVisible ? 0 : 190;
         _registerHeight = _keyboardVisible ? windowHeight : windowHeight - 190;
         break;
     }
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
           AnimatedContainer(
             width: double.infinity,
             curve: Curves.fastLinearToSlowEaseIn,
             duration: Duration(milliseconds: 1000),
-            decoration: BoxDecoration(
-              color: ConstantColors.primaryColor),
-                // gradient: LinearGradient(
-                //     begin: Alignment.topCenter,
-                //     colors: [Color(0xffd23232), Color(0xffe37f7f)])),
+            decoration: BoxDecoration(color: ConstantColors.primaryColor),
+            // gradient: LinearGradient(
+            //     begin: Alignment.topCenter,
+            //     colors: [Color(0xffd23232), Color(0xffe37f7f)])),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -139,7 +150,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
           // Login Screen
           AnimatedContainer(
-            padding: EdgeInsets.all(45),
+            padding: _keyboardVisible
+                ? EdgeInsets.only(bottom: 40, left: 40, right: 40, top: 55)
+                : EdgeInsets.all(40),
             width: _loginWidth,
             height: _loginHeight,
             curve: Curves.fastLinearToSlowEaseIn,
@@ -147,10 +160,16 @@ class _LoginScreenState extends State<LoginScreen> {
             transform:
                 Matrix4.translationValues(_loginXOffset, _loginYOffset, 1),
             decoration: BoxDecoration(
-                color: _loginOpacity == 1 ? Colors.white : Color.fromRGBO(255, 255, 255, _loginOpacity),
+                color: _loginOpacity == 1
+                    ? Colors.white
+                    : Color.fromRGBO(255, 255, 255, _loginOpacity),
                 borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(50),
-                    topRight: Radius.circular(50))),
+                    topLeft: _keyboardVisible
+                        ? Radius.circular(0)
+                        : Radius.circular(50),
+                    topRight: _keyboardVisible
+                        ? Radius.circular(0)
+                        : Radius.circular(50))),
             child: Opacity(
               opacity: _loginOpacity,
               child: Column(
@@ -180,6 +199,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         bottom: BorderSide(
                                             color: Colors.grey.shade200))),
                                 child: TextField(
+                                  controller: emailController,
                                   decoration: InputDecoration(
                                       prefixIcon: Icon(Icons.email),
                                       hintText: "E-mail",
@@ -196,6 +216,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                         bottom: BorderSide(
                                             color: Colors.grey.shade200))),
                                 child: TextField(
+                                  controller: passwordController,
+                                  obscureText: true,
                                   decoration: InputDecoration(
                                       prefixIcon: Icon(Icons.vpn_key),
                                       hintText: "Senha",
@@ -222,7 +244,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               delay: 1.5,
                               child: Text(
                                 "Esqueci minha senha",
-                                style: TextStyle(color: Colors.grey, fontSize: 16),
+                                style:
+                                    TextStyle(color: Colors.grey, fontSize: 16),
                               )),
                         ),
                       ),
@@ -242,8 +265,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             margin: EdgeInsets.symmetric(horizontal: 50),
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(50),
-                                color: ConstantColors.primaryColor
-                            ),
+                                color: ConstantColors.primaryColor),
                             child: Center(
                               child: Text(
                                 'Entrar',
@@ -346,15 +368,15 @@ class _LoginScreenState extends State<LoginScreen> {
                               children: [
                                 Text(
                                   "Não possui uma conta? ",
-                                  style: TextStyle(color: Colors.grey, fontSize: 18
-                                  ),
+                                  style: TextStyle(
+                                      color: Colors.grey, fontSize: 18),
                                 ),
                                 Text(
                                   "Cadastre-se",
                                   style: TextStyle(
                                       color: Colors.grey,
-                                      fontWeight: FontWeight.bold, fontSize: 18
-                                  ),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18),
                                 )
                               ],
                             ),
@@ -370,17 +392,20 @@ class _LoginScreenState extends State<LoginScreen> {
 
           // Signup Screen
           AnimatedContainer(
-            padding: EdgeInsets.all(35),
+            padding: EdgeInsets.all(40),
             height: _registerHeight,
             curve: Curves.fastLinearToSlowEaseIn,
             duration: Duration(milliseconds: 1000),
-            transform:
-            Matrix4.translationValues(0, _registerYOffset, 1),
+            transform: Matrix4.translationValues(0, _registerYOffset, 1),
             decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(50),
-                    topRight: Radius.circular(50))),
+                    topLeft: _keyboardVisible
+                        ? Radius.circular(0)
+                        : Radius.circular(50),
+                    topRight: _keyboardVisible
+                        ? Radius.circular(0)
+                        : Radius.circular(50))),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -408,6 +433,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       bottom: BorderSide(
                                           color: Colors.grey.shade200))),
                               child: TextField(
+                                controller: nameController,
                                 decoration: InputDecoration(
                                     prefixIcon: Icon(Icons.person),
                                     hintText: "Nome completo",
@@ -424,6 +450,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       bottom: BorderSide(
                                           color: Colors.grey.shade200))),
                               child: TextField(
+                                controller: emailController,
                                 decoration: InputDecoration(
                                     prefixIcon: Icon(Icons.email),
                                     hintText: "E-mail",
@@ -440,6 +467,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       bottom: BorderSide(
                                           color: Colors.grey.shade200))),
                               child: TextField(
+                                controller: passwordController,
                                 obscureText: true,
                                 decoration: InputDecoration(
                                     prefixIcon: Icon(Icons.vpn_key),
@@ -457,6 +485,16 @@ class _LoginScreenState extends State<LoginScreen> {
                                       bottom: BorderSide(
                                           color: Colors.grey.shade200))),
                               child: TextField(
+                                controller: confirmPasswordController,
+                                onChanged: (value) {
+                                  print(
+                                      "senha: ${passwordController.text} || confirmar senha: $value");
+                                  if (passwordController.text == value) {
+                                    loginController.setValue(false);
+                                  } else {
+                                    loginController.setValue(true);
+                                  }
+                                },
                                 obscureText: true,
                                 decoration: InputDecoration(
                                     prefixIcon: Icon(Icons.vpn_key),
@@ -476,29 +514,48 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     FadeAnimation(
                       delay: 1.6,
-                      child: FlatButton(
-                        onPressed: () {
-                          print('Success');
-                        },
-                        splashColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                        child: Container(
-                          height: 50,
-                          margin: EdgeInsets.symmetric(horizontal: 50),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(50),
-                              color: Color(0xffd23232)),
-                          child: Center(
-                            child: Text(
-                              'Cadastrar',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20
+                      child: Observer(
+                        builder: (context) {
+                          return FlatButton(
+                            onPressed: loginController.isSignUpButtonDisabled
+                                ? null
+                                : () async {
+                                    int? statusCode =
+                                        await userRepository.createUser(
+                                            emailController.text,
+                                            nameController.text,
+                                            passwordController.text);
+
+                                    if (statusCode == 200) {
+                                      setState(() {
+                                        _pageState = 1;
+                                      });
+                                    } else {
+                                      print(statusCode);
+                                    }
+                                  },
+                            splashColor: Colors.transparent,
+                            highlightColor: Colors.transparent,
+                            child: Container(
+                              height: 50,
+                              margin: EdgeInsets.symmetric(horizontal: 50),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(50),
+                                  color: loginController.isSignUpButtonDisabled
+                                      ? ConstantColors.secondaryColor
+                                      : ConstantColors.primaryColor),
+                              child: Center(
+                                child: Text(
+                                  'Cadastrar',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20),
+                                ),
                               ),
                             ),
-                          ),
-                        ),
+                          );
+                        },
                       ),
                     ),
                     SizedBox(
@@ -519,17 +576,15 @@ class _LoginScreenState extends State<LoginScreen> {
                             children: [
                               Text(
                                 "Já possui uma conta? ",
-                                style: TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 18),
+                                style:
+                                    TextStyle(color: Colors.grey, fontSize: 18),
                               ),
                               Text(
                                 "Entre aqui.",
                                 style: TextStyle(
                                     color: Colors.grey,
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 18
-                                ),
+                                    fontSize: 18),
                               )
                             ],
                           ),
