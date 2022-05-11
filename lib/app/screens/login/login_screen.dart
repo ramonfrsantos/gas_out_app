@@ -5,6 +5,7 @@ import 'package:gas_out_app/data/repositories/user/user_repository.dart';
 import 'package:gas_out_app/main_prod.dart';
 import 'package:simple_animations/simple_animations.dart';
 
+import '../../../data/repositories/login/login_repository.dart';
 import '../../stores/controller/login/login_controller.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -41,12 +42,15 @@ class _LoginScreenState extends State<LoginScreen> {
     super.initState();
   }
 
-  TextEditingController emailController = TextEditingController();
+  TextEditingController emailLoginController = TextEditingController();
+  TextEditingController passwordLoginController = TextEditingController();
+  TextEditingController emailSignUpController = TextEditingController();
+  TextEditingController passwordSignUpController = TextEditingController();
   TextEditingController nameController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
 
   UserRepository userRepository = UserRepository();
+  LoginRepository loginRepository = LoginRepository();
   LoginController loginController = LoginController();
 
   @override
@@ -200,7 +204,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         bottom: BorderSide(
                                             color: Colors.grey.shade200))),
                                 child: TextField(
-                                  controller: emailController,
+                                  controller: emailLoginController,
                                   decoration: InputDecoration(
                                       prefixIcon: Icon(Icons.email),
                                       hintText: "E-mail",
@@ -217,7 +221,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         bottom: BorderSide(
                                             color: Colors.grey.shade200))),
                                 child: TextField(
-                                  controller: passwordController,
+                                  controller: passwordLoginController,
                                   obscureText: true,
                                   decoration: InputDecoration(
                                       prefixIcon: Icon(Icons.vpn_key),
@@ -257,7 +261,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         delay: 1.6,
                         child: FlatButton(
                           onPressed: () {
-                            print('Success');
+                            print(loginRepository.doLogin(emailLoginController.text, passwordLoginController.text));
                           },
                           splashColor: Colors.transparent,
                           highlightColor: Colors.transparent,
@@ -451,7 +455,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       bottom: BorderSide(
                                           color: Colors.grey.shade200))),
                               child: TextField(
-                                controller: emailController,
+                                controller: emailSignUpController,
                                 decoration: InputDecoration(
                                     prefixIcon: Icon(Icons.email),
                                     hintText: "E-mail",
@@ -468,7 +472,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       bottom: BorderSide(
                                           color: Colors.grey.shade200))),
                               child: TextField(
-                                controller: passwordController,
+                                controller: passwordSignUpController,
                                 obscureText: true,
                                 decoration: InputDecoration(
                                     prefixIcon: Icon(Icons.vpn_key),
@@ -489,8 +493,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                 controller: confirmPasswordController,
                                 onChanged: (value) {
                                   print(
-                                      "senha: ${passwordController.text} || confirmar senha: $value");
-                                  if (passwordController.text == value) {
+                                      "senha: ${passwordSignUpController.text} || confirmar senha: $value");
+                                  if (passwordSignUpController.text == value) {
                                     loginController.setValue(false);
                                   } else {
                                     loginController.setValue(true);
@@ -527,9 +531,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
                                     int? statusCode =
                                         await userRepository.createUser(
-                                            emailController.text,
+                                            emailSignUpController.text,
                                             nameController.text,
-                                            passwordController.text);
+                                            passwordSignUpController.text);
 
                                     if (statusCode == 200) {
                                       setState(() {

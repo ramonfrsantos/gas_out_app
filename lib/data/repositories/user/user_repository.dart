@@ -134,7 +134,6 @@ class UserRepository {
       // print(jsonData);
     } catch (e) {
       print(e.toString());
-      throw ('Erro na conexão');
     }
   }
 }
