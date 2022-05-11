@@ -10,8 +10,8 @@ class ConstantToken {
 }
 
 class ConstantColors {
-  static const Color primaryColor = Color(0xFFC62127);
-  static const Color secondaryColor = Color(0xFFFFF6F7);
+  static const Color primaryColor = Color(0xFFc70000);
+  static const Color secondaryColor = Color(0xFFe37f7f);
 }
 
 class ConstantsSupport {
