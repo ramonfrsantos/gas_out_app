@@ -34,22 +34,23 @@ class _LoginScreenState extends State<LoginScreen> {
   double windowHeight = 0;
 
   bool _keyboardVisible = false;
+  bool _loading = false;
 
   @override
   void initState() {
     super.initState();
   }
 
+  TextEditingController emailController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
+
+  UserRepository userRepository = UserRepository();
+  LoginController loginController = LoginController();
+
   @override
   Widget build(BuildContext context) {
-    UserRepository userRepository = UserRepository();
-    LoginController loginController = LoginController();
-
-    TextEditingController emailController = TextEditingController();
-    TextEditingController nameController = TextEditingController();
-    TextEditingController passwordController = TextEditingController();
-    TextEditingController confirmPasswordController = TextEditingController();
-
     _keyboardVisible = MediaQuery.of(context).viewInsets.bottom != 0;
     windowHeight = MediaQuery.of(context).size.height;
     windowWidth = MediaQuery.of(context).size.width;
@@ -520,6 +521,10 @@ class _LoginScreenState extends State<LoginScreen> {
                             onPressed: loginController.isSignUpButtonDisabled
                                 ? null
                                 : () async {
+                                    setState(() {
+                                      _loading = true;
+                                    });
+
                                     int? statusCode =
                                         await userRepository.createUser(
                                             emailController.text,
@@ -529,8 +534,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                     if (statusCode == 200) {
                                       setState(() {
                                         _pageState = 1;
+                                        _loading = false;
                                       });
                                     } else {
+                                      setState(() {
+                                        _loading = false;
+                                      });
                                       print(statusCode);
                                     }
                                   },
@@ -545,13 +554,24 @@ class _LoginScreenState extends State<LoginScreen> {
                                       ? ConstantColors.secondaryColor
                                       : ConstantColors.primaryColor),
                               child: Center(
-                                child: Text(
-                                  'Cadastrar',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20),
-                                ),
+                                // child: Text(
+                                //   'Cadastrar',
+                                //   style: TextStyle(
+                                //       color: Colors.white,
+                                //       fontWeight: FontWeight.bold,
+                                //       fontSize: 20),
+                                // ),
+                                child: _loading
+                                    ? CircularProgressIndicator(
+                                        color: Colors.white,
+                                      )
+                                    : Text(
+                                        'Cadastrar',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20),
+                                      ),
                               ),
                             ),
                           );
