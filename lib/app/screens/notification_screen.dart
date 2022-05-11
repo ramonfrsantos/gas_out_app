@@ -13,7 +13,6 @@ class Notifications extends KFDrawerContent {
 
 class _NotificationsState extends State<Notifications> {
   NotificationStore _store = NotificationStore();
-  String email = "ramonfrsantos@outlook.com";
 
   @override
   void initState() {
@@ -88,7 +87,7 @@ class _NotificationsState extends State<Notifications> {
                     ),
                     onDismissed: (direction) {
                       var notificationChosen = notification;
-                      _showAlertDialog(context, notificationChosen.id, email);
+                      _showAlertDialog(context, notificationChosen.id, ConstantUser.email);
                     },
                     background: _deleteBgItem()
                   )
@@ -99,7 +98,7 @@ class _NotificationsState extends State<Notifications> {
   }
 
   Future<void> _refresh() async {
-    await _store.getUserNotifications(email);
+    await _store.getUserNotifications(ConstantUser.email);
 
     setState(() {
       _store.notificationList;

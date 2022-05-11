@@ -25,12 +25,9 @@ class NotificationRepository {
         ),
       );
 
-      if(response.statusCode == 200){
+      if(response.statusCode == 200) {
         print(response.data);
       }
-
-      // var jsonData = json.decode(response.data);
-      // print(jsonData);
 
       List<NotificationResponseModel> list = [];
 
@@ -65,9 +62,6 @@ class NotificationRepository {
         print(response.data);
       }
 
-      // var jsonData = json.decode(response.data);
-      // print(jsonData);
-
       List<NotificationResponseModel> list = [];
 
       response.data.map((el) {
@@ -75,8 +69,6 @@ class NotificationRepository {
           NotificationResponseModel.fromMap(el),
         );
       }).toList();
-
-      print(list);
 
       return list;
     } catch (e) {
@@ -167,10 +159,6 @@ class NotificationRepository {
           },
         ),
       );
-
-      // var jsonData = json.decode(response.data);
-
-      // print(jsonData.toString());
 
       createNotificationApp(title, body, email);
 

@@ -16,3 +16,7 @@ class ConstantsSupport {
   static const String message = "Olá, gostaria de falar com o suporte.";
   static const String phone = "+553186294593"; // telefone do suporte
 }
+
+class ConstantUser {
+  static const String email = "ramonfrsantos@outlook.com";
+}
