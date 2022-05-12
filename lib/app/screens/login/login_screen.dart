@@ -289,6 +289,10 @@ class _LoginScreenState extends State<LoginScreen> {
                               setState(() {
                                 _loading = false;
                               });
+
+                              emailLoginController.text = "";
+                              passwordLoginController.text = "";
+
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
