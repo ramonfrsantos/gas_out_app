@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:gas_out_app/app/constants/gasout_constants.dart';
 import 'package:gas_out_app/data/repositories/user/user_repository.dart';
-import 'package:gas_out_app/main_prod.dart';
 import 'package:simple_animations/simple_animations.dart';
 
+import '../../../data/model/login/login_response_model.dart';
 import '../../../data/repositories/login/login_repository.dart';
+import '../../../main_dev.dart';
 import '../../stores/controller/login/login_controller.dart';
+import '../home/home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -17,11 +19,6 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   int _pageState = 1;
-
-  var _backgroundColor = Colors.white;
-  var _headingColor = Color(0xFFB40284A);
-
-  double _headingTop = 100;
 
   double _loginWidth = 0;
   double _loginHeight = 0;
@@ -64,11 +61,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
     switch (_pageState) {
       case 0:
-        _backgroundColor = Colors.white;
-        _headingColor = Color(0xFFB40284A);
-
-        _headingTop = 100;
-
         _loginWidth = windowWidth;
         _loginOpacity = 1;
 
@@ -80,15 +72,10 @@ class _LoginScreenState extends State<LoginScreen> {
         break;
 
       case 1:
-        _backgroundColor = Color(0xFFB40284A);
-        _headingColor = Colors.white;
-
-        _headingTop = 90;
-
         _loginWidth = windowWidth;
         _loginOpacity = 1;
 
-        _loginYOffset = _keyboardVisible ? 0 : 190;
+        _loginYOffset = _keyboardVisible ? 40 : 190;
         _loginHeight = _keyboardVisible ? windowHeight : windowHeight - 190;
 
         _loginXOffset = 0;
@@ -96,19 +83,14 @@ class _LoginScreenState extends State<LoginScreen> {
         break;
 
       case 2:
-        _backgroundColor = Color(0xFFB40284A);
-        _headingColor = Colors.white;
-
-        _headingTop = 80;
-
         _loginWidth = windowWidth - 40;
         _loginOpacity = 0.5;
 
-        _loginYOffset = _keyboardVisible ? 0 : 190;
+        _loginYOffset = _keyboardVisible ? 40 : 190;
         _loginHeight = _keyboardVisible ? windowHeight : windowHeight - 190;
 
         _loginXOffset = 20;
-        _registerYOffset = _keyboardVisible ? 0 : 190;
+        _registerYOffset = _keyboardVisible ? 40 : 190;
         _registerHeight = _keyboardVisible ? windowHeight : windowHeight - 190;
         break;
     }
@@ -169,12 +151,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     ? Colors.white
                     : Color.fromRGBO(255, 255, 255, _loginOpacity),
                 borderRadius: BorderRadius.only(
-                    topLeft: _keyboardVisible
-                        ? Radius.circular(0)
-                        : Radius.circular(50),
-                    topRight: _keyboardVisible
-                        ? Radius.circular(0)
-                        : Radius.circular(50))),
+                    topLeft: Radius.circular(50),
+                    topRight: Radius.circular(50))),
             child: Opacity(
               opacity: _loginOpacity,
               child: Column(
@@ -260,8 +238,15 @@ class _LoginScreenState extends State<LoginScreen> {
                       FadeAnimation(
                         delay: 1.6,
                         child: FlatButton(
-                          onPressed: () {
-                            print(loginRepository.doLogin(emailLoginController.text, passwordLoginController.text));
+                          onPressed: () async {
+                            LoginResponseModel? response =
+                                await loginRepository.doLogin(emailLoginController.text, passwordLoginController.text);
+                            if(response?.userId != null){
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => MainWidget(title: 'GasOut', username: response?.userName)),
+                              );
+                            }
                           },
                           splashColor: Colors.transparent,
                           highlightColor: Colors.transparent,
@@ -405,12 +390,8 @@ class _LoginScreenState extends State<LoginScreen> {
             decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
-                    topLeft: _keyboardVisible
-                        ? Radius.circular(0)
-                        : Radius.circular(50),
-                    topRight: _keyboardVisible
-                        ? Radius.circular(0)
-                        : Radius.circular(50))),
+                    topLeft: Radius.circular(50),
+                    topRight: Radius.circular(50))),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

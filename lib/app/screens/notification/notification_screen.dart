@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:kf_drawer/kf_drawer.dart';
 import '../../components/notification/notification_tiles_component.dart';
 import '../../stores/notification/notification_store.dart';
+import '../login/login_screen.dart';
 
 class Notifications extends KFDrawerContent {
   @override
@@ -27,6 +28,7 @@ class _NotificationsState extends State<Notifications> {
           child: Column(
             children: <Widget>[
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   ClipRRect(
                     borderRadius: BorderRadius.all(Radius.circular(32.0)),
@@ -42,15 +44,28 @@ class _NotificationsState extends State<Notifications> {
                       ),
                     ),
                   ),
-                  SizedBox(
-                    width: 95,
-                  ),
                   Text(
                     'Notificações',
                     style: GoogleFonts.roboto(
                       fontSize: 22,
                       color: ConstantColors.primaryColor,
                       fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  ClipRRect(
+                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
+                    child: Material(
+                      shadowColor: Colors.transparent,
+                      color: Colors.transparent,
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.exit_to_app,
+                          color: Colors.black,
+                        ),
+                        onPressed: (){
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));
+                        },
+                      ),
                     ),
                   )
                 ],

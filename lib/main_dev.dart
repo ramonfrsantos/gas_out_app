@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:gas_out_app/app/screens/login/login_screen.dart';
+import 'package:gas_out_app/app/stores/controller/login/login_controller.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kf_drawer/kf_drawer.dart';
 import 'package:gas_out_app/app/helpers/dependency_injection.dart' as di;
@@ -70,8 +71,9 @@ class _MyAppState extends State<MyApp> {
 }
 
 class MainWidget extends StatefulWidget {
-  MainWidget({Key? key, required this.title}) : super(key: key);
+  MainWidget({Key? key, required this.title, this.username}) : super(key: key);
   final String title;
+  final String? username;
 
   @override
   _MainWidgetState createState() => _MainWidgetState();
@@ -79,10 +81,13 @@ class MainWidget extends StatefulWidget {
 
 class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
   late KFDrawerController _drawerController;
+  LoginController loginController = LoginController();
 
   @override
   void initState() {
     super.initState();
+    print(widget.username);
+
     _drawerController = KFDrawerController(
       initialPage: ClassBuilder.fromString('Home'),
       items: [
@@ -90,7 +95,7 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
           text: Text('Página Inicial',
               style: TextStyle(color: Colors.white, fontSize: 18)),
           icon: Icon(Icons.home, color: Colors.white),
-          page: Home(),
+          page: ClassBuilder.fromString('Home'),
         ),
         KFDrawerItem.initWithPage(
           text: Text(

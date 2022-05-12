@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:gas_out_app/app/screens/login/login_screen.dart';
+import 'package:gas_out_app/app/stores/controller/login/login_controller.dart';
 import 'package:kf_drawer/kf_drawer.dart';
 import '../../helpers/global.dart';
 import '../detail/detailpage_screen.dart';
@@ -9,7 +11,12 @@ class Home extends KFDrawerContent {
   _HomeState createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeState extends State<Home> with TickerProviderStateMixin{
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -18,6 +25,7 @@ class _HomeState extends State<Home> {
           Column(
             children: <Widget>[
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   ClipRRect(
                     borderRadius: BorderRadius.all(Radius.circular(32.0)),
@@ -33,7 +41,22 @@ class _HomeState extends State<Home> {
                       ),
                     ),
                   ),
-                  SizedBox(width: 15)
+                  ClipRRect(
+                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
+                    child: Material(
+                      shadowColor: Colors.transparent,
+                      color: Colors.transparent,
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.exit_to_app,
+                          color: Colors.black,
+                        ),
+                        onPressed: (){
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));
+                        },
+                      ),
+                    ),
+                  ),
                 ],
               ),
               Padding(
@@ -41,11 +64,16 @@ class _HomeState extends State<Home> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
+                    Text("Olá, null!",
+                            style: TextStyle(
+                                fontSize: 23, fontWeight: FontWeight.bold)
+    ),
+                    SizedBox(height: 15),
                     Container(
                       alignment: Alignment.center,
                       child: Image(
                         image: AssetImage('images/logoPequena.png'),
-                        width: 250,
+                        width: 150,
                       ),
                     ),
                     SizedBox(height: 50),

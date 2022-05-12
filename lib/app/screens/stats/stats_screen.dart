@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:kf_drawer/kf_drawer.dart';
 
+import '../login/login_screen.dart';
+
 class Stats extends KFDrawerContent {
   Stats({
     Key? key,
@@ -18,6 +20,7 @@ class _StatsState extends State<Stats> {
         child: Column(
           children: <Widget>[
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(32.0)),
@@ -33,6 +36,22 @@ class _StatsState extends State<Stats> {
                     ),
                   ),
                 ),
+                ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(32.0)),
+                  child: Material(
+                    shadowColor: Colors.transparent,
+                    color: Colors.transparent,
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.exit_to_app,
+                        color: Colors.black,
+                      ),
+                      onPressed: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));
+                      },
+                    ),
+                  ),
+                )
               ],
             ),
             Expanded(
