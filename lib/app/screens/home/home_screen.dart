@@ -4,14 +4,18 @@ import 'package:gas_out_app/app/screens/login/login_screen.dart';
 import 'package:gas_out_app/app/stores/controller/login/login_controller.dart';
 import 'package:kf_drawer/kf_drawer.dart';
 import '../../helpers/global.dart';
-import '../detail/detailpage_screen.dart';
+import '../detail/details_screen.dart';
 
-class Home extends KFDrawerContent {
+class HomeScreen extends KFDrawerContent {
+  final String? username;
+
+  HomeScreen({required this.username});
+
   @override
-  _HomeState createState() => _HomeState();
+  _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeState extends State<Home> with TickerProviderStateMixin{
+class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
@@ -51,8 +55,12 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                           Icons.exit_to_app,
                           color: Colors.black,
                         ),
-                        onPressed: (){
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));
+                        onPressed: () {
+                          Navigator.pop(context);
+                          // Navigator.push(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //         builder: (context) => LoginScreen()));
                         },
                       ),
                     ),
@@ -64,16 +72,15 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text("Olá, null!",
-                            style: TextStyle(
-                                fontSize: 23, fontWeight: FontWeight.bold)
-    ),
+                    Text("Olá, ${(widget.username)?.split(' ')[0]}!",
+                        style: TextStyle(
+                            fontSize: 23, fontWeight: FontWeight.bold)),
                     SizedBox(height: 15),
                     Container(
                       alignment: Alignment.center,
                       child: Image(
                         image: AssetImage('images/logoPequena.png'),
-                        width: 150,
+                        width: 220,
                       ),
                     ),
                     SizedBox(height: 50),
@@ -163,7 +170,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
       InkWell(
         onTap: () {
           Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => DetailPage(
+              builder: (context) => DetailsScreen(
                     imgPath: imgpath,
                     averageValue: averageValue,
                     maxValue: maxValue,

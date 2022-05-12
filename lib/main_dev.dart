@@ -13,6 +13,7 @@ import 'app/config/app_config.dart';
 import 'app/config/environments.dart';
 import 'app/constants/gasout_constants.dart';
 import 'app/screens/home/home_screen.dart';
+import 'app/screens/notification/notification_screen.dart';
 import 'app/screens/stats/stats_screen.dart';
 import 'data/firebase_messaging/custom_firebase_messaging.dart';
 import 'data/model/class_builder_model.dart';
@@ -39,7 +40,6 @@ Future<void> main() async {
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) {
-    ClassBuilder.registerClasses();
     runApp(MyApp());
     FlutterNativeSplash.remove();
   });
@@ -71,9 +71,10 @@ class _MyAppState extends State<MyApp> {
 }
 
 class MainWidget extends StatefulWidget {
-  MainWidget({Key? key, required this.title, this.username}) : super(key: key);
+  MainWidget({Key? key, required this.title, this.username, this.email}) : super(key: key);
   final String title;
   final String? username;
+  final String? email;
 
   @override
   _MainWidgetState createState() => _MainWidgetState();
@@ -86,7 +87,11 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+    ClassBuilder.registerNotification(widget.email);
+    ClassBuilder.registerStats();
+    ClassBuilder.registerHome(widget.username);
     print(widget.username);
+    print(widget.email);
 
     _drawerController = KFDrawerController(
       initialPage: ClassBuilder.fromString('Home'),
@@ -95,7 +100,7 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
           text: Text('Página Inicial',
               style: TextStyle(color: Colors.white, fontSize: 18)),
           icon: Icon(Icons.home, color: Colors.white),
-          page: ClassBuilder.fromString('Home'),
+          page: HomeScreen(username: widget.username,),
         ),
         KFDrawerItem.initWithPage(
           text: Text(
@@ -103,7 +108,7 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
             style: TextStyle(color: Colors.white, fontSize: 18),
           ),
           icon: Icon(Icons.notifications_active, color: Colors.white),
-          page: ClassBuilder.fromString('Notifications'),
+          page: NotificationScreen(email: widget.email,),
         ),
         KFDrawerItem.initWithPage(
           text: Text(
@@ -111,7 +116,7 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
             style: TextStyle(color: Colors.white, fontSize: 18),
           ),
           icon: Icon(Icons.trending_up, color: Colors.white),
-          page: Stats(),
+          page: StatsScreen(),
         ),
         KFDrawerItem.initWithPage(
           text: Text(

@@ -7,13 +7,13 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../data/model/notiification/notification_firebase_model.dart';
 import '../../../main_dev.dart';
 
-class DetailPage extends StatefulWidget {
+class DetailsScreen extends StatefulWidget {
   final imgPath;
   final double averageValue;
   final double maxValue;
   final int totalHours;
 
-  DetailPage(
+  DetailsScreen(
       {Key? key,
       this.imgPath,
       required this.averageValue,
@@ -22,10 +22,10 @@ class DetailPage extends StatefulWidget {
       : super(key: key);
 
   @override
-  _DetailPageState createState() => _DetailPageState();
+  _DetailsScreenState createState() => _DetailsScreenState();
 }
 
-class _DetailPageState extends State<DetailPage> {
+class _DetailsScreenState extends State<DetailsScreen> {
   bool sprinklersValue = false;
   bool alarmValue = false;
   bool notificationValue = false;

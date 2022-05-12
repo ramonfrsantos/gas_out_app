@@ -1,6 +1,7 @@
 import '../../app/screens/home/home_screen.dart';
 import '../../app/screens/notification/notification_screen.dart';
 import '../../app/screens/stats/stats_screen.dart';
+import '../../main_dev.dart';
 
 typedef T Constructor<T>();
 
@@ -11,10 +12,16 @@ void register<T>(Constructor<T> constructor) {
 }
 
 class ClassBuilder {
-  static void registerClasses() {
-    register<Home>(() => Home());
-    register<Notifications>(() => Notifications());
-    register<Stats>(() => Stats());
+  static void registerStats() {
+    register<StatsScreen>(() => StatsScreen());
+  }
+
+  static void registerHome(String? username) {
+    register<HomeScreen>(() => HomeScreen(username: username,));
+  }
+
+  static void registerNotification(String? email) {
+    register<NotificationScreen>(() => NotificationScreen(email: email));
   }
 
   static dynamic fromString(String type) {

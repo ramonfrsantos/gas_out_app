@@ -20,5 +20,5 @@ class ConstantsSupport {
 }
 
 class ConstantUser {
-  static const String email = "ramonfrsantos@gmail.com";
+  // static const String email = "ramonfrsantos@gmail.com";
 }

@@ -41,8 +41,9 @@ class _LoginScreenState extends State<LoginScreen> {
   final nameController = TextEditingController();
   final confirmPasswordController = TextEditingController();
 
-  bool? _confirmPasswordVisible;
-  bool? _passwordVisible;
+  bool? _confirmPasswordSignUpVisible;
+  bool? _passwordSignUpVisible;
+  bool? _passwordLoginVisible;
 
   // dispose it when the widget is unmounted
   @override
@@ -62,8 +63,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void initState() {
-    _passwordVisible = false;
-    _confirmPasswordVisible = false;
+    _passwordLoginVisible = false;
+    _passwordSignUpVisible = false;
+    _confirmPasswordSignUpVisible = false;
     super.initState();
   }
 
@@ -218,9 +220,25 @@ class _LoginScreenState extends State<LoginScreen> {
                                             color: Colors.grey.shade200))),
                                 child: TextField(
                                   controller: passwordLoginController,
-                                  obscureText: true,
+                                  obscureText: !(_passwordLoginVisible!),
                                   decoration: InputDecoration(
                                       prefixIcon: Icon(Icons.vpn_key),
+                                      suffixIcon: IconButton(
+                                        icon: Icon(
+                                          _passwordLoginVisible!
+                                              ? Icons.visibility
+                                              : Icons.visibility_off,
+                                          color:  _passwordLoginVisible!
+                                              ? Theme.of(context).primaryColorDark
+                                              : Colors.grey,
+                                          size: 20,
+                                        ),
+                                        onPressed: () {
+                                          setState(() {
+                                            _passwordLoginVisible = !(_passwordLoginVisible!);
+                                          });
+                                        },
+                                      ),
                                       hintText: "Senha",
                                       hintStyle: TextStyle(
                                         color: Colors.grey,
@@ -274,7 +292,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                 MaterialPageRoute(
                                     builder: (context) => MainWidget(
                                         title: 'GasOut',
-                                        username: response?.userName)),
+                                        username: response?.userName,
+                                        email: response?.login,
+                                    )),
                               );
                             } else {
                               setState(() {
@@ -514,22 +534,22 @@ class _LoginScreenState extends State<LoginScreen> {
                                           color: Colors.grey.shade200))),
                               child: TextField(
                                   controller: passwordSignUpController,
-                                  obscureText: !(_passwordVisible!),
+                                  obscureText: !(_passwordSignUpVisible!),
                                   decoration: InputDecoration(
                                       prefixIcon: Icon(Icons.vpn_key),
                                       suffixIcon: IconButton(
                                         icon: Icon(
-                                          _passwordVisible!
+                                          _passwordSignUpVisible!
                                               ? Icons.visibility
                                               : Icons.visibility_off,
-                                          color:  _passwordVisible!
+                                          color:  _passwordSignUpVisible!
                                               ? Theme.of(context).primaryColorDark
                                               : Colors.grey,
                                           size: 20,
                                         ),
                                         onPressed: () {
                                           setState(() {
-                                            _passwordVisible = !(_passwordVisible!);
+                                            _passwordSignUpVisible = !(_passwordSignUpVisible!);
                                           });
                                         },
                                       ),
@@ -559,22 +579,22 @@ class _LoginScreenState extends State<LoginScreen> {
                                           color: Colors.grey.shade200))),
                               child: TextField(
                                 controller: confirmPasswordController,
-                                obscureText: !(_confirmPasswordVisible!),
+                                obscureText: !(_confirmPasswordSignUpVisible!),
                                 decoration: InputDecoration(
                                     prefixIcon: Icon(Icons.vpn_key),
                                     suffixIcon: IconButton(
                                       icon: Icon(
-                                        _confirmPasswordVisible!
+                                        _confirmPasswordSignUpVisible!
                                             ? Icons.visibility
                                             : Icons.visibility_off,
-                                        color: _confirmPasswordVisible!
+                                        color: _confirmPasswordSignUpVisible!
                                             ? Theme.of(context).primaryColorDark
                                             : Colors.grey,
                                         size: 20,
                                       ),
                                       onPressed: () {
                                         setState(() {
-                                          _confirmPasswordVisible = !(_confirmPasswordVisible!);
+                                          _confirmPasswordSignUpVisible = !(_confirmPasswordSignUpVisible!);
                                         });
                                       },
                                     ),
@@ -603,7 +623,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     SizedBox(
-                      height: 25,
+                      height: 30,
                     ),
                     FadeAnimation(
                       delay: 1.6,
@@ -638,8 +658,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             splashColor: Colors.transparent,
                             highlightColor: Colors.transparent,
                             child: Container(
-                              height: 42,
-                              width: 150,
+                              height: 50,
                               margin: EdgeInsets.symmetric(horizontal: 50),
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(50),
@@ -672,7 +691,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     SizedBox(
-                      height: 22,
+                      height: 30,
                     ),
                     GestureDetector(
                       onTap: () {

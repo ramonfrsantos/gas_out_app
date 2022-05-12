@@ -3,16 +3,16 @@ import 'package:kf_drawer/kf_drawer.dart';
 
 import '../login/login_screen.dart';
 
-class Stats extends KFDrawerContent {
-  Stats({
+class StatsScreen extends KFDrawerContent {
+  StatsScreen({
     Key? key,
   });
 
   @override
-  _StatsState createState() => _StatsState();
+  _StatsScreenState createState() => _StatsScreenState();
 }
 
-class _StatsState extends State<Stats> {
+class _StatsScreenState extends State<StatsScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(

@@ -7,17 +7,22 @@ import '../../components/notification/notification_tiles_component.dart';
 import '../../stores/controller/notification/notification_controller.dart';
 import '../login/login_screen.dart';
 
-class Notifications extends KFDrawerContent {
+class NotificationScreen extends KFDrawerContent {
+  final String? email;
+
+  NotificationScreen({required this.email});
+
   @override
-  _NotificationsState createState() => _NotificationsState();
+  _NotificationScreenState createState() => _NotificationScreenState();
 }
 
-class _NotificationsState extends State<Notifications> {
-  NotificationController _notificationController = NotificationController(ConstantUser.email);
+class _NotificationScreenState extends State<NotificationScreen> {
+  NotificationController _notificationController = NotificationController();
 
   @override
   void initState() {
     super.initState();
+    _notificationController.getUserNotifications(widget.email);
   }
 
   @override
@@ -63,7 +68,8 @@ class _NotificationsState extends State<Notifications> {
                           color: Colors.black,
                         ),
                         onPressed: (){
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));
+                          Navigator.pop(context);
+                          // Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));
                         },
                       ),
                     ),
@@ -102,7 +108,7 @@ class _NotificationsState extends State<Notifications> {
                     ),
                     onDismissed: (direction) {
                       var notificationChosen = notification;
-                      _showAlertDialog(context, notificationChosen.id, ConstantUser.email);
+                      _showAlertDialog(context, notificationChosen.id, widget.email);
                     },
                     background: _deleteBgItem()
                   )
@@ -113,7 +119,7 @@ class _NotificationsState extends State<Notifications> {
   }
 
   Future<void> _refresh() async {
-    await _notificationController.getUserNotifications(ConstantUser.email);
+    await _notificationController.getUserNotifications(widget.email);
 
     setState(() {
       _notificationController.notificationList;
@@ -136,7 +142,7 @@ class _NotificationsState extends State<Notifications> {
     );
   }
 
-  _showAlertDialog(BuildContext context, int id, String email) {
+  _showAlertDialog(BuildContext context, int id, String? email) {
     Widget cancelaButton = TextButton(
       child: Text("NÃO", style: GoogleFonts.roboto(
           fontSize: 16,

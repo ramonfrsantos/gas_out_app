@@ -30,7 +30,7 @@ mixin _$NotificationController on _NotificationControllerBase, Store {
       context: context);
 
   @override
-  Future getUserNotifications(String login) {
+  Future getUserNotifications(String? login) {
     return _$getUserNotificationsAsyncAction
         .run(() => super.getUserNotifications(login));
   }
@@ -40,7 +40,7 @@ mixin _$NotificationController on _NotificationControllerBase, Store {
       context: context);
 
   @override
-  Future deleteNotification(int id, String email) {
+  Future deleteNotification(int id, String? email) {
     return _$deleteNotificationAsyncAction
         .run(() => super.deleteNotification(id, email));
   }

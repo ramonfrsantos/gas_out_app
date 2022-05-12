@@ -32,12 +32,9 @@ abstract class _LoginControllerBase with Store {
     if(text.length == 0){
       return null;
     }
-    // Note: you can do your own custom validation here
     if (!validateStructure(text)) {
       return 'A senha é muito fraca.';
     }
-
-    // return null if the text is valid
     return null;
   }
 
@@ -66,6 +63,10 @@ abstract class _LoginControllerBase with Store {
   @action
   String? getErrorConfirmPassword(
       String textPassword, String textConfirmPassword) {
+    if(textConfirmPassword.length == 0){
+      return null;
+    }
+
     if(textPassword.length == 0 && textConfirmPassword.length == 0){
       return null;
     }
