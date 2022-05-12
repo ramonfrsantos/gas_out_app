@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:gas_out_app/app/screens/login/login_screen.dart';
 import 'package:gas_out_app/app/stores/controller/login/login_controller.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:kf_drawer/kf_drawer.dart';
 import '../../helpers/global.dart';
 import '../detail/details_screen.dart';
@@ -56,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                           color: Colors.black,
                         ),
                         onPressed: () {
-                          Navigator.pop(context);
+                          _showLogOutAlertDialog(context);
                           // Navigator.push(
                           //     context,
                           //     MaterialPageRoute(
@@ -163,6 +164,39 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       ),
     );
   }
+
+  _showLogOutAlertDialog(BuildContext context) {
+    Widget cancelaButton = TextButton(
+      child: Text("Cancelar", style: GoogleFonts.muli()),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+    Widget continuaButton = TextButton(
+      child: Text("Continuar", style: GoogleFonts.muli()),
+      onPressed: () {
+        Navigator.of(context).pop();
+        Navigator.of(context).pop();
+      },
+    );
+    //configura o AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Atenção!", style: GoogleFonts.muli(fontSize: 24)),
+      content: Text("Deseja realmente sair da sua conta?",
+          style: GoogleFonts.muli()),
+      actions: [
+        cancelaButton,
+        continuaButton,
+      ],
+    );
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
 
   Widget _listItem(
       String imgpath, String stringPath, double averageValue, double maxValue) {

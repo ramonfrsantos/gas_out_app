@@ -29,7 +29,7 @@ abstract class _LoginControllerBase with Store {
       name.length > 0;
 
   String? getErrorPassword(String text) {
-    if(text.length == 0){
+    if (text.length == 0) {
       return null;
     }
     if (!validateStructure(text)) {
@@ -40,10 +40,10 @@ abstract class _LoginControllerBase with Store {
 
   @action
   String? getErrorName(String text) {
-    if(text.length == 0){
+    if (text.length == 0) {
       return null;
     }
-    if (text.length < 6 && text.length > 0) {
+    if (text.replaceAll(' ', '').length < 6 && text.length > 0) {
       return 'Nome inválido.';
     }
     return null;
@@ -51,7 +51,7 @@ abstract class _LoginControllerBase with Store {
 
   @action
   String? getErrorEmail(String text) {
-    if(text.length == 0){
+    if (text.length == 0) {
       return null;
     }
     if (!EmailValidator.validate(text)) {
@@ -63,11 +63,11 @@ abstract class _LoginControllerBase with Store {
   @action
   String? getErrorConfirmPassword(
       String textPassword, String textConfirmPassword) {
-    if(textConfirmPassword.length == 0){
+    if (textConfirmPassword.length == 0) {
       return null;
     }
 
-    if(textPassword.length == 0 && textConfirmPassword.length == 0){
+    if (textPassword.length == 0 && textConfirmPassword.length == 0) {
       return null;
     }
     if (textPassword != textConfirmPassword) {
@@ -77,8 +77,7 @@ abstract class _LoginControllerBase with Store {
   }
 
   bool validateStructure(String value) {
-    String pattern =
-        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{6,}$';
+    String pattern = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{6,}$';
     RegExp regExp = new RegExp(pattern);
     return regExp.hasMatch(value);
   }

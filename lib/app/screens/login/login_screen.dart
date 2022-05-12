@@ -1,8 +1,8 @@
-import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:gas_out_app/app/constants/gasout_constants.dart';
 import 'package:gas_out_app/data/repositories/user/user_repository.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:simple_animations/simple_animations.dart';
 
 import '../../../data/model/login/login_response_model.dart';
@@ -228,14 +228,16 @@ class _LoginScreenState extends State<LoginScreen> {
                                           _passwordLoginVisible!
                                               ? Icons.visibility
                                               : Icons.visibility_off,
-                                          color:  _passwordLoginVisible!
-                                              ? Theme.of(context).primaryColorDark
+                                          color: _passwordLoginVisible!
+                                              ? Theme.of(context)
+                                                  .primaryColorDark
                                               : Colors.grey,
                                           size: 20,
                                         ),
                                         onPressed: () {
                                           setState(() {
-                                            _passwordLoginVisible = !(_passwordLoginVisible!);
+                                            _passwordLoginVisible =
+                                                !(_passwordLoginVisible!);
                                           });
                                         },
                                       ),
@@ -291,15 +293,16 @@ class _LoginScreenState extends State<LoginScreen> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => MainWidget(
-                                        title: 'GasOut',
-                                        username: response?.userName,
-                                        email: response?.login,
-                                    )),
+                                          title: 'GasOut',
+                                          username: response?.userName,
+                                          email: response?.login,
+                                        )),
                               );
                             } else {
                               setState(() {
                                 _loading = false;
                               });
+                              _showLoginErrorAlertDialog(context);
                             }
                           },
                           splashColor: Colors.transparent,
@@ -486,8 +489,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ),
                                     errorStyle: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        height: 0.5
-                                    ),
+                                        height: 0.5),
                                     border: InputBorder.none,
                                     errorText: loginController
                                         .getErrorName(loginController.name)),
@@ -514,8 +516,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ),
                                     errorStyle: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        height: 0.5
-                                    ),
+                                        height: 0.5),
                                     border: InputBorder.none,
                                     errorText: loginController
                                         .getErrorEmail(loginController.email)),
@@ -542,14 +543,16 @@ class _LoginScreenState extends State<LoginScreen> {
                                           _passwordSignUpVisible!
                                               ? Icons.visibility
                                               : Icons.visibility_off,
-                                          color:  _passwordSignUpVisible!
-                                              ? Theme.of(context).primaryColorDark
+                                          color: _passwordSignUpVisible!
+                                              ? Theme.of(context)
+                                                  .primaryColorDark
                                               : Colors.grey,
                                           size: 20,
                                         ),
                                         onPressed: () {
                                           setState(() {
-                                            _passwordSignUpVisible = !(_passwordSignUpVisible!);
+                                            _passwordSignUpVisible =
+                                                !(_passwordSignUpVisible!);
                                           });
                                         },
                                       ),
@@ -559,8 +562,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       ),
                                       errorStyle: TextStyle(
                                           fontWeight: FontWeight.bold,
-                                          height: 0.5
-                                      ),
+                                          height: 0.5),
                                       border: InputBorder.none,
                                       errorText:
                                           loginController.getErrorPassword(
@@ -594,7 +596,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                       ),
                                       onPressed: () {
                                         setState(() {
-                                          _confirmPasswordSignUpVisible = !(_confirmPasswordSignUpVisible!);
+                                          _confirmPasswordSignUpVisible =
+                                              !(_confirmPasswordSignUpVisible!);
                                         });
                                       },
                                     ),
@@ -603,9 +606,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                       color: Colors.grey,
                                     ),
                                     errorStyle: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      height: 0.5
-                                    ),
+                                        fontWeight: FontWeight.bold,
+                                        height: 0.5),
                                     border: InputBorder.none,
                                     errorText:
                                         loginController.getErrorConfirmPassword(
@@ -645,10 +647,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                     if (statusCode == 200) {
                                       setState(() {
                                         _pageState = 1;
+                                        _showSignUpSuccessAlertDialog(context);
                                         _loading = false;
                                       });
                                     } else {
                                       setState(() {
+                                        _showSignUpErrorAlertDialog(context);
                                         _loading = false;
                                       });
                                       print(statusCode);
@@ -708,8 +712,10 @@ class _LoginScreenState extends State<LoginScreen> {
                             children: [
                               Text(
                                 "Já possui uma conta? ",
-                                style:
-                                    TextStyle(height: 0.5, color: Colors.grey, fontSize: 16),
+                                style: TextStyle(
+                                    height: 0.5,
+                                    color: Colors.grey,
+                                    fontSize: 16),
                               ),
                               Text(
                                 "Entre aqui.",
@@ -739,6 +745,50 @@ class _LoginScreenState extends State<LoginScreen> {
         r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
     RegExp regExp = new RegExp(pattern);
     return regExp.hasMatch(value);
+  }
+
+  _showSignUpErrorAlertDialog(BuildContext context) {
+    //configura o AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Erro no cadastro", style: GoogleFonts.muli(fontSize: 20)),
+      content: Text("Confira seus dados e tente novamente.",
+          style: GoogleFonts.muli()),
+    );
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  _showLoginErrorAlertDialog(BuildContext context) {
+    //configura o AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Erro", style: GoogleFonts.muli(fontSize: 20)),
+      content: Text("Dados de login incorretos.",
+          style: GoogleFonts.muli()),
+    );
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  _showSignUpSuccessAlertDialog(BuildContext context) {
+    //configura o AlertDialog
+    AlertDialog alert = AlertDialog(
+      content:
+          Text("Usuário cadastrado com sucesso!", style: GoogleFonts.muli()),
+    );
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 }
 

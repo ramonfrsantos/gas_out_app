@@ -241,13 +241,13 @@ class _DetailsScreenState extends State<DetailsScreen> {
 
   _showAlertDialog(BuildContext context, Function funcao) {
     Widget cancelaButton = TextButton(
-      child: Text("Cancelar", style: GoogleFonts.roboto()),
+      child: Text("Cancelar", style: GoogleFonts.muli()),
       onPressed: () {
         Navigator.of(context).pop();
       },
     );
     Widget continuaButton = TextButton(
-      child: Text("Continuar", style: GoogleFonts.roboto()),
+      child: Text("Continuar", style: GoogleFonts.muli()),
       onPressed: () {
         Navigator.of(context).pop();
         funcao();
@@ -255,9 +255,9 @@ class _DetailsScreenState extends State<DetailsScreen> {
     );
     //configura o AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Atenção!", style: GoogleFonts.roboto(fontSize: 24)),
+      title: Text("Atenção!", style: GoogleFonts.muli(fontSize: 24)),
       content: Text("Deseja realmente acionar os sprinklers?",
-          style: GoogleFonts.roboto()),
+          style: GoogleFonts.muli()),
       actions: [
         cancelaButton,
         continuaButton,

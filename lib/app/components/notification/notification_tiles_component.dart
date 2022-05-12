@@ -42,7 +42,7 @@ class NotificationTiles extends StatelessWidget {
       ),
       title: Text(
         title!,
-        style: GoogleFonts.roboto(
+        style: GoogleFonts.muli(
             fontWeight: FontWeight.w500, color: Colors.black87),
       ),
       subtitle: Text(
@@ -56,7 +56,7 @@ class NotificationTiles extends StatelessWidget {
             ":" +
             minute! +
             ")",
-        style: GoogleFonts.roboto(color: Colors.black54),
+        style: GoogleFonts.muli(color: Colors.black54),
       ),
     );
   }

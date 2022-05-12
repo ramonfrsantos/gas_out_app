@@ -51,7 +51,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   ),
                   Text(
                     'Notificações',
-                    style: GoogleFonts.roboto(
+                    style: GoogleFonts.muli(
                       fontSize: 22,
                       color: ConstantColors.primaryColor,
                       fontWeight: FontWeight.w400,
@@ -68,7 +68,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                           color: Colors.black,
                         ),
                         onPressed: (){
-                          Navigator.pop(context);
+                          _showLogOutAlertDialog(context);
                           // Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));
                         },
                       ),
@@ -87,6 +87,39 @@ class _NotificationScreenState extends State<NotificationScreen> {
       );
     });
   }
+
+  _showLogOutAlertDialog(BuildContext context) {
+    Widget cancelaButton = TextButton(
+      child: Text("Cancelar", style: GoogleFonts.muli()),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+    Widget continuaButton = TextButton(
+      child: Text("Continuar", style: GoogleFonts.muli()),
+      onPressed: () {
+        Navigator.of(context).pop();
+        Navigator.of(context).pop();
+      },
+    );
+    //configura o AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Atenção!", style: GoogleFonts.muli(fontSize: 24)),
+      content: Text("Deseja realmente sair da sua conta?",
+          style: GoogleFonts.muli()),
+      actions: [
+        cancelaButton,
+        continuaButton,
+      ],
+    );
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
 
   Widget _buildBaseBody() {
     if (_notificationController.notificationList == null) {
@@ -144,7 +177,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
   _showAlertDialog(BuildContext context, int id, String? email) {
     Widget cancelaButton = TextButton(
-      child: Text("NÃO", style: GoogleFonts.roboto(
+      child: Text("NÃO", style: GoogleFonts.muli(
           fontSize: 16,
       )),
       onPressed: () {
@@ -152,7 +185,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
       },
     );
     Widget continuaButton = TextButton(
-      child: Text("SIM", style: GoogleFonts.roboto(
+      child: Text("SIM", style: GoogleFonts.muli(
           fontSize: 16,
       )),
       onPressed: () async {
@@ -162,10 +195,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
     );
 
     AlertDialog alert = AlertDialog(
-      title: Text("Atenção!", style: GoogleFonts.roboto(
+      title: Text("Atenção!", style: GoogleFonts.muli(
           fontSize: 24
       )),
-      content: Text("Você deseja realmente excluir essa notificação?", style: GoogleFonts.roboto(
+      content: Text("Você deseja realmente excluir essa notificação?", style: GoogleFonts.muli(
           fontSize: 18
       )),
       actions: [

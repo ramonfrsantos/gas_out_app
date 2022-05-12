@@ -94,7 +94,7 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
     print(widget.email);
 
     _drawerController = KFDrawerController(
-      initialPage: ClassBuilder.fromString('Home'),
+      initialPage: ClassBuilder.fromString('HomeScreen'),
       items: [
         KFDrawerItem.initWithPage(
           text: Text('Página Inicial',
