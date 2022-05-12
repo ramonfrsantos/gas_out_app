@@ -292,6 +292,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
                               emailLoginController.text = "";
                               passwordLoginController.text = "";
+                              passwordSignUpController.text = "";
+                              confirmPasswordController.text = "";
+                              nameController.text = "";
+                              emailSignUpController.text = "";
 
                               Navigator.push(
                                 context,
