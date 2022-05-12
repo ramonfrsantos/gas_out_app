@@ -1,3 +1,4 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:gas_out_app/app/constants/gasout_constants.dart';
@@ -8,7 +9,6 @@ import '../../../data/model/login/login_response_model.dart';
 import '../../../data/repositories/login/login_repository.dart';
 import '../../../main_dev.dart';
 import '../../stores/controller/login/login_controller.dart';
-import '../home/home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -34,21 +34,38 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _keyboardVisible = false;
   bool _loading = false;
 
-  @override
-  void initState() {
-    super.initState();
-  }
+  final emailLoginController = TextEditingController();
+  final passwordLoginController = TextEditingController();
+  final emailSignUpController = TextEditingController();
+  final passwordSignUpController = TextEditingController();
+  final nameController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
 
-  TextEditingController emailLoginController = TextEditingController();
-  TextEditingController passwordLoginController = TextEditingController();
-  TextEditingController emailSignUpController = TextEditingController();
-  TextEditingController passwordSignUpController = TextEditingController();
-  TextEditingController nameController = TextEditingController();
-  TextEditingController confirmPasswordController = TextEditingController();
+  bool? _confirmPasswordVisible;
+  bool? _passwordVisible;
+
+  // dispose it when the widget is unmounted
+  @override
+  void dispose() {
+    emailLoginController.dispose();
+    passwordLoginController.dispose();
+    emailSignUpController.dispose();
+    passwordSignUpController.dispose();
+    nameController.dispose();
+    confirmPasswordController.dispose();
+    super.dispose();
+  }
 
   UserRepository userRepository = UserRepository();
   LoginRepository loginRepository = LoginRepository();
   LoginController loginController = LoginController();
+
+  @override
+  void initState() {
+    _passwordVisible = false;
+    _confirmPasswordVisible = false;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +92,7 @@ class _LoginScreenState extends State<LoginScreen> {
         _loginWidth = windowWidth;
         _loginOpacity = 1;
 
-        _loginYOffset = _keyboardVisible ? 40 : 190;
+        _loginYOffset = _keyboardVisible ? 60 : 190;
         _loginHeight = _keyboardVisible ? windowHeight : windowHeight - 190;
 
         _loginXOffset = 0;
@@ -83,15 +100,15 @@ class _LoginScreenState extends State<LoginScreen> {
         break;
 
       case 2:
-        _loginWidth = windowWidth - 40;
+        _loginWidth = windowWidth - 60;
         _loginOpacity = 0.5;
 
-        _loginYOffset = _keyboardVisible ? 40 : 190;
-        _loginHeight = _keyboardVisible ? windowHeight : windowHeight - 190;
+        _loginYOffset = _keyboardVisible ? 60 : 190;
+        _loginHeight = _keyboardVisible ? windowHeight : windowHeight - 160;
 
         _loginXOffset = 20;
-        _registerYOffset = _keyboardVisible ? 40 : 190;
-        _registerHeight = _keyboardVisible ? windowHeight : windowHeight - 190;
+        _registerYOffset = _keyboardVisible ? 60 : 190;
+        _registerHeight = _keyboardVisible ? windowHeight : windowHeight - 160;
         break;
     }
 
@@ -184,12 +201,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                 child: TextField(
                                   controller: emailLoginController,
                                   decoration: InputDecoration(
-                                      prefixIcon: Icon(Icons.email),
-                                      hintText: "E-mail",
-                                      hintStyle: TextStyle(
-                                        color: Colors.grey,
-                                      ),
-                                      border: InputBorder.none),
+                                    prefixIcon: Icon(Icons.email),
+                                    hintText: "E-mail",
+                                    hintStyle: TextStyle(
+                                      color: Colors.grey,
+                                    ),
+                                    border: InputBorder.none,
+                                  ),
                                 ),
                               ),
                               Container(
@@ -239,13 +257,29 @@ class _LoginScreenState extends State<LoginScreen> {
                         delay: 1.6,
                         child: FlatButton(
                           onPressed: () async {
+                            setState(() {
+                              _loading = true;
+                            });
+
                             LoginResponseModel? response =
-                                await loginRepository.doLogin(emailLoginController.text, passwordLoginController.text);
-                            if(response?.userId != null){
+                                await loginRepository.doLogin(
+                                    emailLoginController.text,
+                                    passwordLoginController.text);
+                            if (response?.userId != null) {
+                              setState(() {
+                                _loading = false;
+                              });
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => MainWidget(title: 'GasOut', username: response?.userName)),
+                                MaterialPageRoute(
+                                    builder: (context) => MainWidget(
+                                        title: 'GasOut',
+                                        username: response?.userName)),
                               );
+                            } else {
+                              setState(() {
+                                _loading = false;
+                              });
                             }
                           },
                           splashColor: Colors.transparent,
@@ -257,14 +291,18 @@ class _LoginScreenState extends State<LoginScreen> {
                                 borderRadius: BorderRadius.circular(50),
                                 color: ConstantColors.primaryColor),
                             child: Center(
-                              child: Text(
-                                'Entrar',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
+                              child: _loading
+                                  ? CircularProgressIndicator(
+                                      color: Colors.white,
+                                    )
+                                  : Text(
+                                      'Entrar',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
                             ),
                           ),
                         ),
@@ -426,7 +464,18 @@ class _LoginScreenState extends State<LoginScreen> {
                                     hintStyle: TextStyle(
                                       color: Colors.grey,
                                     ),
-                                    border: InputBorder.none),
+                                    errorStyle: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        height: 0.5
+                                    ),
+                                    border: InputBorder.none,
+                                    errorText: loginController
+                                        .getErrorName(loginController.name)),
+                                onChanged: (value) {
+                                  setState(() {
+                                    loginController.name = value;
+                                  });
+                                },
                               ),
                             ),
                             Container(
@@ -443,7 +492,18 @@ class _LoginScreenState extends State<LoginScreen> {
                                     hintStyle: TextStyle(
                                       color: Colors.grey,
                                     ),
-                                    border: InputBorder.none),
+                                    errorStyle: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        height: 0.5
+                                    ),
+                                    border: InputBorder.none,
+                                    errorText: loginController
+                                        .getErrorEmail(loginController.email)),
+                                onChanged: (value) {
+                                  setState(() {
+                                    loginController.email = value;
+                                  });
+                                },
                               ),
                             ),
                             Container(
@@ -453,16 +513,43 @@ class _LoginScreenState extends State<LoginScreen> {
                                       bottom: BorderSide(
                                           color: Colors.grey.shade200))),
                               child: TextField(
-                                controller: passwordSignUpController,
-                                obscureText: true,
-                                decoration: InputDecoration(
-                                    prefixIcon: Icon(Icons.vpn_key),
-                                    hintText: "Senha",
-                                    hintStyle: TextStyle(
-                                      color: Colors.grey,
-                                    ),
-                                    border: InputBorder.none),
-                              ),
+                                  controller: passwordSignUpController,
+                                  obscureText: !(_passwordVisible!),
+                                  decoration: InputDecoration(
+                                      prefixIcon: Icon(Icons.vpn_key),
+                                      suffixIcon: IconButton(
+                                        icon: Icon(
+                                          _passwordVisible!
+                                              ? Icons.visibility
+                                              : Icons.visibility_off,
+                                          color:  _passwordVisible!
+                                              ? Theme.of(context).primaryColorDark
+                                              : Colors.grey,
+                                          size: 20,
+                                        ),
+                                        onPressed: () {
+                                          setState(() {
+                                            _passwordVisible = !(_passwordVisible!);
+                                          });
+                                        },
+                                      ),
+                                      hintText: "Senha",
+                                      hintStyle: TextStyle(
+                                        color: Colors.grey,
+                                      ),
+                                      errorStyle: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          height: 0.5
+                                      ),
+                                      border: InputBorder.none,
+                                      errorText:
+                                          loginController.getErrorPassword(
+                                              loginController.password)),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      loginController.password = value;
+                                    });
+                                  }),
                             ),
                             Container(
                               padding: EdgeInsets.all(10),
@@ -472,23 +559,43 @@ class _LoginScreenState extends State<LoginScreen> {
                                           color: Colors.grey.shade200))),
                               child: TextField(
                                 controller: confirmPasswordController,
-                                onChanged: (value) {
-                                  print(
-                                      "senha: ${passwordSignUpController.text} || confirmar senha: $value");
-                                  if (passwordSignUpController.text == value) {
-                                    loginController.setValue(false);
-                                  } else {
-                                    loginController.setValue(true);
-                                  }
-                                },
-                                obscureText: true,
+                                obscureText: !(_confirmPasswordVisible!),
                                 decoration: InputDecoration(
                                     prefixIcon: Icon(Icons.vpn_key),
+                                    suffixIcon: IconButton(
+                                      icon: Icon(
+                                        _confirmPasswordVisible!
+                                            ? Icons.visibility
+                                            : Icons.visibility_off,
+                                        color: _confirmPasswordVisible!
+                                            ? Theme.of(context).primaryColorDark
+                                            : Colors.grey,
+                                        size: 20,
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          _confirmPasswordVisible = !(_confirmPasswordVisible!);
+                                        });
+                                      },
+                                    ),
                                     hintText: "Confirmar senha",
                                     hintStyle: TextStyle(
                                       color: Colors.grey,
                                     ),
-                                    border: InputBorder.none),
+                                    errorStyle: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      height: 0.5
+                                    ),
+                                    border: InputBorder.none,
+                                    errorText:
+                                        loginController.getErrorConfirmPassword(
+                                            loginController.password,
+                                            loginController.confirmPassword)),
+                                onChanged: (value) {
+                                  setState(() {
+                                    loginController.confirmPassword = value;
+                                  });
+                                },
                               ),
                             )
                           ],
@@ -496,16 +603,15 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     SizedBox(
-                      height: 30,
+                      height: 25,
                     ),
                     FadeAnimation(
                       delay: 1.6,
                       child: Observer(
                         builder: (context) {
                           return FlatButton(
-                            onPressed: loginController.isSignUpButtonDisabled
-                                ? null
-                                : () async {
+                            onPressed: loginController.isSignUpButtonEnabled
+                                ? () async {
                                     setState(() {
                                       _loading = true;
                                     });
@@ -527,17 +633,19 @@ class _LoginScreenState extends State<LoginScreen> {
                                       });
                                       print(statusCode);
                                     }
-                                  },
+                                  }
+                                : null,
                             splashColor: Colors.transparent,
                             highlightColor: Colors.transparent,
                             child: Container(
-                              height: 50,
+                              height: 42,
+                              width: 150,
                               margin: EdgeInsets.symmetric(horizontal: 50),
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(50),
-                                  color: loginController.isSignUpButtonDisabled
-                                      ? ConstantColors.secondaryColor
-                                      : ConstantColors.primaryColor),
+                                  color: loginController.isSignUpButtonEnabled
+                                      ? ConstantColors.primaryColor
+                                      : ConstantColors.secondaryColor),
                               child: Center(
                                 // child: Text(
                                 //   'Cadastrar',
@@ -564,7 +672,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     SizedBox(
-                      height: 20,
+                      height: 22,
                     ),
                     GestureDetector(
                       onTap: () {
@@ -582,14 +690,15 @@ class _LoginScreenState extends State<LoginScreen> {
                               Text(
                                 "Já possui uma conta? ",
                                 style:
-                                    TextStyle(color: Colors.grey, fontSize: 18),
+                                    TextStyle(height: 0.5, color: Colors.grey, fontSize: 16),
                               ),
                               Text(
                                 "Entre aqui.",
                                 style: TextStyle(
+                                    height: 0.5,
                                     color: Colors.grey,
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 18),
+                                    fontSize: 16),
                               )
                             ],
                           ),
@@ -604,6 +713,13 @@ class _LoginScreenState extends State<LoginScreen> {
         ],
       ),
     );
+  }
+
+  bool validateStructure(String value) {
+    String pattern =
+        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
+    RegExp regExp = new RegExp(pattern);
+    return regExp.hasMatch(value);
   }
 }
 

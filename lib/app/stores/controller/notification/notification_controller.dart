@@ -1,12 +1,12 @@
 import 'package:gas_out_app/data/model/notiification/notification_response_model.dart';
 import 'package:gas_out_app/data/repositories/notification/notification_repository.dart';
 import 'package:mobx/mobx.dart';
-part 'notification_store.g.dart';
+part 'notification_controller.g.dart';
 
-class NotificationStore = _NotificationStoreBase with _$NotificationStore;
+class NotificationController = _NotificationControllerBase with _$NotificationController;
 
-abstract class _NotificationStoreBase with Store {
-  _NotificationStoreBase(String login) {
+abstract class _NotificationControllerBase with Store {
+  _NotificationControllerBase(String login) {
     getUserNotifications(login);
   }
 
@@ -14,12 +14,6 @@ abstract class _NotificationStoreBase with Store {
 
   @observable
   List<NotificationResponseModel>? notificationList;
-
-  //@action
-  //getAllNotifications() async {
-  // notificationList = await _repository.getAllNotifications();
-  // print(notificationList);
-  //}
 
   @action
   getUserNotifications(String login) async {

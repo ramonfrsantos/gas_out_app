@@ -42,7 +42,7 @@ class LoginRepository {
       return LoginResponseModel.fromJson(response.data);
     } catch (e) {
       print(e.toString());
-      throw ('Erro na conexão');
+      return null;
     }
   }
 }

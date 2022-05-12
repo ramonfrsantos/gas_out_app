@@ -4,7 +4,7 @@ import 'package:gas_out_app/app/constants/gasout_constants.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kf_drawer/kf_drawer.dart';
 import '../../components/notification/notification_tiles_component.dart';
-import '../../stores/notification/notification_store.dart';
+import '../../stores/controller/notification/notification_controller.dart';
 import '../login/login_screen.dart';
 
 class Notifications extends KFDrawerContent {
@@ -13,7 +13,7 @@ class Notifications extends KFDrawerContent {
 }
 
 class _NotificationsState extends State<Notifications> {
-  NotificationStore _store = NotificationStore(ConstantUser.email);
+  NotificationController _notificationController = NotificationController(ConstantUser.email);
 
   @override
   void initState() {
@@ -83,7 +83,7 @@ class _NotificationsState extends State<Notifications> {
   }
 
   Widget _buildBaseBody() {
-    if (_store.notificationList == null) {
+    if (_notificationController.notificationList == null) {
       return Center(
         child: const CircularProgressIndicator(),
       );
@@ -91,7 +91,7 @@ class _NotificationsState extends State<Notifications> {
       return RefreshIndicator(
         child: ListView(
                 padding: EdgeInsets.zero,
-                children: _store.notificationList!
+                children: _notificationController.notificationList!
                     .map(
                       (notification) => Dismissible(
                     direction: DismissDirection.startToEnd,
@@ -113,10 +113,10 @@ class _NotificationsState extends State<Notifications> {
   }
 
   Future<void> _refresh() async {
-    await _store.getUserNotifications(ConstantUser.email);
+    await _notificationController.getUserNotifications(ConstantUser.email);
 
     setState(() {
-      _store.notificationList;
+      _notificationController.notificationList;
     });
 
     return Future.delayed(Duration(
@@ -150,7 +150,7 @@ class _NotificationsState extends State<Notifications> {
           fontSize: 16,
       )),
       onPressed: () async {
-        await _store.deleteNotification(id, email);
+        await _notificationController.deleteNotification(id, email);
         Navigator.of(context).pop();
       },
     );

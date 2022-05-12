@@ -53,6 +53,7 @@ dependencies:
   shared_preferences: ^2.0.13
   font_awesome_flutter:
   simple_animations:
+  email_validator: ^2.0.1
 
 flutter_native_splash:
   image: "images/logo.png"
