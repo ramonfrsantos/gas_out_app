@@ -158,7 +158,7 @@ class _LoginScreenState extends State<LoginScreen> {
           AnimatedContainer(
             padding: _keyboardVisible
                 ? EdgeInsets.only(bottom: 40, left: 40, right: 40, top: 55)
-                : EdgeInsets.all(40),
+                : EdgeInsets.only(bottom: 40, left: 50, right: 50, top: 60),
             width: _loginWidth,
             height: _loginHeight,
             curve: Curves.fastLinearToSlowEaseIn,
@@ -185,10 +185,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: Container(
                           decoration: BoxDecoration(
                               color: Colors.white,
-                              borderRadius: BorderRadius.circular(10),
+                              borderRadius: BorderRadius.circular(20),
                               boxShadow: [
                                 BoxShadow(
-                                    color: Color.fromRGBO(32, 132, 232, 0.3),
+                                    color: Color.fromRGBO(40, 40, 40, 0.15),
                                     blurRadius: 20,
                                     offset: Offset(0, 10))
                               ]),
@@ -340,75 +340,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
 
                       // Login with social media
-
-                      // SizedBox(
-                      //   height: 15,
-                      // ),
-                      // FadeAnimation(
-                      //     delay: 1.7,
-                      //     child: Text(
-                      //       "Faça login com sua conta",
-                      //       style: TextStyle(color: Colors.grey),
-                      //     )),
-                      // SizedBox(
-                      //   height: 12,
-                      // ),
-                      // Row(
-                      //   mainAxisAlignment: MainAxisAlignment.center,
-                      //   children: [
-                      //     Container(
-                      //       child: FadeAnimation(
-                      //           delay: 1.8,
-                      //           child: Container(
-                      //             child: MaterialButton(
-                      //               onPressed: () {},
-                      //               color: Color(0xff3b5998),
-                      //               textColor: Colors.white,
-                      //               child: Icon(
-                      //                 FontAwesomeIcons.facebookF,
-                      //                 size: 30,
-                      //               ),
-                      //               padding: EdgeInsets.all(16),
-                      //               shape: CircleBorder(),
-                      //             ),
-                      //           )),
-                      //     ),
-                      //     Container(
-                      //       child: FadeAnimation(
-                      //           delay: 1.8,
-                      //           child: Container(
-                      //             child: MaterialButton(
-                      //               onPressed: () {},
-                      //               color: Color(0xffea4335),
-                      //               textColor: Colors.white,
-                      //               child: Icon(
-                      //                 FontAwesomeIcons.google,
-                      //                 size: 30,
-                      //               ),
-                      //               padding: EdgeInsets.all(16),
-                      //               shape: CircleBorder(),
-                      //             ),
-                      //           )),
-                      //     ),
-                      //     Container(
-                      //       child: FadeAnimation(
-                      //           delay: 1.8,
-                      //           child: Container(
-                      //             child: MaterialButton(
-                      //               onPressed: () {},
-                      //               color: Color(0xff34a853),
-                      //               textColor: Colors.white,
-                      //               child: Icon(
-                      //                 FontAwesomeIcons.mobileAlt,
-                      //                 size: 30,
-                      //               ),
-                      //               padding: EdgeInsets.all(16),
-                      //               shape: CircleBorder(),
-                      //             ),
-                      //           )),
-                      //     ),
-                      //   ],
-                      // ),
                       SizedBox(
                         height: 20,
                       ),
@@ -451,7 +382,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
           // Signup Screen
           AnimatedContainer(
-            padding: EdgeInsets.all(40),
+            padding: EdgeInsets.only(bottom: 40, left: 50, right: 50, top: 55),
             height: _registerHeight,
             curve: Curves.fastLinearToSlowEaseIn,
             duration: Duration(milliseconds: 1000),
@@ -472,10 +403,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: Container(
                         decoration: BoxDecoration(
                             color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(20),
                             boxShadow: [
                               BoxShadow(
-                                  color: Color.fromRGBO(32, 132, 232, 0.3),
+                                  color: Color.fromRGBO(40, 40, 40, 0.15),
                                   blurRadius: 20,
                                   offset: Offset(0, 10))
                             ]),

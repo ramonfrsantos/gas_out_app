@@ -146,35 +146,40 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
     return Scaffold(
       body: KFDrawer(
         controller: _drawerController,
-        header: Row(
-          children: [
-            Container(
-              height: 50,
-              width: 200,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage('images/logoPequenaBranco.png'),
-                    fit: BoxFit.fitHeight,
-                    opacity: 1.0),
+        menuPadding: EdgeInsets.only(left: 15),
+        header: Padding(
+          padding: EdgeInsets.only(top: 15),
+          child: Row(
+            children: [
+              Container(
+                height: 80,
+                width: 200,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage('images/logoPequenaBranco.png'),
+                      fit: BoxFit.fitHeight,
+                      opacity: 1.0),
+                ),
               ),
-            ),
-            SizedBox(
-              width: 150,
-              height: 95,
-            )
-          ],
+              SizedBox(
+                width: 150,
+                height: 125,
+              )
+            ],
+          ),
         ),
         footer: Container(),
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-            colors: [
-              ConstantColors.primaryColor,
-              ConstantColors.secondaryColor
-            ],
-            tileMode: TileMode.repeated,
-          ),
+          color: ConstantColors.primaryColor,
+          // gradient: LinearGradient(
+          //   begin: Alignment.centerLeft,
+          //   end: Alignment.centerRight,
+          //   colors: [
+          //     ConstantColors.primaryColor,
+          //     ConstantColors.secondaryColor
+          //   ],
+          //   tileMode: TileMode.repeated,
+          // ),
         ),
       ),
     );
