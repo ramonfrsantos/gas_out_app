@@ -130,10 +130,33 @@ class UserRepository {
       print(response.data);
 
       return response.statusCode;
-      // var jsonData = json.decode(response.data);
-      // print(jsonData);
     } catch (e) {
       print(e.toString());
     }
+  }
+
+  Future<String?> sendVerificationCode(String email) async {
+    final String url = '${baseUrl}user/verification-code/$email';
+    print(url);
+
+    try {
+      var response = await client.get(
+        url,
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': 'Bearer ${ConstantToken.tokenRequests}'
+          },
+        ),
+      );
+
+      print(response.data);
+
+      return response.data.toString();
+    } catch (e) {
+      print(e.toString());
+    }
+
+    return null;
   }
 }

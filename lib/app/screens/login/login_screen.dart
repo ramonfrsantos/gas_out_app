@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:gas_out_app/app/constants/gasout_constants.dart';
+import 'package:gas_out_app/app/screens/login/forgot_password_screen.dart';
 import 'package:gas_out_app/data/repositories/user/user_repository.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:simple_animations/simple_animations.dart';
@@ -258,6 +259,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       GestureDetector(
                         onTap: () {
                           print('Forget working');
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => ForgotPasswordScreen()));
                         },
                         child: Container(
                           height: 30,
