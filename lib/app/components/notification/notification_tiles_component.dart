@@ -23,7 +23,7 @@ class NotificationTiles extends StatelessWidget {
   Widget build(BuildContext context) {
     if (date != null) {
       dateUtc = DateTime.parse(date!);
-      dateLocal = dateUtc!.toLocal();
+      dateLocal = dateUtc!.subtract(const Duration(hours: 3));
 
       day = (dateLocal!.day).toString().padLeft(2, '0');
       month = (dateLocal!.month).toString().padLeft(2, '0');

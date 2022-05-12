@@ -9,8 +9,9 @@ import '../detail/details_screen.dart';
 
 class HomeScreen extends KFDrawerContent {
   final String? username;
+  final String? email;
 
-  HomeScreen({required this.username});
+  HomeScreen({required this.username, required this.email});
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -209,6 +210,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     averageValue: averageValue,
                     maxValue: maxValue,
                     totalHours: monitoringController.monitoringTotalHours,
+                    email: widget.email,
                   )));
         },
         child: Stack(alignment: Alignment.center, children: [

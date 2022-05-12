@@ -133,7 +133,7 @@ class NotificationRepository {
   }
 
   Future<NotificationModel?> createNotificationFirebase(
-      String title, String body, String email, String token) async {
+      String title, String body, String? email, String token) async {
     print(token);
 
     final String url = 'https://fcm.googleapis.com/fcm/send';
@@ -160,7 +160,7 @@ class NotificationRepository {
         ),
       );
 
-      createNotificationApp(title, body, email);
+      createNotificationApp(title, body, email!);
 
       return NotificationModel.fromJson(response.data);
     } catch (e) {

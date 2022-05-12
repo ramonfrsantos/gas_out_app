@@ -5,7 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:kf_drawer/kf_drawer.dart';
 import '../../components/notification/notification_tiles_component.dart';
 import '../../stores/controller/notification/notification_controller.dart';
-import '../login/login_screen.dart';
 
 class NotificationScreen extends KFDrawerContent {
   final String? email;

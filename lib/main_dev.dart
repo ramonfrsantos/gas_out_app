@@ -89,7 +89,7 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
     super.initState();
     ClassBuilder.registerNotification(widget.email);
     ClassBuilder.registerStats();
-    ClassBuilder.registerHome(widget.username);
+    ClassBuilder.registerHome(widget.username, widget.email);
     print(widget.username);
     print(widget.email);
 
@@ -100,7 +100,7 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
           text: Text('Página Inicial',
               style: TextStyle(color: Colors.white, fontSize: 18)),
           icon: Icon(Icons.home, color: Colors.white),
-          page: HomeScreen(username: widget.username,),
+          page: HomeScreen(username: widget.username, email: widget.email,),
         ),
         KFDrawerItem.initWithPage(
           text: Text(

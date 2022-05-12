@@ -16,8 +16,8 @@ class ClassBuilder {
     register<StatsScreen>(() => StatsScreen());
   }
 
-  static void registerHome(String? username) {
-    register<HomeScreen>(() => HomeScreen(username: username,));
+  static void registerHome(String? username, String? email) {
+    register<HomeScreen>(() => HomeScreen(username: username, email: email,));
   }
 
   static void registerNotification(String? email) {

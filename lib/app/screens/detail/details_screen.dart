@@ -12,13 +12,16 @@ class DetailsScreen extends StatefulWidget {
   final double averageValue;
   final double maxValue;
   final int totalHours;
+  final String? email;
 
   DetailsScreen(
       {Key? key,
       this.imgPath,
       required this.averageValue,
       required this.maxValue,
-      required this.totalHours})
+      required this.totalHours,
+      required this.email
+      })
       : super(key: key);
 
   @override
@@ -274,7 +277,6 @@ class _DetailsScreenState extends State<DetailsScreen> {
   Future<void> _generateNotification() async {
     String title = "";
     String body = "";
-    String email = "ramonfrsantos@gmail.com";
 
     if (widget.averageValue == 0) {
       title = "Apenas atualização de status...";
@@ -289,7 +291,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
     }
 
     final NotificationModel? notification = await notificationRepository
-        .createNotificationFirebase(title, body, email, token);
+        .createNotificationFirebase(title, body, widget.email, token);
 
     setState(() {
       _notification = notification;
