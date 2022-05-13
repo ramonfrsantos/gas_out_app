@@ -1,3 +1,5 @@
+import 'package:mqtt_client/mqtt_server_client.dart';
+
 import '../../app/screens/home/home_screen.dart';
 import '../../app/screens/notification/notification_screen.dart';
 import '../../app/screens/stats/stats_screen.dart';
@@ -12,8 +14,8 @@ void register<T>(Constructor<T> constructor) {
 }
 
 class ClassBuilder {
-  static void registerStats() {
-    register<StatsScreen>(() => StatsScreen());
+  static void registerStats(MqttServerClient client) {
+    register<StatsScreen>(() => StatsScreen(client: client));
   }
 
   static void registerHome(String? username, String? email) {

@@ -53,7 +53,7 @@ class _OtpScreenState extends State<OtpScreen> {
                       height: 40,
                     ),
                     SvgPicture.asset(
-                      "images/otp.svg",
+                      "assets/images/otp.svg",
                       height: 180,
                       width: 180,
                       color: ConstantColors.primaryColor,
@@ -108,6 +108,7 @@ class _OtpScreenState extends State<OtpScreen> {
                                     letterSpacing: 40
                                 ),
                                 decoration: InputDecoration(
+                                    border: InputBorder.none,
                                     hintText: "______",
                                     counterText: "",
                                     hintStyle: GoogleFonts.viga(

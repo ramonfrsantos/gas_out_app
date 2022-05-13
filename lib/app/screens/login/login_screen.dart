@@ -141,7 +141,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       FadeAnimation(
                         delay: 1,
                         child: Image(
-                          image: AssetImage('images/logoPequenaBranco.png'),
+                          image: AssetImage('assets/images/logoPequenaBranco.png'),
                           width: 200,
                         ),
                       ),

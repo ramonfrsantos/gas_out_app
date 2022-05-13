@@ -37,7 +37,7 @@ class NotificationTiles extends StatelessWidget {
         width: 40.0,
         decoration: BoxDecoration(
             image: DecorationImage(
-                image: AssetImage('images/notification.png'),
+                image: AssetImage('assets/images/notification.png'),
                 fit: BoxFit.cover)),
       ),
       title: Text(

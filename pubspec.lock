@@ -618,6 +618,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.19.2"
+  ndialog:
+    dependency: "direct main"
+    description:
+      name: ndialog
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.1.1"
   package_config:
     dependency: transitive
     description:

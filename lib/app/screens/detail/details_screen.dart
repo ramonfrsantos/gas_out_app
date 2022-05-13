@@ -100,7 +100,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         listItemStats(
-                          imgpath: 'images/notification.png',
+                          imgpath: 'assets/images/notification.png',
                           name: "Notificações",
                           value: notificationValue,
                           onChanged: (value) {
@@ -110,7 +110,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                           },
                         ),
                         listItemStats(
-                          imgpath: 'images/creative.png',
+                          imgpath: 'assets/images/creative.png',
                           name: "Alarme",
                           value: alarmValue,
                           onChanged: (value) {
@@ -120,7 +120,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                           },
                         ),
                         listItemStats(
-                          imgpath: 'images/sprinkler.png',
+                          imgpath: 'assets/images/sprinkler.png',
                           name: "Sprinklers",
                           value: sprinklersValue,
                           onChanged: (value) {

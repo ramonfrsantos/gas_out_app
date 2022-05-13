@@ -1,13 +1,18 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kf_drawer/kf_drawer.dart';
-
-import '../login/login_screen.dart';
+import 'package:mqtt_client/mqtt_client.dart';
+import 'package:mqtt_client/mqtt_server_client.dart';
+import 'package:image/image.dart' as img;
 
 class StatsScreen extends KFDrawerContent {
   StatsScreen({
-    Key? key,
+    Key? key, required this.client,
   });
+  final MqttServerClient client;
 
   @override
   _StatsScreenState createState() => _StatsScreenState();
@@ -57,15 +62,46 @@ class _StatsScreenState extends State<StatsScreen> {
               ],
             ),
             Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text('Análise Geral'),
-                ],
+              child: Scaffold(
+                body: _buildBaseBody(),
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildBaseBody(){
+    return Container(
+      color: Colors.black,
+      child: StreamBuilder(
+        stream: widget.client.updates,
+        builder: (context, snapshot){
+          if(!snapshot.hasData){
+            return Center(
+              child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white),),
+            );
+          } else {
+            final mqttReceivedMessages = snapshot.data as List<MqttReceivedMessage<MqttMessage>>?;
+            final recMess = mqttReceivedMessages![0].payload as MqttPublishMessage;
+            final messPub = MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
+
+            final messPubJsonValue = json.decode(messPub)['message'];
+
+            print(messPubJsonValue);
+
+            return Center(
+              child: Text(
+                messPubJsonValue,
+                style: TextStyle(
+                    color: Colors.white,
+                  fontSize: 40
+                ),
+              ),
+            );
+          }
+        },
       ),
     );
   }

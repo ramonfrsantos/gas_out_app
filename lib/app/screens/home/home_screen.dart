@@ -81,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     Container(
                       alignment: Alignment.center,
                       child: Image(
-                        image: AssetImage('images/logoPequena.png'),
+                        image: AssetImage('assets/images/logoPequena.png'),
                         width: 220,
                       ),
                     ),
@@ -107,24 +107,24 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                           scrollDirection: Axis.horizontal,
                           children: <Widget>[
                             _listItem(
-                              'images/quarto.jpg',
+                              'assets/images/quarto.jpg',
                               'Quarto',
                               10,
                               14.7,
                             ),
                             new SizedBox(width: 15),
                             _listItem(
-                                'images/cozinha.jpg', 'Cozinha', 51.3, 62.5),
+                                'assets/images/cozinha.jpg', 'Cozinha', 51.3, 62.5),
                             new SizedBox(width: 15),
                             _listItem(
-                              'images/sala.jpg',
+                              'assets/images/sala.jpg',
                               'Sala de estar',
                               8,
                               6,
                             ),
                             new SizedBox(width: 15),
                             _listItem(
-                              'images/banheiro.jpg',
+                              'assets/images/banheiro.jpg',
                               'Banheiro',
                               0,
                               2,

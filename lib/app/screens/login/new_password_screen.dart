@@ -101,7 +101,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                       FadeAnimation(
                         delay: 1,
                         child: Image(
-                          image: AssetImage('images/logoPequenaBranco.png'),
+                          image: AssetImage('assets/images/logoPequenaBranco.png'),
                           width: 200,
                         ),
                       ),
