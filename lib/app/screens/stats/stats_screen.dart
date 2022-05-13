@@ -72,13 +72,13 @@ class _StatsScreenState extends State<StatsScreen> {
 
   _showLogOutAlertDialog(BuildContext context) {
     Widget cancelaButton = TextButton(
-      child: Text("Cancelar", style: GoogleFonts.muli()),
+      child: Text("Cancelar", style: GoogleFonts.muli(fontSize: 16)),
       onPressed: () {
         Navigator.of(context).pop();
       },
     );
     Widget continuaButton = TextButton(
-      child: Text("Continuar", style: GoogleFonts.muli()),
+      child: Text("Continuar", style: GoogleFonts.muli(fontSize: 16)),
       onPressed: () {
         Navigator.of(context).pop();
         Navigator.of(context).pop();
@@ -88,7 +88,7 @@ class _StatsScreenState extends State<StatsScreen> {
     AlertDialog alert = AlertDialog(
       title: Text("Atenção!", style: GoogleFonts.muli(fontSize: 24)),
       content: Text("Deseja realmente sair da sua conta?",
-          style: GoogleFonts.muli()),
+          style: GoogleFonts.muli(fontSize: 20)),
       actions: [
         cancelaButton,
         continuaButton,

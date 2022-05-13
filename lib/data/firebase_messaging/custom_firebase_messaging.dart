@@ -1,5 +1,5 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
-import '../../main_dev.dart';
+import '../../main.dart';
 import 'custom_local_notification.dart';
 
 class CustomFirebaseMessaging {

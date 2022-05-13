@@ -1,7 +1,7 @@
 import '../../app/screens/home/home_screen.dart';
 import '../../app/screens/notification/notification_screen.dart';
 import '../../app/screens/stats/stats_screen.dart';
-import '../../main_dev.dart';
+import '../../main.dart';
 
 typedef T Constructor<T>();
 

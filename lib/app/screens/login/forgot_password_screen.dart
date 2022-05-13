@@ -204,7 +204,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => OtpScreen(verificationCode: response, email: email,)),
+                                    builder: (context) => OtpScreen(email: email,)),
                               );
 
                             } else {
@@ -258,9 +258,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   _showVerificationCodeErrorAlertDialog(BuildContext context) {
     //configura o AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Erro", style: GoogleFonts.muli(fontSize: 20)),
-      content: Text("Email de verificação inválido.",
-          style: GoogleFonts.muli()),
+      title: Text("Erro", style: GoogleFonts.muli(fontSize: 24)),
+      content: Text("Erro ao enviar o código. Tente novamente.",
+          style: GoogleFonts.muli(fontSize: 20)),
     );
     showDialog(
       context: context,

@@ -5,7 +5,7 @@ import 'package:gas_out_app/data/repositories/notification/notification_reposito
 import 'package:http/http.dart' as http;
 import 'package:google_fonts/google_fonts.dart';
 import '../../../data/model/notiification/notification_firebase_model.dart';
-import '../../../main_dev.dart';
+import '../../../main.dart';
 
 class DetailsScreen extends StatefulWidget {
   final imgPath;
@@ -244,13 +244,13 @@ class _DetailsScreenState extends State<DetailsScreen> {
 
   _showAlertDialog(BuildContext context, Function funcao) {
     Widget cancelaButton = TextButton(
-      child: Text("Cancelar", style: GoogleFonts.muli()),
+      child: Text("Cancelar", style: GoogleFonts.muli(fontSize: 16)),
       onPressed: () {
         Navigator.of(context).pop();
       },
     );
     Widget continuaButton = TextButton(
-      child: Text("Continuar", style: GoogleFonts.muli()),
+      child: Text("Continuar", style: GoogleFonts.muli(fontSize: 16)),
       onPressed: () {
         Navigator.of(context).pop();
         funcao();
@@ -260,7 +260,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
     AlertDialog alert = AlertDialog(
       title: Text("Atenção!", style: GoogleFonts.muli(fontSize: 24)),
       content: Text("Deseja realmente acionar os sprinklers?",
-          style: GoogleFonts.muli()),
+          style: GoogleFonts.muli(fontSize: 20)),
       actions: [
         cancelaButton,
         continuaButton,

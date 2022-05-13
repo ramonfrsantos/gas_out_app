@@ -28,6 +28,13 @@ abstract class _LoginControllerBase with Store {
       confirmPassword.length > 0 &&
       name.length > 0;
 
+  @computed
+  bool get isCreateNewPasswordButtonEnabled =>
+      getErrorPassword(password) == null &&
+      getErrorConfirmPassword(password, confirmPassword) == null &&
+      password.length > 0 &&
+      confirmPassword.length > 0;
+
   String? getErrorPassword(String text) {
     if (text.length == 0) {
       return null;

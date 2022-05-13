@@ -8,7 +8,7 @@ import 'package:simple_animations/simple_animations.dart';
 
 import '../../../data/model/login/login_response_model.dart';
 import '../../../data/repositories/login/login_repository.dart';
-import '../../../main_dev.dart';
+import '../../../main.dart';
 import '../../stores/controller/login/login_controller.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -609,7 +609,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                   borderRadius: BorderRadius.circular(50),
                                   color: loginController.isSignUpButtonEnabled
                                       ? ConstantColors.primaryColor
-                                      : ConstantColors.secondaryColor),
+                                      : ConstantColors.secondaryColor
+                              ),
                               child: Center(
                                 // child: Text(
                                 //   'Cadastrar',
@@ -691,9 +692,9 @@ class _LoginScreenState extends State<LoginScreen> {
   _showSignUpErrorAlertDialog(BuildContext context) {
     //configura o AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Erro no cadastro", style: GoogleFonts.muli(fontSize: 20)),
+      title: Text("Erro no cadastro", style: GoogleFonts.muli(fontSize: 24)),
       content: Text("Confira seus dados e tente novamente.",
-          style: GoogleFonts.muli()),
+          style: GoogleFonts.muli(fontSize: 20)),
     );
     showDialog(
       context: context,
@@ -706,9 +707,9 @@ class _LoginScreenState extends State<LoginScreen> {
   _showLoginErrorAlertDialog(BuildContext context) {
     //configura o AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Erro", style: GoogleFonts.muli(fontSize: 20)),
+      title: Text("Erro", style: GoogleFonts.muli(fontSize: 24)),
       content: Text("Dados de login incorretos.",
-          style: GoogleFonts.muli()),
+          style: GoogleFonts.muli(fontSize: 20)),
     );
     showDialog(
       context: context,
@@ -722,7 +723,7 @@ class _LoginScreenState extends State<LoginScreen> {
     //configura o AlertDialog
     AlertDialog alert = AlertDialog(
       content:
-          Text("Usuário cadastrado com sucesso!", style: GoogleFonts.muli()),
+          Text("Usuário cadastrado com sucesso!", style: GoogleFonts.muli(fontSize: 20)),
     );
     showDialog(
       context: context,

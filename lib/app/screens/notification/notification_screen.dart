@@ -87,39 +87,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
     });
   }
 
-  _showLogOutAlertDialog(BuildContext context) {
-    Widget cancelaButton = TextButton(
-      child: Text("Cancelar", style: GoogleFonts.muli()),
-      onPressed: () {
-        Navigator.of(context).pop();
-      },
-    );
-    Widget continuaButton = TextButton(
-      child: Text("Continuar", style: GoogleFonts.muli()),
-      onPressed: () {
-        Navigator.of(context).pop();
-        Navigator.of(context).pop();
-      },
-    );
-    //configura o AlertDialog
-    AlertDialog alert = AlertDialog(
-      title: Text("Atenção!", style: GoogleFonts.muli(fontSize: 24)),
-      content: Text("Deseja realmente sair da sua conta?",
-          style: GoogleFonts.muli()),
-      actions: [
-        cancelaButton,
-        continuaButton,
-      ],
-    );
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
-    );
-  }
-
-
   Widget _buildBaseBody() {
     if (_notificationController.notificationList == null) {
       return Center(
@@ -198,7 +165,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
           fontSize: 24
       )),
       content: Text("Você deseja realmente excluir essa notificação?", style: GoogleFonts.muli(
-          fontSize: 18
+          fontSize: 20
       )),
       actions: [
         cancelaButton,
@@ -212,4 +179,37 @@ class _NotificationScreenState extends State<NotificationScreen> {
       },
     );
   }
+
+  _showLogOutAlertDialog(BuildContext context) {
+    Widget cancelaButton = TextButton(
+      child: Text("Cancelar", style: GoogleFonts.muli(fontSize: 16)),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+    Widget continuaButton = TextButton(
+      child: Text("Continuar", style: GoogleFonts.muli(fontSize: 16)),
+      onPressed: () {
+        Navigator.of(context).pop();
+        Navigator.of(context).pop();
+      },
+    );
+    //configura o AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Atenção!", style: GoogleFonts.muli(fontSize: 24)),
+      content: Text("Deseja realmente sair da sua conta?",
+          style: GoogleFonts.muli(fontSize: 20)),
+      actions: [
+        cancelaButton,
+        continuaButton,
+      ],
+    );
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
 }
