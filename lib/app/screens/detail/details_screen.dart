@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:google_fonts/google_fonts.dart';
 import '../../../data/model/notiification/notification_firebase_model.dart';
 import '../../../main.dart';
+import '../../constants/gasout_constants.dart';
 
 class DetailsScreen extends StatefulWidget {
   final imgPath;
@@ -90,7 +91,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                     topLeft: Radius.circular(40),
                     topRight: Radius.circular(40),
                   ),
-                  color: Color.fromRGBO(250, 193, 157, 0.68),
+                  color: ConstantColors.secondaryColor.withOpacity(0.6),
                 ),
                 child: new Column(
                   children: <Widget>[
@@ -218,7 +219,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
           borderRadius: BorderRadius.circular(25),
           color: value == true
               ? Colors.white
-              : Color.fromRGBO(210, 153, 117, 0.75)),
+              : ConstantColors.primaryColor.withOpacity(0.75)),
       child: Column(
         children: <Widget>[
           SizedBox(height: 15),
@@ -235,7 +236,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
           Switch(
             value: value,
             onChanged: onChanged,
-            activeColor: Colors.lightGreen,
+            activeColor: Colors.green,
           )
         ],
       ),

@@ -10,9 +10,8 @@ import 'package:image/image.dart' as img;
 
 class StatsScreen extends KFDrawerContent {
   StatsScreen({
-    Key? key, required this.client,
+    Key? key,
   });
-  final MqttServerClient client;
 
   @override
   _StatsScreenState createState() => _StatsScreenState();
@@ -52,7 +51,7 @@ class _StatsScreenState extends State<StatsScreen> {
                         Icons.exit_to_app,
                         color: Colors.black,
                       ),
-                      onPressed: (){
+                      onPressed: () {
                         _showLogOutAlertDialog(context);
                         // Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));
                       },
@@ -72,36 +71,14 @@ class _StatsScreenState extends State<StatsScreen> {
     );
   }
 
-  Widget _buildBaseBody(){
+  Widget _buildBaseBody() {
     return Container(
       color: Colors.black,
-      child: StreamBuilder(
-        stream: widget.client.updates,
-        builder: (context, snapshot){
-          if(!snapshot.hasData){
-            return Center(
-              child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white),),
-            );
-          } else {
-            final mqttReceivedMessages = snapshot.data as List<MqttReceivedMessage<MqttMessage>>?;
-            final recMess = mqttReceivedMessages![0].payload as MqttPublishMessage;
-            final messPub = MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
-
-            final messPubJsonValue = json.decode(messPub)['message'];
-
-            print(messPubJsonValue);
-
-            return Center(
-              child: Text(
-                messPubJsonValue,
-                style: TextStyle(
-                    color: Colors.white,
-                  fontSize: 40
-                ),
-              ),
-            );
-          }
-        },
+      child: Center(
+        child: Text(
+          "Análise geral",
+          style: TextStyle(color: Colors.white, fontSize: 40),
+        ),
       ),
     );
   }
@@ -137,5 +114,4 @@ class _StatsScreenState extends State<StatsScreen> {
       },
     );
   }
-
 }

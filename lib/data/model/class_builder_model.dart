@@ -14,12 +14,12 @@ void register<T>(Constructor<T> constructor) {
 }
 
 class ClassBuilder {
-  static void registerStats(MqttServerClient client) {
-    register<StatsScreen>(() => StatsScreen(client: client));
+  static void registerStats() {
+    register<StatsScreen>(() => StatsScreen());
   }
 
-  static void registerHome(String? username, String? email) {
-    register<HomeScreen>(() => HomeScreen(username: username, email: email,));
+  static void registerHome(String? username, String? email, MqttServerClient client) {
+    register<HomeScreen>(() => HomeScreen(username: username, email: email, client: client));
   }
 
   static void registerNotification(String? email) {

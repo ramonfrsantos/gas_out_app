@@ -100,8 +100,8 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     ClassBuilder.registerNotification(widget.email);
-    ClassBuilder.registerStats(client);
-    ClassBuilder.registerHome(widget.username, widget.email);
+    ClassBuilder.registerStats();
+    ClassBuilder.registerHome(widget.username, widget.email, client);
     print(widget.username);
     print(widget.email);
 
@@ -115,6 +115,7 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
           page: HomeScreen(
             username: widget.username,
             email: widget.email,
+            client: client
           ),
         ),
         KFDrawerItem.initWithPage(
@@ -133,7 +134,7 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
             style: TextStyle(color: Colors.white, fontSize: 18),
           ),
           icon: Icon(Icons.trending_up, color: Colors.white),
-          page: StatsScreen(client: client,),
+          page: StatsScreen(),
         ),
         KFDrawerItem.initWithPage(
           text: Text(
@@ -162,21 +163,6 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
         overlays: SystemUiOverlay.values);
 
     return Scaffold(
-      // floatingActionButton: isConnected
-      //     ? FloatingActionButton(
-      //   onPressed: () {
-      //     _disconnect();
-      //   },
-      //   child: Icon(Icons.wifi_off, color: Colors.white),
-      //   backgroundColor: Colors.redAccent,
-      // )
-      //     : FloatingActionButton(
-      //         onPressed: () {
-      //           _connect();
-      //         },
-      //         child: Icon(Icons.wifi, color: Colors.white),
-      //         backgroundColor: Colors.green,
-      //       ),
       body: KFDrawer(
         controller: _drawerController,
         menuPadding: EdgeInsets.only(left: 15),
@@ -272,6 +258,8 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
 
       isConnected = await mqttConnect(idTextController.text.trim());
       progressDialog.dismiss();
+
+      Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen(username: widget.username, email: widget.email, client: client)));
     }
   }
 
