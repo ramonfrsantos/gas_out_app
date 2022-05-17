@@ -66,7 +66,9 @@ class _MyAppState extends State<MyApp> {
         ),
       ),
       debugShowCheckedModeBanner: false,
+      // home: MainWidget(title: 'Gas Out',),
       home: LoginScreen(),
+
       // MainWidget(
       //   title: 'Gas Out',
       // ),
@@ -75,11 +77,13 @@ class _MyAppState extends State<MyApp> {
 }
 
 class MainWidget extends StatefulWidget {
-  MainWidget({Key? key, required this.title, this.username, this.email})
+  MainWidget({Key? key, required this.title, this.username, this.email, required this.client, required this.isConnected})
       : super(key: key);
   final String title;
   final String? username;
   final String? email;
+  final MqttServerClient client;
+  late bool isConnected;
 
   @override
   _MainWidgetState createState() => _MainWidgetState();
@@ -87,11 +91,7 @@ class MainWidget extends StatefulWidget {
 
 class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
   String statusText = "Status Text";
-  bool isConnected = false;
   TextEditingController idTextController = TextEditingController();
-
-  final MqttServerClient client =
-      MqttServerClient('aulwdm3oigmf5-ats.iot.us-east-1.amazonaws.com', '');
 
   late KFDrawerController _drawerController;
   LoginController loginController = LoginController();
@@ -101,7 +101,7 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
     super.initState();
     ClassBuilder.registerNotification(widget.email);
     ClassBuilder.registerStats();
-    ClassBuilder.registerHome(widget.username, widget.email, client);
+    ClassBuilder.registerHome(widget.username, widget.email, widget.client);
     print(widget.username);
     print(widget.email);
 
@@ -115,7 +115,7 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
           page: HomeScreen(
             username: widget.username,
             email: widget.email,
-            client: client
+            client: widget.client
           ),
         ),
         KFDrawerItem.initWithPage(
@@ -195,12 +195,12 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
               Container(
                 width: 200,
                 height: 50,
-                child: isConnected ? TextButton(
+                child: widget.isConnected ? TextButton(
                     onPressed: _disconnect,
                     child: Text("Desconectar")
                 ) : TextFormField(
                   controller: idTextController,
-                  enabled: !isConnected,
+                  enabled: !widget.isConnected,
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.only(left: 10, top: 5),
@@ -256,15 +256,18 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
       progressDialog.setTitle(Text("Conectando"));
       progressDialog.show();
 
-      isConnected = await mqttConnect(idTextController.text.trim());
+      widget.isConnected = await mqttConnect(idTextController.text.trim());
       progressDialog.dismiss();
 
-      Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen(username: widget.username, email: widget.email, client: client)));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => MainWidget(username: widget.username, email: widget.email, title: 'GasOut', client: widget.client, isConnected: widget.isConnected,)));
     }
   }
 
   _disconnect() {
-    client.disconnect();
+    setState(() {
+      widget.isConnected = false;
+    });
+    widget.client.disconnect();
   }
 
   Future<bool> mqttConnect(String uniqueId) async {
@@ -279,28 +282,28 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
     context.useCertificateChainBytes(deviceCert.buffer.asUint8List());
     context.usePrivateKeyBytes(privateKey.buffer.asUint8List());
 
-    client.securityContext = context;
-    client.logging(on: true);
-    client.keepAlivePeriod = 20;
-    client.port = 8883;
-    client.secure = true;
-    client.onConnected = onConnected;
-    client.onDisconnected = onDisconnected;
-    client.pongCallback = pong;
+    widget.client.securityContext = context;
+    widget.client.logging(on: true);
+    widget.client.keepAlivePeriod = 20;
+    widget.client.port = 8883;
+    widget.client.secure = true;
+    widget.client.onConnected = onConnected;
+    widget.client.onDisconnected = onDisconnected;
+    widget.client.pongCallback = pong;
 
     final MqttConnectMessage connMess =
         MqttConnectMessage().withClientIdentifier(uniqueId).startClean();
-    client.connectionMessage = connMess;
+    widget.client.connectionMessage = connMess;
 
-    await client.connect();
-    if (client.connectionStatus!.state == MqttConnectionState.connected) {
+    await widget.client.connect();
+    if (widget.client.connectionStatus!.state == MqttConnectionState.connected) {
       print("Conectado ao AWS com sucesso.");
     } else {
       return false;
     }
 
-    const topic = 'localgateway_to_awsiot';
-    client.subscribe(topic, MqttQos.atMostOnce);
+    const topic = 'GasOutAPP';
+    widget.client.subscribe(topic, MqttQos.atMostOnce);
 
     return true;
   }
@@ -317,7 +320,7 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
 
   void onDisconnected() {
     setStatus("Cliente desconectado.");
-    isConnected = false;
+    widget.isConnected = false;
   }
 
   void pong() {

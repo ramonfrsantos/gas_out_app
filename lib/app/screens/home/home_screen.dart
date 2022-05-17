@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_launcher_icons/utils.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -12,7 +13,8 @@ import '../../helpers/global.dart';
 import '../detail/details_screen.dart';
 
 class HomeScreen extends KFDrawerContent {
-  HomeScreen({required this.username, required this.email, required this.client});
+  HomeScreen(
+      {required this.username, required this.email, required this.client});
 
   final String? username;
   final String? email;
@@ -76,91 +78,123 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   ],
                 ),
                 Padding(
-                  padding: EdgeInsets.all(15),
+                  padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text("Olá, ${(widget.username)?.split(' ')[0]}!",
+                      Text(
+                          "Olá, ${(widget.username == null ? "" : widget.username)?.split(' ')[0]}!",
                           style: TextStyle(
-                              fontSize: 23, fontWeight: FontWeight.bold)),
-                      SizedBox(height: 15),
+                              fontSize: 21, fontWeight: FontWeight.bold)),
+                      SizedBox(height: 28),
                       Container(
+                        padding: EdgeInsets.only(right: 20),
                         alignment: Alignment.center,
                         child: Image(
                           image: AssetImage('assets/images/logoPequena.png'),
-                          width: 220,
+                          width: 250,
                         ),
                       ),
-                      SizedBox(height: 50),
-                      Text("Sobre o APP:",
-                          style: TextStyle(
-                              fontSize: 19, fontWeight: FontWeight.bold)),
-                      SizedBox(height: 15),
+                      SizedBox(height: 30),
                       Text(
-                        "No GasOut apresentamos um relatório completo sobre possíveis vazamentos de gás na sua residência."
-                            " Sugerimos seguir as recomendações em caso de alterações ou resultados indesejados.",
+                        "Aqui está o relatório sobre vazamentos de gás na sua residência."
+                        " Sugerimos seguir as recomendações, em caso de alterações ou de resultados indesejados.",
+                        textAlign: TextAlign.justify,
                         style: TextStyle(color: Colors.grey),
                       ),
                       SizedBox(height: 30),
                       Text("Escolha um cômodo:",
                           style: TextStyle(
                               fontSize: 19, fontWeight: FontWeight.bold)),
-                      SizedBox(height: 15),
+                      SizedBox(height: 25),
                       Container(
-                          key: UniqueKey(),
-                          height: 300,
-                          width: double.infinity,
-                          child: StreamBuilder(
-                            stream: widget.client.updates,
-                            builder: (context, snapshot) {
-                              print(snapshot);
-                              if (!snapshot.hasData) {
-                                return Center(
-                                  child: CircularProgressIndicator(
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                        ConstantColors.primaryColor),
+                        alignment: Alignment.center,
+                        key: UniqueKey(),
+                        height: 300,
+                        width: double.infinity,
+                        child: StreamBuilder(
+                          stream: widget.client.updates,
+                          builder: (context, snapshot) {
+                            print(snapshot);
+                            if (!snapshot.hasData) {
+                              return Center(
+                                child: CircularProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      ConstantColors.primaryColor),
+                                ),
+                              );
+                            } else {
+                              final mqttReceivedMessages = snapshot.data
+                                  as List<MqttReceivedMessage<MqttMessage>>?;
+                              final recMessBytes = mqttReceivedMessages![0]
+                                  .payload as MqttPublishMessage;
+                              final recMessString =
+                                  MqttPublishPayload.bytesToStringAsString(
+                                      recMessBytes.payload.message);
+
+                              final recMessValue =
+                                  json.decode(recMessString)['message'];
+
+                              print(recMessValue);
+
+                              return Column(
+                                children: <Widget>[
+                                  // _listItem(
+                                  //   'assets/images/quarto.jpg',
+                                  //   'Quarto',
+                                  //   10,
+                                  //   14.7,
+                                  // ),
+                                  // new SizedBox(width: 15),
+                                  Row(
+                                    children: [
+                                      _listItem(
+                                        'assets/images/cozinha.jpg',
+                                        'Cozinha',
+                                        recMessValue.toDouble(),
+                                        62.5,
+                                        // 'Cozinha',
+                                        // 10.0,
+                                        // 62.5,
+                                        AssetImage(
+                                            'assets/images/icon-kitchen.png'),
+                                      ),
+                                      new SizedBox(width: 22),
+                                      _listItem(
+                                          'assets/images/sala.jpg',
+                                          'Sala de estar',
+                                          8,
+                                          6,
+                                          AssetImage(
+                                              'assets/images/icon-living-room.png')),
+                                    ],
                                   ),
-                                );
-                              } else {
-                                final mqttReceivedMessages = snapshot.data as List<MqttReceivedMessage<MqttMessage>>?;
-                                final recMess = mqttReceivedMessages![0].payload as MqttPublishMessage;
-                                final messPub = MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
-
-                                final messPubJsonValue = json.decode(messPub)['message'];
-
-                                print(messPubJsonValue);
-
-                                return ListView(
-                                  scrollDirection: Axis.horizontal,
-                                  children: <Widget>[
-                                    // _listItem(
-                                    //   'assets/images/quarto.jpg',
-                                    //   'Quarto',
-                                    //   10,
-                                    //   14.7,
-                                    // ),
-                                    // new SizedBox(width: 15),
-                                    _listItem('assets/images/cozinha.jpg',
-                                        'Cozinha', messPubJsonValue.toDouble(), 62.5),
-                                    new SizedBox(width: 15),
-                                    _listItem(
-                                      'assets/images/sala.jpg',
-                                      'Sala de estar',
-                                      8,
-                                      6,
-                                    ),
-                                    new SizedBox(width: 15),
-                                    _listItem(
-                                      'assets/images/banheiro.jpg',
-                                      'Banheiro',
-                                      0,
-                                      2,
-                                    ),
-                                  ],
-                                );
-                              }
-                            },
-                          )),
+                                  new SizedBox(height: 20),
+                                  Row(
+                                    children: [
+                                      _listItem(
+                                          'assets/images/banheiro.jpg',
+                                          'Banheiro',
+                                          0,
+                                          2,
+                                          AssetImage(
+                                              'assets/images/icon-bathroom.png')),
+                                      new SizedBox(width: 22),
+                                      _listItem(
+                                          'assets/images/sala.jpg',
+                                          'Sala de estar',
+                                          8,
+                                          6,
+                                          AssetImage(
+                                              'assets/images/icon-living-room.png')),
+                                    ],
+                                  ),
+                                ],
+                              );
+                            }
+                          },
+                        ),
+                      ),
                       SizedBox(height: 30),
                       Padding(
                           padding: EdgeInsets.only(top: 5, left: 20, right: 20),
@@ -180,7 +214,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                               return Switch(
                                 value: monitoringController.activeMonitoring,
                                 onChanged: monitoringController.setValue,
-                                activeColor: Colors.lightGreen,
+                                activeColor: Colors.greenAccent,
                               );
                             })
                           ],
@@ -229,8 +263,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
   }
 
-  Widget _listItem(
-      String imgpath, String stringPath, double averageValue, double maxValue) {
+  Widget _listItem(String imgpath, String stringPath, double averageValue,
+      double maxValue, AssetImage icon) {
     return Stack(children: [
       InkWell(
         onTap: () {
@@ -241,32 +275,41 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     maxValue: maxValue,
                     totalHours: monitoringController.monitoringTotalHours,
                     email: widget.email,
+                    roomName: stringPath,
                   )));
         },
         child: Stack(alignment: Alignment.center, children: [
           Container(
-            width: 325,
+            width: 158,
+            height: 140,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(25),
-              image: DecorationImage(
-                  image: AssetImage(imgpath), fit: BoxFit.cover, opacity: 0.96),
-            ),
+                borderRadius: BorderRadius.circular(25),
+                color: ConstantColors.thirdColor.withOpacity(0.5)
+                // image: DecorationImage(
+                //     image: AssetImage(imgpath), fit: BoxFit.cover, opacity: 0.96),
+                ),
           ),
-          Container(
-            alignment: Alignment.center,
-            width: 200,
-            child: Text(stringPath,
-                style: TextStyle(
-                    fontSize: 36,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    shadows: [
-                      Shadow(
-                        color: Colors.black.withOpacity(1.0),
-                        offset: Offset(0.0, 0.0),
-                        blurRadius: 30.0,
-                      ),
-                    ])),
+          Column(
+            children: [
+              Container(
+                height: 60.0,
+                width: 60.0,
+                decoration: BoxDecoration(
+                    image: DecorationImage(image: icon, fit: BoxFit.cover)),
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              Container(
+                alignment: Alignment.center,
+                width: 120,
+                child: Text(stringPath,
+                    style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.black87,
+                        fontWeight: FontWeight.bold)),
+              )
+            ],
           ),
         ]),
       )

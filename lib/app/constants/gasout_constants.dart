@@ -12,6 +12,7 @@ class ConstantToken {
 class ConstantColors {
   static const Color primaryColor = Color(0xFFc70000);
   static const Color secondaryColor = Color(0xFFe37f7f);
+  static const Color thirdColor = Color(0xFFf9e5e5);
 }
 
 class ConstantsSupport {

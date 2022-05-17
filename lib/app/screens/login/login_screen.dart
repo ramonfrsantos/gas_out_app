@@ -4,6 +4,7 @@ import 'package:gas_out_app/app/constants/gasout_constants.dart';
 import 'package:gas_out_app/app/screens/login/forgot_password_screen.dart';
 import 'package:gas_out_app/data/repositories/user/user_repository.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mqtt_client/mqtt_server_client.dart';
 import 'package:simple_animations/simple_animations.dart';
 
 import '../../../data/model/login/login_response_model.dart';
@@ -306,6 +307,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                           title: 'GasOut',
                                           username: response?.userName,
                                           email: response?.login,
+                                      client: new MqttServerClient('aulwdm3oigmf5-ats.iot.us-east-1.amazonaws.com', ''),
+                                      isConnected: false,
                                         )),
                               );
                             } else {

@@ -14,6 +14,7 @@ class DetailsScreen extends StatefulWidget {
   final double maxValue;
   final int totalHours;
   final String? email;
+  final String? roomName;
 
   DetailsScreen(
       {Key? key,
@@ -21,7 +22,8 @@ class DetailsScreen extends StatefulWidget {
       required this.averageValue,
       required this.maxValue,
       required this.totalHours,
-      required this.email
+      required this.email,
+      required this.roomName
       })
       : super(key: key);
 
@@ -58,14 +60,15 @@ class _DetailsScreenState extends State<DetailsScreen> {
       body: Stack(
         children: <Widget>[
           new Container(
-            height: MediaQuery.of(context).size.height,
+            height: MediaQuery.of(context).size.height-300,
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
                 image: DecorationImage(
-                    image: AssetImage(widget.imgPath), fit: BoxFit.cover)),
+                    image: AssetImage(widget.imgPath), fit: BoxFit.cover)
+            ),
           ),
           new Padding(
-            padding: EdgeInsets.only(top: 15),
+            padding: EdgeInsets.only(top: 40),
             child: new Row(
               children: <Widget>[
                 new IconButton(
@@ -85,120 +88,123 @@ class _DetailsScreenState extends State<DetailsScreen> {
             alignment: Alignment.bottomCenter,
             child: Container(
                 width: MediaQuery.of(context).size.width,
-                height: 360,
+                height: 340,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(40),
                     topRight: Radius.circular(40),
                   ),
-                  color: ConstantColors.secondaryColor.withOpacity(0.6),
+                  color: Colors.white,
                 ),
-                child: new Column(
-                  children: <Widget>[
-                    SizedBox(height: 22),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        listItemStats(
-                          imgpath: 'assets/images/notification.png',
-                          name: "Notificações",
-                          value: notificationValue,
-                          onChanged: (value) {
-                            setState(() {
-                              notificationValue = value;
-                            });
-                          },
-                        ),
-                        listItemStats(
-                          imgpath: 'assets/images/creative.png',
-                          name: "Alarme",
-                          value: alarmValue,
-                          onChanged: (value) {
-                            setState(() {
-                              alarmValue = value;
-                            });
-                          },
-                        ),
-                        listItemStats(
-                          imgpath: 'assets/images/sprinkler.png',
-                          name: "Sprinklers",
-                          value: sprinklersValue,
-                          onChanged: (value) {
-                            if (widget.averageValue >= 50) {
-                              sprinklersValue == false
-                                  ? _showAlertDialog(context, () {
-                                      setState(() {
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 18.0),
+                  child: new Column(
+                    children: <Widget>[
+                      SizedBox(height: 28),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          listItemStats(
+                            imgpath: 'assets/images/notification.png',
+                            name: "Notificações",
+                            value: notificationValue,
+                            onChanged: (value) {
+                              setState(() {
+                                notificationValue = value;
+                              });
+                            },
+                          ),
+                          listItemStats(
+                            imgpath: 'assets/images/creative.png',
+                            name: "Alarme",
+                            value: alarmValue,
+                            onChanged: (value) {
+                              setState(() {
+                                alarmValue = value;
+                              });
+                            },
+                          ),
+                          listItemStats(
+                            imgpath: 'assets/images/sprinkler.png',
+                            name: "Sprinklers",
+                            value: sprinklersValue,
+                            onChanged: (value) {
+                              if (widget.averageValue >= 50) {
+                                sprinklersValue == false
+                                    ? _showAlertDialog(context, () {
+                                        setState(() {
+                                          sprinklersValue = value;
+                                        });
+                                      })
+                                    : setState(() {
                                         sprinklersValue = value;
                                       });
-                                    })
-                                  : setState(() {
-                                      sprinklersValue = value;
-                                    });
-                            } else {
-                              value = false;
-                            }
-                          },
+                              } else {
+                                value = false;
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                      Padding(
+                          padding: EdgeInsets.only(top: 10, left: 20, right: 20),
+                          child: Divider(
+                            color: Colors.black26,
+                          )),
+                      SizedBox(height: 5),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20, right: 20),
+                        child: Row(
+                          children: <Widget>[
+                            Text(
+                              "Valor Máximo Atingido",
+                              style: new TextStyle(color: Colors.black87,fontSize: 18),
+                            ),
+                            Spacer(),
+                            Text(
+                              widget.maxValue.toString() + "%",
+                              style: new TextStyle(color: Colors.black87,fontSize: 18),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    Padding(
-                        padding: EdgeInsets.only(top: 10, left: 20, right: 20),
-                        child: Divider(
-                          color: Colors.white,
-                        )),
-                    SizedBox(height: 5),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 20, right: 20),
-                      child: Row(
-                        children: <Widget>[
-                          Text(
-                            "Valor Máximo Atingido",
-                            style: new TextStyle(color: Colors.white),
-                          ),
-                          Spacer(),
-                          Text(
-                            widget.maxValue.toString() + "%",
-                            style: new TextStyle(color: Colors.white),
-                          ),
-                        ],
                       ),
-                    ),
-                    SizedBox(height: 5),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 20, right: 20),
-                      child: Row(
-                        children: <Widget>[
-                          Text(
-                            "Total de Horas Monitoradas",
-                            style: new TextStyle(color: Colors.white),
-                          ),
-                          Spacer(),
-                          Text(
-                            widget.totalHours.toString(),
-                            style: new TextStyle(color: Colors.white),
-                          ),
-                        ],
+                      SizedBox(height: 5),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20, right: 20),
+                        child: Row(
+                          children: <Widget>[
+                            Text(
+                              "Total de Horas Monitoradas",
+                              style: new TextStyle(color: Colors.black87,fontSize: 18),
+                            ),
+                            Spacer(),
+                            Text(
+                              widget.totalHours.toString(),
+                              style: new TextStyle(color: Colors.black87,fontSize: 18),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 5),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 20, right: 20),
-                      child: Row(
-                        children: <Widget>[
-                          Text(
-                            "Valor Médio Diário",
-                            style: new TextStyle(color: Colors.white),
-                          ),
-                          Spacer(),
-                          Text(
-                            widget.averageValue.toString() + "%",
-                            style: new TextStyle(color: Colors.white),
-                          ),
-                        ],
+                      SizedBox(height: 5),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20, right: 20),
+                        child: Row(
+                          children: <Widget>[
+                            Text(
+                              "Valor Médio Diário",
+                              style: new TextStyle(color: Colors.black87,fontSize: 18),
+                            ),
+                            Spacer(),
+                            Text(
+                              widget.averageValue.toString() + "%",
+                              style: new TextStyle(color: Colors.black87,fontSize: 18),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 )),
           )
         ],
@@ -213,30 +219,30 @@ class _DetailsScreenState extends State<DetailsScreen> {
     Function(bool value)? onChanged,
   }) {
     return Container(
-      width: 120,
-      height: 150,
+      width: 105,
+      height: 135,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(25),
           color: value == true
-              ? Colors.white
-              : ConstantColors.primaryColor.withOpacity(0.75)),
+              ? ConstantColors.primaryColor
+              : ConstantColors.thirdColor),
       child: Column(
         children: <Widget>[
-          SizedBox(height: 15),
+          SizedBox(height: 10),
           Image(
               image: AssetImage(imgpath),
               width: 45,
               height: 45,
-              color: value == true ? Colors.black : Colors.white),
-          SizedBox(height: 15),
+              color: value == true ? Colors.white : Colors.white),
+          SizedBox(height: 10),
           Text(name,
               style: TextStyle(
-                  fontSize: 13,
-                  color: value == true ? Colors.black : Colors.white)),
+                  fontSize: 14,
+                  color: value == true ? Colors.white : Colors.white)),
           Switch(
             value: value,
             onChanged: onChanged,
-            activeColor: Colors.green,
+            activeColor: Colors.greenAccent,
           )
         ],
       ),
