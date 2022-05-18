@@ -191,20 +191,32 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                           )),
                       Padding(
                         padding: const EdgeInsets.only(left: 20, right: 10),
-                        child: Row(
-                          children: <Widget>[
-                            Text(
-                              "Acionar monitoramento",
-                              style: new TextStyle(color: Colors.black87),
+                        child: Column(
+                          children: [
+                            Row(
+                              children: <Widget>[
+                                Text(
+                                  "Acionar monitoramento",
+                                  style: new TextStyle(color: Colors.black87),
+                                ),
+                                Spacer(),
+                                Observer(builder: (_) {
+                                  return Switch(
+                                    value: monitoringController.activeMonitoring,
+                                    onChanged: monitoringController.setValue,
+                                    activeColor: Colors.greenAccent,
+                                  );
+                                })
+                              ],
                             ),
-                            Spacer(),
-                            Observer(builder: (_) {
-                              return Switch(
-                                value: monitoringController.activeMonitoring,
-                                onChanged: monitoringController.setValue,
-                                activeColor: Colors.greenAccent,
-                              );
-                            })
+                            Text(
+                              '*Reinicia a contagem de horas totais de monitoramento.',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.black38
+                              ),
+                              textAlign: TextAlign.left,
+                            )
                           ],
                         ),
                       ),
@@ -268,7 +280,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         },
         child: Stack(alignment: Alignment.center, children: [
           Container(
-            width: 158,
+            width: 148,
             height: 140,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(25),
