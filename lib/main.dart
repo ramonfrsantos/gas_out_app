@@ -303,7 +303,7 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
       return false;
     }
 
-    const topic = 'GasOutAPP';
+    const topic = 'gas-out-topic';
     widget.client.subscribe(topic, MqttQos.atMostOnce);
 
     return true;
