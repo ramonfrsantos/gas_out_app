@@ -1,8 +1,5 @@
 import 'dart:convert';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_launcher_icons/utils.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:gas_out_app/app/constants/gasout_constants.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -14,11 +11,12 @@ import '../detail/details_screen.dart';
 
 class HomeScreen extends KFDrawerContent {
   HomeScreen(
-      {required this.username, required this.email, required this.client});
+      {required this.username, required this.email, required this.client, required this.isConnected});
 
   final String? username;
   final String? email;
   final MqttServerClient client;
+  late bool isConnected;
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -108,7 +106,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                               fontSize: 19, fontWeight: FontWeight.bold)),
                       SizedBox(height: 25),
                       Container(
-                        alignment: Alignment.center,
+                        padding: EdgeInsets.only(left: 15),
                         key: UniqueKey(),
                         height: 300,
                         width: double.infinity,
@@ -139,23 +137,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
                               return Column(
                                 children: <Widget>[
-                                  // _listItem(
-                                  //   'assets/images/quarto.jpg',
-                                  //   'Quarto',
-                                  //   10,
-                                  //   14.7,
-                                  // ),
-                                  // new SizedBox(width: 15),
                                   Row(
                                     children: [
                                       _listItem(
                                         'assets/images/cozinha.jpg',
                                         'Cozinha',
-                                        recMessValue.toDouble(),
+                                        recMessValue == null ? 0.0 : recMessValue,
                                         62.5,
-                                        // 'Cozinha',
-                                        // 10.0,
-                                        // 62.5,
                                         AssetImage(
                                             'assets/images/icon-kitchen.png'),
                                       ),
@@ -164,7 +152,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                           'assets/images/sala.jpg',
                                           'Sala de estar',
                                           8,
-                                          6,
+                                          16,
                                           AssetImage(
                                               'assets/images/icon-living-room.png')),
                                     ],
@@ -181,12 +169,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                               'assets/images/icon-bathroom.png')),
                                       new SizedBox(width: 22),
                                       _listItem(
-                                          'assets/images/sala.jpg',
-                                          'Sala de estar',
+                                          'assets/images/quarto.jpg',
+                                          'Quarto',
                                           8,
                                           6,
                                           AssetImage(
-                                              'assets/images/icon-living-room.png')),
+                                              'assets/images/icon-bedroom.png')),
                                     ],
                                   ),
                                 ],

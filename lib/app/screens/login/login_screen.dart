@@ -308,7 +308,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                           username: response?.userName,
                                           email: response?.login,
                                       client: new MqttServerClient('aulwdm3oigmf5-ats.iot.us-east-1.amazonaws.com', ''),
-                                      isConnected: false,
+                                      isConnected: false
                                         )),
                               );
                             } else {
@@ -397,110 +397,157 @@ class _LoginScreenState extends State<LoginScreen> {
                 borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(50),
                     topRight: Radius.circular(50))),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  children: [
-                    FadeAnimation(
-                      delay: 1.4,
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(20),
-                            boxShadow: [
-                              BoxShadow(
-                                  color: Color.fromRGBO(40, 40, 40, 0.15),
-                                  blurRadius: 20,
-                                  offset: Offset(0, 10))
-                            ]),
-                        child: Column(
-                          children: [
-                            Container(
-                              padding: EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                  border: Border(
-                                      bottom: BorderSide(
-                                          color: Colors.grey.shade200))),
-                              child: TextField(
-                                controller: nameController,
-                                decoration: InputDecoration(
-                                    prefixIcon: Icon(Icons.person),
-                                    hintText: "Nome completo",
-                                    hintStyle: TextStyle(
-                                      color: Colors.grey,
-                                    ),
-                                    errorStyle: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        height: 0.5),
-                                    border: InputBorder.none,
-                                    errorText: loginController
-                                        .getErrorName(loginController.name)),
-                                onChanged: (value) {
-                                  setState(() {
-                                    loginController.name = value;
-                                  });
-                                },
+            child: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    children: [
+                      FadeAnimation(
+                        delay: 1.4,
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(20),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Color.fromRGBO(40, 40, 40, 0.15),
+                                    blurRadius: 20,
+                                    offset: Offset(0, 10))
+                              ]),
+                          child: Column(
+                            children: [
+                              Container(
+                                padding: EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                    border: Border(
+                                        bottom: BorderSide(
+                                            color: Colors.grey.shade200))),
+                                child: TextField(
+                                  controller: nameController,
+                                  decoration: InputDecoration(
+                                      prefixIcon: Icon(Icons.person),
+                                      hintText: "Nome completo",
+                                      hintStyle: TextStyle(
+                                        color: Colors.grey,
+                                      ),
+                                      errorStyle: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          height: 0.5),
+                                      border: InputBorder.none,
+                                      errorText: loginController
+                                          .getErrorName(loginController.name)),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      loginController.name = value;
+                                    });
+                                  },
+                                ),
                               ),
-                            ),
-                            Container(
-                              padding: EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                  border: Border(
-                                      bottom: BorderSide(
-                                          color: Colors.grey.shade200))),
-                              child: TextField(
-                                controller: emailSignUpController,
-                                decoration: InputDecoration(
-                                    prefixIcon: Icon(Icons.email),
-                                    hintText: "E-mail",
-                                    hintStyle: TextStyle(
-                                      color: Colors.grey,
-                                    ),
-                                    errorStyle: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        height: 0.5),
-                                    border: InputBorder.none,
-                                    errorText: loginController
-                                        .getErrorEmail(loginController.email)),
-                                onChanged: (value) {
-                                  setState(() {
-                                    loginController.email = value;
-                                  });
-                                },
+                              Container(
+                                padding: EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                    border: Border(
+                                        bottom: BorderSide(
+                                            color: Colors.grey.shade200))),
+                                child: TextField(
+                                  controller: emailSignUpController,
+                                  decoration: InputDecoration(
+                                      prefixIcon: Icon(Icons.email),
+                                      hintText: "E-mail",
+                                      hintStyle: TextStyle(
+                                        color: Colors.grey,
+                                      ),
+                                      errorStyle: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          height: 0.5),
+                                      border: InputBorder.none,
+                                      errorText: loginController
+                                          .getErrorEmail(loginController.email)),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      loginController.email = value;
+                                    });
+                                  },
+                                ),
                               ),
-                            ),
-                            Container(
-                              padding: EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                  border: Border(
-                                      bottom: BorderSide(
-                                          color: Colors.grey.shade200))),
-                              child: TextField(
-                                  controller: passwordSignUpController,
-                                  obscureText: !(_passwordSignUpVisible!),
+                              Container(
+                                padding: EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                    border: Border(
+                                        bottom: BorderSide(
+                                            color: Colors.grey.shade200))),
+                                child: TextField(
+                                    controller: passwordSignUpController,
+                                    obscureText: !(_passwordSignUpVisible!),
+                                    decoration: InputDecoration(
+                                        prefixIcon: Icon(Icons.vpn_key),
+                                        suffixIcon: IconButton(
+                                          icon: Icon(
+                                            _passwordSignUpVisible!
+                                                ? Icons.visibility
+                                                : Icons.visibility_off,
+                                            color: _passwordSignUpVisible!
+                                                ? Theme.of(context)
+                                                    .primaryColorDark
+                                                : Colors.grey,
+                                            size: 20,
+                                          ),
+                                          onPressed: () {
+                                            setState(() {
+                                              _passwordSignUpVisible =
+                                                  !(_passwordSignUpVisible!);
+                                            });
+                                          },
+                                        ),
+                                        hintText: "Senha",
+                                        hintStyle: TextStyle(
+                                          color: Colors.grey,
+                                        ),
+                                        errorStyle: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            height: 0.5),
+                                        border: InputBorder.none,
+                                        errorText:
+                                            loginController.getErrorPassword(
+                                                loginController.password)),
+                                    onChanged: (value) {
+                                      setState(() {
+                                        loginController.password = value;
+                                      });
+                                    }),
+                              ),
+                              Container(
+                                padding: EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                    border: Border(
+                                        bottom: BorderSide(
+                                            color: Colors.grey.shade200))),
+                                child: TextField(
+                                  controller: confirmPasswordController,
+                                  obscureText: !(_confirmPasswordSignUpVisible!),
                                   decoration: InputDecoration(
                                       prefixIcon: Icon(Icons.vpn_key),
                                       suffixIcon: IconButton(
                                         icon: Icon(
-                                          _passwordSignUpVisible!
+                                          _confirmPasswordSignUpVisible!
                                               ? Icons.visibility
                                               : Icons.visibility_off,
-                                          color: _passwordSignUpVisible!
-                                              ? Theme.of(context)
-                                                  .primaryColorDark
+                                          color: _confirmPasswordSignUpVisible!
+                                              ? Theme.of(context).primaryColorDark
                                               : Colors.grey,
                                           size: 20,
                                         ),
                                         onPressed: () {
                                           setState(() {
-                                            _passwordSignUpVisible =
-                                                !(_passwordSignUpVisible!);
+                                            _confirmPasswordSignUpVisible =
+                                                !(_confirmPasswordSignUpVisible!);
                                           });
                                         },
                                       ),
-                                      hintText: "Senha",
+                                      hintText: "Confirmar senha",
                                       hintStyle: TextStyle(
                                         color: Colors.grey,
                                       ),
@@ -509,175 +556,131 @@ class _LoginScreenState extends State<LoginScreen> {
                                           height: 0.5),
                                       border: InputBorder.none,
                                       errorText:
-                                          loginController.getErrorPassword(
-                                              loginController.password)),
+                                          loginController.getErrorConfirmPassword(
+                                              loginController.password,
+                                              loginController.confirmPassword)),
                                   onChanged: (value) {
                                     setState(() {
-                                      loginController.password = value;
+                                      loginController.confirmPassword = value;
                                     });
-                                  }),
-                            ),
-                            Container(
-                              padding: EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                  border: Border(
-                                      bottom: BorderSide(
-                                          color: Colors.grey.shade200))),
-                              child: TextField(
-                                controller: confirmPasswordController,
-                                obscureText: !(_confirmPasswordSignUpVisible!),
-                                decoration: InputDecoration(
-                                    prefixIcon: Icon(Icons.vpn_key),
-                                    suffixIcon: IconButton(
-                                      icon: Icon(
-                                        _confirmPasswordSignUpVisible!
-                                            ? Icons.visibility
-                                            : Icons.visibility_off,
-                                        color: _confirmPasswordSignUpVisible!
-                                            ? Theme.of(context).primaryColorDark
-                                            : Colors.grey,
-                                        size: 20,
-                                      ),
-                                      onPressed: () {
-                                        setState(() {
-                                          _confirmPasswordSignUpVisible =
-                                              !(_confirmPasswordSignUpVisible!);
-                                        });
-                                      },
-                                    ),
-                                    hintText: "Confirmar senha",
-                                    hintStyle: TextStyle(
-                                      color: Colors.grey,
-                                    ),
-                                    errorStyle: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        height: 0.5),
-                                    border: InputBorder.none,
-                                    errorText:
-                                        loginController.getErrorConfirmPassword(
-                                            loginController.password,
-                                            loginController.confirmPassword)),
-                                onChanged: (value) {
-                                  setState(() {
-                                    loginController.confirmPassword = value;
-                                  });
-                                },
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    FadeAnimation(
-                      delay: 1.6,
-                      child: Observer(
-                        builder: (context) {
-                          return FlatButton(
-                            onPressed: loginController.isSignUpButtonEnabled
-                                ? () async {
-                                    setState(() {
-                                      _loading = true;
-                                    });
-
-                                    int? statusCode =
-                                        await userRepository.createUser(
-                                            emailSignUpController.text,
-                                            nameController.text,
-                                            passwordSignUpController.text);
-
-                                    if (statusCode == 200) {
-                                      setState(() {
-                                        _pageState = 1;
-                                        _showSignUpSuccessAlertDialog(context);
-                                        _loading = false;
-                                      });
-                                    } else {
-                                      setState(() {
-                                        _showSignUpErrorAlertDialog(context);
-                                        _loading = false;
-                                      });
-                                      print(statusCode);
-                                    }
-                                  }
-                                : null,
-                            splashColor: Colors.transparent,
-                            highlightColor: Colors.transparent,
-                            child: Container(
-                              height: 50,
-                              margin: EdgeInsets.symmetric(horizontal: 50),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(50),
-                                  color: loginController.isSignUpButtonEnabled
-                                      ? ConstantColors.primaryColor
-                                      : ConstantColors.secondaryColor
-                              ),
-                              child: Center(
-                                // child: Text(
-                                //   'Cadastrar',
-                                //   style: TextStyle(
-                                //       color: Colors.white,
-                                //       fontWeight: FontWeight.bold,
-                                //       fontSize: 20),
-                                // ),
-                                child: _loading
-                                    ? CircularProgressIndicator(
-                                        color: Colors.white,
-                                      )
-                                    : Text(
-                                        'Cadastrar',
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20),
-                                      ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        print("sign  up working");
-                        setState(() {
-                          _pageState = 1;
-                        });
-                      },
-                      child: Container(
-                        child: FadeAnimation(
-                          delay: 1.5,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "Já possui uma conta? ",
-                                style: TextStyle(
-                                    height: 0.5,
-                                    color: Colors.grey,
-                                    fontSize: 16),
-                              ),
-                              Text(
-                                "Entre aqui.",
-                                style: TextStyle(
-                                    height: 0.5,
-                                    color: Colors.grey,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16),
+                                  },
+                                ),
                               )
                             ],
                           ),
                         ),
                       ),
-                    )
-                  ],
-                )
-              ],
+                      SizedBox(
+                        height: 30,
+                      ),
+                      FadeAnimation(
+                        delay: 1.6,
+                        child: Observer(
+                          builder: (context) {
+                            return FlatButton(
+                              onPressed: loginController.isSignUpButtonEnabled
+                                  ? () async {
+                                      setState(() {
+                                        _loading = true;
+                                      });
+
+                                      int? statusCode =
+                                          await userRepository.createUser(
+                                              emailSignUpController.text,
+                                              nameController.text,
+                                              passwordSignUpController.text);
+
+                                      if (statusCode == 200) {
+                                        setState(() {
+                                          _pageState = 1;
+                                          _showSignUpSuccessAlertDialog(context);
+                                          _loading = false;
+                                        });
+                                      } else {
+                                        setState(() {
+                                          _showSignUpErrorAlertDialog(context);
+                                          _loading = false;
+                                        });
+                                        print(statusCode);
+                                      }
+                                    }
+                                  : null,
+                              splashColor: Colors.transparent,
+                              highlightColor: Colors.transparent,
+                              child: Container(
+                                height: 50,
+                                margin: EdgeInsets.symmetric(horizontal: 50),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(50),
+                                    color: loginController.isSignUpButtonEnabled
+                                        ? ConstantColors.primaryColor
+                                        : ConstantColors.secondaryColor
+                                ),
+                                child: Center(
+                                  // child: Text(
+                                  //   'Cadastrar',
+                                  //   style: TextStyle(
+                                  //       color: Colors.white,
+                                  //       fontWeight: FontWeight.bold,
+                                  //       fontSize: 20),
+                                  // ),
+                                  child: _loading
+                                      ? CircularProgressIndicator(
+                                          color: Colors.white,
+                                        )
+                                      : Text(
+                                          'Cadastrar',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20),
+                                        ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          print("sign  up working");
+                          setState(() {
+                            _pageState = 1;
+                          });
+                        },
+                        child: Container(
+                          child: FadeAnimation(
+                            delay: 1.5,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "Já possui uma conta? ",
+                                  style: TextStyle(
+                                      height: 0.5,
+                                      color: Colors.grey,
+                                      fontSize: 16),
+                                ),
+                                Text(
+                                  "Entre aqui.",
+                                  style: TextStyle(
+                                      height: 0.5,
+                                      color: Colors.grey,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  )
+                ],
+              ),
             ),
           )
         ],

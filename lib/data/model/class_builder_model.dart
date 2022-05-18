@@ -18,8 +18,8 @@ class ClassBuilder {
     register<StatsScreen>(() => StatsScreen());
   }
 
-  static void registerHome(String? username, String? email, MqttServerClient client) {
-    register<HomeScreen>(() => HomeScreen(username: username, email: email, client: client));
+  static void registerHome(String? username, String? email, MqttServerClient client, bool isConnected) {
+    register<HomeScreen>(() => HomeScreen(username: username, email: email, client: client, isConnected: isConnected));
   }
 
   static void registerNotification(String? email) {

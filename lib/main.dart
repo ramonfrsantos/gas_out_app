@@ -101,7 +101,7 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
     super.initState();
     ClassBuilder.registerNotification(widget.email);
     ClassBuilder.registerStats();
-    ClassBuilder.registerHome(widget.username, widget.email, widget.client);
+    ClassBuilder.registerHome(widget.username, widget.email, widget.client, widget.isConnected);
     print(widget.username);
     print(widget.email);
 
@@ -115,7 +115,8 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
           page: HomeScreen(
             username: widget.username,
             email: widget.email,
-            client: widget.client
+            client: widget.client,
+            isConnected: widget.isConnected,
           ),
         ),
         KFDrawerItem.initWithPage(
@@ -239,7 +240,7 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
     );
   }
 
-  _connect() async {
+  Future<dynamic> _connect() async {
     if(idTextController.text.trim().isNotEmpty){
       print(idTextController.text.trim());
       ProgressDialog progressDialog = ProgressDialog(
@@ -259,7 +260,7 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
       widget.isConnected = await mqttConnect(idTextController.text.trim());
       progressDialog.dismiss();
 
-      Navigator.push(context, MaterialPageRoute(builder: (context) => MainWidget(username: widget.username, email: widget.email, title: 'GasOut', client: widget.client, isConnected: widget.isConnected,)));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => MainWidget(username: widget.username, email: widget.email, title: 'GasOut', client: widget.client, isConnected: widget.isConnected)));
     }
   }
 
