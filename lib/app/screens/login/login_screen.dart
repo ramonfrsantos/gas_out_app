@@ -260,6 +260,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       GestureDetector(
                         onTap: () {
                           print('Forget working');
+                          emailLoginController.text = "";
+                          passwordLoginController.text = "";
+                          passwordSignUpController.text = "";
+                          confirmPasswordController.text = "";
+                          nameController.text = "";
+                          emailSignUpController.text = "";
                           Navigator.push(context, MaterialPageRoute(builder: (context) => ForgotPasswordScreen()));
                         },
                         child: Container(
@@ -356,10 +362,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           });
                           emailLoginController.text = "";
                           passwordLoginController.text = "";
-                          passwordSignUpController.text = "";
-                          confirmPasswordController.text = "";
-                          nameController.text = "";
-                          emailSignUpController.text = "";
                         },
                         child: Container(
                           child: FadeAnimation(
@@ -661,6 +663,11 @@ class _LoginScreenState extends State<LoginScreen> {
                           print("sign  up working");
                           setState(() {
                             _pageState = 1;
+
+                            passwordSignUpController.text = "";
+                            confirmPasswordController.text = "";
+                            nameController.text = "";
+                            emailSignUpController.text = "";
                           });
                         },
                         child: Container(
