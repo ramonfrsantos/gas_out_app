@@ -141,12 +141,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                 Row(
                                     children: _roomController.roomList!
                                         .map((notification) => _listItem(
-                                            'assets/images/${notification.name.toLowerCase()}.jpg',
-                                            notification.name,
-                                            notification.sensorValue.toInt(),
-                                            0,
-                                            AssetImage(
-                                                'assets/images/icon-${notification.name.toLowerCase()}.png')))
+                                        'assets/images/${notification.name.split(' ')[0].toLowerCase()}.jpg',
+                                        notification.name.split(' ')[0],
+                                        notification.sensorValue.toInt(),
+                                        0,
+                                        AssetImage(
+                                            'assets/images/icon-${notification.name.split(' ')[0].toLowerCase()}.png')))
                                         .toList()),
                               ],
                             );
