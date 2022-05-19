@@ -354,6 +354,12 @@ class _LoginScreenState extends State<LoginScreen> {
                           setState(() {
                             _pageState = 2;
                           });
+                          emailLoginController.text = "";
+                          passwordLoginController.text = "";
+                          passwordSignUpController.text = "";
+                          confirmPasswordController.text = "";
+                          nameController.text = "";
+                          emailSignUpController.text = "";
                         },
                         child: Container(
                           child: FadeAnimation(
@@ -594,6 +600,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                         setState(() {
                                           _pageState = 1;
                                           _showSignUpSuccessAlertDialog(context);
+                                          emailLoginController.text = "";
+                                          passwordLoginController.text = "";
+                                          passwordSignUpController.text = "";
+                                          confirmPasswordController.text = "";
+                                          nameController.text = "";
+                                          emailSignUpController.text = "";
                                           _loading = false;
                                         });
                                       } else {
