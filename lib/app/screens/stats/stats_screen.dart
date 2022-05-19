@@ -33,10 +33,7 @@ class _StatsScreenState extends State<StatsScreen> {
                     shadowColor: Colors.transparent,
                     color: Colors.transparent,
                     child: IconButton(
-                      icon: Icon(
-                        Icons.menu,
-                        color: Colors.black,
-                      ),
+                      icon: Icon(Icons.menu, color: Colors.black, size: 30),
                       onPressed: widget.onMenuPressed,
                     ),
                   ),
@@ -47,10 +44,8 @@ class _StatsScreenState extends State<StatsScreen> {
                     shadowColor: Colors.transparent,
                     color: Colors.transparent,
                     child: IconButton(
-                      icon: Icon(
-                        Icons.exit_to_app,
-                        color: Colors.black,
-                      ),
+                      icon: Icon(Icons.exit_to_app,
+                          color: Colors.black, size: 30),
                       onPressed: () {
                         _showLogOutAlertDialog(context);
                         // Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));
@@ -91,7 +86,7 @@ class _StatsScreenState extends State<StatsScreen> {
       },
     );
     Widget continuaButton = TextButton(
-      child: Text("Continuar", style: GoogleFonts.muli(fontSize: 16)),
+      child: Text("Sair", style: GoogleFonts.muli(fontSize: 16)),
       onPressed: () {
         Navigator.of(context).pop();
         Navigator.of(context).pop();

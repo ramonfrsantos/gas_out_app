@@ -43,6 +43,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                         icon: Icon(
                           Icons.menu,
                           color: Colors.black,
+                            size: 30
                         ),
                         onPressed: widget.onMenuPressed,
                       ),
@@ -65,6 +66,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                         icon: Icon(
                           Icons.exit_to_app,
                           color: Colors.black,
+                            size: 30
                         ),
                         onPressed: (){
                           _showLogOutAlertDialog(context);
@@ -188,7 +190,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
       },
     );
     Widget continuaButton = TextButton(
-      child: Text("Continuar", style: GoogleFonts.muli(fontSize: 16)),
+      child: Text("Sair", style: GoogleFonts.muli(fontSize: 16)),
       onPressed: () {
         Navigator.of(context).pop();
         Navigator.of(context).pop();

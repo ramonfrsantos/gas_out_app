@@ -139,7 +139,7 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
         ),
         KFDrawerItem.initWithPage(
           text: Text(
-            'Acionar suporte',
+            'Acionar Suporte',
             style: TextStyle(color: Colors.white, fontSize: 18),
           ),
           icon: Image.asset(

@@ -74,6 +74,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                 new IconButton(
                   icon: Icon(
                     Icons.arrow_back,
+                    size: 30,
                     color: Colors.white,
                   ),
                   onPressed: () {
@@ -242,7 +243,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
           Switch(
             value: value,
             onChanged: onChanged,
-            activeColor: Colors.greenAccent,
+            activeColor: Colors.white,
           )
         ],
       ),
@@ -266,7 +267,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
     //configura o AlertDialog
     AlertDialog alert = AlertDialog(
       title: Text("Atenção!", style: GoogleFonts.muli(fontSize: 24)),
-      content: Text("Deseja realmente acionar os sprinklers?",
+      content: Text("Deseja realmente acionar os sprinklers? Isso possivelmente causará alagamento do local.",
           style: GoogleFonts.muli(fontSize: 20)),
       actions: [
         cancelaButton,
@@ -287,14 +288,17 @@ class _DetailsScreenState extends State<DetailsScreen> {
 
     if (widget.averageValue == 0) {
       title = "Apenas atualização de status...";
-      body = "Sem vazamento de gás no momento atual.";
-    } else if (widget.averageValue > 0 && widget.averageValue < 50) {
-      title = "Verifique as opções de monitoramento";
-      body = "Detectamos níveis baixos de vazamento em sua residência.";
-    } else if (widget.averageValue >= 50) {
-      title = "Nível ALTO de vazamento em sua residência!";
+      body = "Tudo em paz! Sem vazamento de gás no momento.";
+    } else if (widget.averageValue > 0 && widget.averageValue <= 24) {
+      title = "Atenção! Verifique as opções de monitoramento."; // Colocar emoji de sirene
+      body = "Detectamos nível BAIXO de vazamento em seu local!";
+    } else if (widget.averageValue > 24 && widget.averageValue < 52) {
+      title = "Atenção! Verifique as opções de monitoramento."; // Colocar emoji de sirene
+      body = "Detectamos nível MÉDIO de vazamento em seu local!";
+    } else if (widget.averageValue >= 52) {
+      title = "Detectamos nível ALTO de vazamento em seu local!";
       body =
-          "Entre agora em opções de monitoramento para acionamento dos sprinkles ou chame um técnico.";
+          "Entre agora em opções de monitoramento do seu cômodo para acionamento dos SPRINKLES ou acione o SUPORTE TÉCNICO.";
     }
 
     final NotificationModel? notification = await notificationRepository

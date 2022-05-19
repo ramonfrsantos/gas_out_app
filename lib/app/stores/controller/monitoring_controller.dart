@@ -8,7 +8,7 @@ class MonitoringController = _MonitoringControllerBase
 
 abstract class _MonitoringControllerBase with Store {
   @observable
-  bool activeMonitoring = false;
+  bool activeMonitoring = true;
 
 //TODO: setar o valor desejado
   @observable

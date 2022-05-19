@@ -48,6 +48,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                           icon: Icon(
                             Icons.menu,
                             color: Colors.black,
+                            size: 30
                           ),
                           onPressed: widget.onMenuPressed,
                         ),
@@ -62,6 +63,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                           icon: Icon(
                             Icons.exit_to_app,
                             color: Colors.black,
+                            size: 30,
                           ),
                           onPressed: () {
                             _showLogOutAlertDialog(context);
@@ -95,13 +97,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       ),
                       SizedBox(height: 30),
                       Text(
-                        "Aqui está o relatório sobre vazamentos de gás na sua residência."
-                        " Sugerimos seguir as recomendações, em caso de alterações ou de resultados indesejados.",
+                        "Faça o controle de vazamento de gás em seu ambiente residencial e/ou industrial.",
                         textAlign: TextAlign.justify,
                         style: TextStyle(color: Colors.grey),
                       ),
                       SizedBox(height: 30),
-                      Text("Escolha um cômodo:",
+                      Text("Escolha um cômodo",
                           style: TextStyle(
                               fontSize: 19, fontWeight: FontWeight.bold)),
                       SizedBox(height: 25),
@@ -196,7 +197,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                             Row(
                               children: <Widget>[
                                 Text(
-                                  "Acionar monitoramento",
+                                  "Horas de monitoramento",
                                   style: new TextStyle(color: Colors.black87),
                                 ),
                                 Spacer(),
@@ -204,13 +205,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                   return Switch(
                                     value: monitoringController.activeMonitoring,
                                     onChanged: monitoringController.setValue,
-                                    activeColor: Colors.greenAccent,
+                                    activeColor: ConstantColors.primaryColor,
                                   );
                                 })
                               ],
                             ),
                             Text(
-                              '*Reinicia a contagem de horas totais de monitoramento.',
+                              '* Reinicia a contagem de horas totais de monitoramento.',
                               style: TextStyle(
                                 fontSize: 12,
                                 color: Colors.black38
@@ -239,7 +240,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       },
     );
     Widget continuaButton = TextButton(
-      child: Text("Continuar", style: GoogleFonts.muli(fontSize: 16)),
+      child: Text("Sair", style: GoogleFonts.muli(fontSize: 16)),
       onPressed: () {
         Navigator.of(context).pop();
         Navigator.of(context).pop();
@@ -284,8 +285,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             height: 140,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(25),
-                color: ConstantColors.thirdColor.withOpacity(0.5)
-                // image: DecorationImage(
+                color: ConstantColors.primaryColor.withOpacity(0.8),                // image: DecorationImage(
                 //     image: AssetImage(imgpath), fit: BoxFit.cover, opacity: 0.96),
                 ),
           ),
@@ -306,7 +306,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 child: Text(stringPath,
                     style: TextStyle(
                         fontSize: 16,
-                        color: Colors.black87,
+                        color: Colors.white,
                         fontWeight: FontWeight.bold)),
               )
             ],
