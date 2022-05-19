@@ -16,6 +16,14 @@ mixin _$LoginController on _LoginControllerBase, Store {
           Computed<bool>(() => super.isSignUpButtonEnabled,
               name: '_LoginControllerBase.isSignUpButtonEnabled'))
       .value;
+  Computed<bool>? _$isCreateNewPasswordButtonEnabledComputed;
+
+  @override
+  bool get isCreateNewPasswordButtonEnabled =>
+      (_$isCreateNewPasswordButtonEnabledComputed ??= Computed<bool>(
+              () => super.isCreateNewPasswordButtonEnabled,
+              name: '_LoginControllerBase.isCreateNewPasswordButtonEnabled'))
+          .value;
 
   late final _$nameAtom =
       Atom(name: '_LoginControllerBase.name', context: context);
@@ -125,7 +133,8 @@ name: ${name},
 email: ${email},
 password: ${password},
 confirmPassword: ${confirmPassword},
-isSignUpButtonEnabled: ${isSignUpButtonEnabled}
+isSignUpButtonEnabled: ${isSignUpButtonEnabled},
+isCreateNewPasswordButtonEnabled: ${isCreateNewPasswordButtonEnabled}
     ''';
   }
 }

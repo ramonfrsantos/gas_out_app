@@ -104,12 +104,12 @@ flutter:
     - assets/images/icWhatsApp.png
     - assets/images/iconeVermelhoFundoBranco.png
     - assets/images/iconeVermelho.png
-    - assets/images/icon-bathroom.png
-    - assets/images/icon-bedroom.png
-    - assets/images/icon-garage.png
-    - assets/images/icon-kitchen.png
-    - assets/images/icon-laundry.png
-    - assets/images/icon-living-room.png
+    - assets/images/icon-banheiro.png
+    - assets/images/icon-quarto.png
+    - assets/images/icon-garagem.png
+    - assets/images/icon-cozinha.png
+    - assets/images/icon-lavanderia.png
+    - assets/images/icon-sala.png
     - assets/images/otp.svg
     - assets/certs/RootCA.pem
     - assets/certs/DeviceCertificate.crt

@@ -7,11 +7,15 @@ import 'package:kf_drawer/kf_drawer.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 import '../../helpers/global.dart';
+import '../../stores/controller/room/room_controller.dart';
 import '../detail/details_screen.dart';
 
 class HomeScreen extends KFDrawerContent {
   HomeScreen(
-      {required this.username, required this.email, required this.client, required this.isConnected});
+      {required this.username,
+      required this.email,
+      required this.client,
+      required this.isConnected});
 
   final String? username;
   final String? email;
@@ -23,9 +27,12 @@ class HomeScreen extends KFDrawerContent {
 }
 
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
+  RoomController _roomController = RoomController();
+
   @override
   void initState() {
     super.initState();
+    _roomController.getUserRooms(widget.email);
   }
 
   @override
@@ -45,11 +52,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         shadowColor: Colors.transparent,
                         color: Colors.transparent,
                         child: IconButton(
-                          icon: Icon(
-                            Icons.menu,
-                            color: Colors.black,
-                            size: 30
-                          ),
+                          icon: Icon(Icons.menu, color: Colors.black, size: 30),
                           onPressed: widget.onMenuPressed,
                         ),
                       ),
@@ -114,15 +117,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         child: StreamBuilder(
                           stream: widget.client.updates,
                           builder: (context, snapshot) {
-                            print(snapshot);
-                            if (!snapshot.hasData) {
-                              return Center(
-                                child: CircularProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                      ConstantColors.primaryColor),
-                                ),
-                              );
-                            } else {
+                            if (snapshot.hasData) {
                               final mqttReceivedMessages = snapshot.data
                                   as List<MqttReceivedMessage<MqttMessage>>?;
                               final recMessBytes = mqttReceivedMessages![0]
@@ -134,53 +129,27 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                               final recMessValue =
                                   json.decode(recMessString)['message'];
 
-                              print(recMessValue);
-
-                              return Column(
-                                children: <Widget>[
-                                  Row(
-                                    children: [
-                                      _listItem(
-                                        'assets/images/cozinha.jpg',
-                                        'Cozinha',
-                                        recMessValue == null ? 0.0 : recMessValue,
-                                        62.5,
-                                        AssetImage(
-                                            'assets/images/icon-kitchen.png'),
-                                      ),
-                                      new SizedBox(width: 22),
-                                      _listItem(
-                                          'assets/images/sala.jpg',
-                                          'Sala de estar',
-                                          8,
-                                          16,
-                                          AssetImage(
-                                              'assets/images/icon-living-room.png')),
-                                    ],
-                                  ),
-                                  new SizedBox(height: 20),
-                                  Row(
-                                    children: [
-                                      _listItem(
-                                          'assets/images/banheiro.jpg',
-                                          'Banheiro',
-                                          0,
-                                          2,
-                                          AssetImage(
-                                              'assets/images/icon-bathroom.png')),
-                                      new SizedBox(width: 22),
-                                      _listItem(
-                                          'assets/images/quarto.jpg',
-                                          'Quarto',
-                                          8,
-                                          6,
-                                          AssetImage(
-                                              'assets/images/icon-bedroom.png')),
-                                    ],
-                                  ),
-                                ],
-                              );
+                              print(recMessValue.toInt());
                             }
+
+                            return GridView.count(
+                              primary: false,
+                              padding: EdgeInsets.all(20),
+                              mainAxisSpacing: 20,
+                              crossAxisCount: 2,
+                              children: <Widget>[
+                                Row(
+                                    children: _roomController.roomList!
+                                        .map((notification) => _listItem(
+                                            'assets/images/${notification.name.toLowerCase()}.jpg',
+                                            notification.name,
+                                            notification.sensorValue.toInt(),
+                                            0,
+                                            AssetImage(
+                                                'assets/images/icon-${notification.name.toLowerCase()}.png')))
+                                        .toList()),
+                              ],
+                            );
                           },
                         ),
                       ),
@@ -203,7 +172,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                 Spacer(),
                                 Observer(builder: (_) {
                                   return Switch(
-                                    value: monitoringController.activeMonitoring,
+                                    value:
+                                        monitoringController.activeMonitoring,
                                     onChanged: monitoringController.setValue,
                                     activeColor: ConstantColors.primaryColor,
                                   );
@@ -213,9 +183,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                             Text(
                               '* Reinicia a contagem de horas totais de monitoramento.',
                               style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.black38
-                              ),
+                                  fontSize: 12, color: Colors.black38),
                               textAlign: TextAlign.left,
                             )
                           ],
@@ -264,55 +232,62 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
   }
 
-  Widget _listItem(String imgpath, String stringPath, double averageValue,
+  Widget _listItem(String imgpath, String stringPath, int averageValue,
       double maxValue, AssetImage icon) {
-    return Stack(children: [
-      InkWell(
-        onTap: () {
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => DetailsScreen(
-                    imgPath: imgpath,
-                    averageValue: averageValue,
-                    maxValue: maxValue,
-                    totalHours: monitoringController.monitoringTotalHours,
-                    email: widget.email,
-                    roomName: stringPath,
-                  )));
-        },
-        child: Stack(alignment: Alignment.center, children: [
-          Container(
-            width: 148,
-            height: 140,
-            decoration: BoxDecoration(
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: Stack(children: [
+        InkWell(
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => DetailsScreen(
+                      imgPath: imgpath,
+                      averageValue: averageValue,
+                      maxValue: maxValue,
+                      totalHours: monitoringController.monitoringTotalHours,
+                      email: widget.email,
+                      roomName: stringPath,
+                    )));
+          },
+          child: Stack(alignment: Alignment.center, children: [
+            Container(
+              width: 130,
+              height: 130,
+              decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(25),
-                color: ConstantColors.primaryColor.withOpacity(0.8),                // image: DecorationImage(
+                color: ConstantColors.primaryColor
+                    .withOpacity(0.8), // image: DecorationImage(
                 //     image: AssetImage(imgpath), fit: BoxFit.cover, opacity: 0.96),
+              ),
+            ),
+            Column(
+              children: [
+                SizedBox(
+                  height: 20,
                 ),
-          ),
-          Column(
-            children: [
-              Container(
-                height: 60.0,
-                width: 60.0,
-                decoration: BoxDecoration(
-                    image: DecorationImage(image: icon, fit: BoxFit.cover)),
-              ),
-              SizedBox(
-                height: 15,
-              ),
-              Container(
-                alignment: Alignment.center,
-                width: 120,
-                child: Text(stringPath,
-                    style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold)),
-              )
-            ],
-          ),
-        ]),
-      )
-    ]);
+                Container(
+                  height: 60.0,
+                  width: 60.0,
+                  decoration: BoxDecoration(
+                      image: DecorationImage(image: icon, fit: BoxFit.cover)),
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                Container(
+                  alignment: Alignment.center,
+                  width: 120,
+                  child: Text(stringPath,
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold)),
+                )
+              ],
+            ),
+          ]),
+        )
+      ]),
+    );
   }
 }

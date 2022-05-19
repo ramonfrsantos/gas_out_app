@@ -10,7 +10,7 @@ import '../../constants/gasout_constants.dart';
 
 class DetailsScreen extends StatefulWidget {
   final imgPath;
-  final double averageValue;
+  final int averageValue;
   final double maxValue;
   final int totalHours;
   final String? email;
