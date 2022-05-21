@@ -10,7 +10,7 @@ abstract class _RoomControllerBase with Store {
   RoomRepository _repository = RoomRepository();
 
   @observable
-  List<RoomResponseModel>? roomList;
+  List<RoomResponseModel>? roomList = [];
 
   @action
   getUserRooms(String? login) async {
@@ -19,7 +19,9 @@ abstract class _RoomControllerBase with Store {
   }
 
   @action
-  sendRoomSensorValue(String name, String email, bool alarmOn, bool notificationOn, bool sprinklersOn, int sensorValue) async {
-    await _repository.sendRoomSensorValue(name, email, alarmOn, notificationOn, sprinklersOn, sensorValue);
+  sendRoomSensorValue(String name, String email, bool alarmOn,
+      bool notificationOn, bool sprinklersOn, int sensorValue) async {
+    await _repository.sendRoomSensorValue(
+        name, email, alarmOn, notificationOn, sprinklersOn, sensorValue);
   }
 }
