@@ -37,10 +37,27 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     _getUserRoons();
+    _teste();
   }
 
   _getUserRoons() async {
     await _roomController.getUserRooms(widget.email);
+  }
+
+  _teste() async {
+    var snapshot = widget.client.updates;
+    if (snapshot != null) {
+      final mqttReceivedMessages =
+          snapshot as List<MqttReceivedMessage<MqttMessage>>?;
+      final recMessBytes =
+          mqttReceivedMessages![0].payload as MqttPublishMessage;
+      final recMessString = MqttPublishPayload.bytesToStringAsString(
+          recMessBytes.payload.message);
+
+      final recMessValue = json.decode(recMessString)['message'];
+
+      print(recMessValue.toInt());
+    }
   }
 
   @override
