@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:gas_out_app/data/model/room/room_response_model.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kf_drawer/kf_drawer.dart';
 import 'package:mqtt_client/mqtt_client.dart';
@@ -37,7 +39,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   RoomController _roomController = RoomController();
   NotificationModel? _notification;
   final NotificationRepository notificationRepository =
-  NotificationRepository();
+      NotificationRepository();
+
+  int mqttSensorValue = 0;
 
   @override
   void initState() {
@@ -197,13 +201,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           // mainAxisSpacing: 0,
           crossAxisCount: 2,
           children: _roomController.roomList!
-              .map((notification) => _listItem(
-                  'assets/images/${notification.name.split(' ')[0].toLowerCase()}.jpg',
-                  notification.name.split(' ')[0],
-                  notification.sensorValue.toInt(),
+              .map((room) => _listItem(
+                  'assets/images/${room.name.split(' ')[0].toLowerCase()}.jpg',
+                  room.name.split(' ')[0],
+                  room.sensorValue,
                   0,
                   AssetImage(
-                      'assets/images/icon-${notification.name.split(' ')[0].toLowerCase()}.png')))
+                      'assets/images/icon-${room.name.split(' ')[0].toLowerCase()}.png')))
               .toList(),
         ),
       );
@@ -236,37 +240,59 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             style: TextStyle(fontSize: 12, color: Colors.black38),
             textAlign: TextAlign.left,
           ),
-          _streamBuilderMqtt()
+          Column(
+            children: _roomController.roomList!
+                .map((room) => _streamBuilderMqtt(room))
+                .toList(),
+          )
         ],
       ),
     );
   }
 
-  Widget _streamBuilderMqtt() {
+  Widget _streamBuilderMqtt(RoomResponseModel room) {
     return StreamBuilder(
-        stream: widget.client.updates,
-        builder: (context, snapshot) {
-          if(snapshot.hasData){
-            final mqttReceivedMessages =
-            snapshot.data as List<MqttReceivedMessage<MqttMessage>>;
-            final recMessBytes =
-            mqttReceivedMessages[0].payload as MqttPublishMessage;
-            final recMessString = MqttPublishPayload.bytesToStringAsString(
-                recMessBytes.payload.message);
+      stream: widget.client.updates,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          final mqttReceivedMessages =
+              snapshot.data as List<MqttReceivedMessage<MqttMessage>>;
+          final recMessBytes =
+              mqttReceivedMessages[0].payload as MqttPublishMessage;
+          final recMessString = MqttPublishPayload.bytesToStringAsString(
+              recMessBytes.payload.message);
 
-            final recMessValue = json.decode(recMessString)['message'];
-            int valueMess = recMessValue.toInt();
+          bool alarmOn = false;
+          bool notificationOn = false;
+          bool sprinklersOn = false;
 
-            // _generateNotification(valueMess);
+          final recMessValue = json.decode(recMessString)['message'];
+          mqttSensorValue = recMessValue.toInt();
 
-            print("message: " + recMessValue.toString());
+          if (mqttSensorValue > 0 && mqttSensorValue < 52) {
+            alarmOn = false;
+            notificationOn = true;
+            sprinklersOn = false;
           } else {
-            print("message:");
+            alarmOn = true;
+            notificationOn = true;
+            sprinklersOn = false;
           }
 
-          return Container();
-        },
-      );
+          Timer(Duration(seconds: 60), () {
+            _roomController.sendRoomSensorValue(room.name, widget.email!,
+                alarmOn, notificationOn, sprinklersOn, mqttSensorValue);
+            _generateNotification(mqttSensorValue);
+          });
+
+          print("message: " + recMessValue.toString());
+        } else {
+          print("message:");
+        }
+
+        return Container();
+      },
+    );
   }
 
   _getUserRoons() async {
@@ -313,15 +339,17 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       title = "Apenas atualização de status...";
       body = "Tudo em paz! Sem vazamento de gás no momento.";
     } else if (mqttReceivedValue > 0 && mqttReceivedValue <= 24) {
-      title = "Atenção! Verifique as opções de monitoramento."; // Colocar emoji de sirene
+      title =
+          "Atenção! Verifique as opções de monitoramento."; // Colocar emoji de sirene
       body = "Detectamos nível BAIXO de vazamento em seu local!";
     } else if (mqttReceivedValue > 24 && mqttReceivedValue < 52) {
-      title = "🚨 Atenção! Verifique as opções de monitoramento 🚨 "; // Colocar emoji de sirene
+      title =
+          "🚨 Atenção! Verifique as opções de monitoramento 🚨 "; // Colocar emoji de sirene
       body = "Detectamos nível MÉDIO de vazamento em seu local!";
     } else if (mqttReceivedValue >= 52) {
       title = "Detectamos nível ALTO de vazamento em seu local!";
       body =
-      "Entre agora em opções de monitoramento do seu cômodo para acionamento dos SPRINKLES ou acione o SUPORTE TÉCNICO.";
+          "Entre agora em opções de monitoramento do seu cômodo para acionamento dos SPRINKLES ou acione o SUPORTE TÉCNICO.";
     }
 
     final NotificationModel? notification = await notificationRepository
@@ -333,7 +361,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   Widget _listItem(String imgpath, String stringPath, int averageValue,
-      double maxValue, AssetImage icon) {
+      int maxValue, AssetImage icon) {
     return Padding(
       padding: const EdgeInsets.all(18.0),
       child: GestureDetector(
