@@ -240,10 +240,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             style: TextStyle(fontSize: 12, color: Colors.black38),
             textAlign: TextAlign.left,
           ),
-          Column(
-            children: _roomController.roomList!
+          Container(
+            child: _roomController.roomList!
                 .map((room) => _streamBuilderMqtt(room))
-                .toList(),
+                .toList()[0],
           )
         ],
       ),
@@ -279,15 +279,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             sprinklersOn = false;
           }
 
-          Timer(Duration(seconds: 60), () {
+          /*Timer(Duration(seconds: 60), () {
             _roomController.sendRoomSensorValue(room.name, widget.email!,
                 alarmOn, notificationOn, sprinklersOn, mqttSensorValue);
             _generateNotification(mqttSensorValue);
-          });
+          });*/
 
-          print("message: " + recMessValue.toString());
-        } else {
-          print("message:");
+          print("TRIGGERED: " + recMessValue.toString());
         }
 
         return Container();

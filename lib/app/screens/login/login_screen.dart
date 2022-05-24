@@ -176,219 +176,221 @@ class _LoginScreenState extends State<LoginScreen> {
                     topRight: Radius.circular(50))),
             child: Opacity(
               opacity: _loginOpacity,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    children: [
-                      FadeAnimation(
-                        delay: 1.4,
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(20),
-                              boxShadow: [
-                                BoxShadow(
-                                    color: Color.fromRGBO(40, 40, 40, 0.15),
-                                    blurRadius: 20,
-                                    offset: Offset(0, 10))
-                              ]),
-                          child: Column(
-                            children: [
-                              Container(
-                                padding: EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                    border: Border(
-                                        bottom: BorderSide(
-                                            color: Colors.grey.shade200))),
-                                child: TextField(
-                                  controller: emailLoginController,
-                                  decoration: InputDecoration(
-                                    prefixIcon: Icon(Icons.email),
-                                    hintText: "E-mail",
-                                    hintStyle: TextStyle(
-                                      color: Colors.grey,
-                                    ),
-                                    border: InputBorder.none,
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                padding: EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                    border: Border(
-                                        bottom: BorderSide(
-                                            color: Colors.grey.shade200))),
-                                child: TextField(
-                                  controller: passwordLoginController,
-                                  obscureText: !(_passwordLoginVisible!),
-                                  decoration: InputDecoration(
-                                      prefixIcon: Icon(Icons.vpn_key),
-                                      suffixIcon: IconButton(
-                                        icon: Icon(
-                                          _passwordLoginVisible!
-                                              ? Icons.visibility
-                                              : Icons.visibility_off,
-                                          color: _passwordLoginVisible!
-                                              ? Theme.of(context)
-                                                  .primaryColorDark
-                                              : Colors.grey,
-                                          size: 20,
-                                        ),
-                                        onPressed: () {
-                                          setState(() {
-                                            _passwordLoginVisible =
-                                                !(_passwordLoginVisible!);
-                                          });
-                                        },
-                                      ),
-                                      hintText: "Senha",
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      children: [
+                        FadeAnimation(
+                          delay: 1.4,
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(20),
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: Color.fromRGBO(40, 40, 40, 0.15),
+                                      blurRadius: 20,
+                                      offset: Offset(0, 10))
+                                ]),
+                            child: Column(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                      border: Border(
+                                          bottom: BorderSide(
+                                              color: Colors.grey.shade200))),
+                                  child: TextField(
+                                    controller: emailLoginController,
+                                    decoration: InputDecoration(
+                                      prefixIcon: Icon(Icons.email),
+                                      hintText: "E-mail",
                                       hintStyle: TextStyle(
                                         color: Colors.grey,
                                       ),
-                                      border: InputBorder.none),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 25,
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          print('Forget working');
-                          emailLoginController.text = "";
-                          passwordLoginController.text = "";
-                          passwordSignUpController.text = "";
-                          confirmPasswordController.text = "";
-                          nameController.text = "";
-                          emailSignUpController.text = "";
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => ForgotPasswordScreen()));
-                        },
-                        child: Container(
-                          height: 30,
-                          child: FadeAnimation(
-                              delay: 1.5,
-                              child: Text(
-                                "Esqueci minha senha",
-                                style:
-                                    TextStyle(color: Colors.grey, fontSize: 16),
-                              )),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      FadeAnimation(
-                        delay: 1.6,
-                        child: FlatButton(
-                          onPressed: () async {
-                            setState(() {
-                              _loading = true;
-                            });
-
-                            LoginResponseModel? response =
-                                await loginRepository.doLogin(
-                                    emailLoginController.text,
-                                    passwordLoginController.text);
-                            if (response?.userId != null) {
-                              setState(() {
-                                _loading = false;
-                              });
-
-                              emailLoginController.text = "";
-                              passwordLoginController.text = "";
-                              passwordSignUpController.text = "";
-                              confirmPasswordController.text = "";
-                              nameController.text = "";
-                              emailSignUpController.text = "";
-
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => MainWidget(
-                                          title: 'GasOut',
-                                          username: response?.userName,
-                                          email: response?.login,
-                                      client: new MqttServerClient('aulwdm3oigmf5-ats.iot.us-east-1.amazonaws.com', ''),
-                                      isConnected: false
-                                        )),
-                              );
-                            } else {
-                              setState(() {
-                                _loading = false;
-                              });
-                              _showLoginErrorAlertDialog(context);
-                            }
-                          },
-                          splashColor: Colors.transparent,
-                          highlightColor: Colors.transparent,
-                          child: Container(
-                            height: 50,
-                            margin: EdgeInsets.symmetric(horizontal: 50),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(50),
-                                color: ConstantColors.primaryColor),
-                            child: Center(
-                              child: _loading
-                                  ? CircularProgressIndicator(
-                                      color: Colors.white,
-                                    )
-                                  : Text(
-                                      'Entrar',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                      border: InputBorder.none,
                                     ),
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      // Login with social media
-                      SizedBox(
-                        height: 20,
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          print("sign  up working");
-                          setState(() {
-                            _pageState = 2;
-                          });
-                          emailLoginController.text = "";
-                          passwordLoginController.text = "";
-                        },
-                        child: Container(
-                          child: FadeAnimation(
-                            delay: 1.5,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "Não possui uma conta? ",
-                                  style: TextStyle(
-                                      color: Colors.grey, fontSize: 18),
+                                  ),
                                 ),
-                                Text(
-                                  "Cadastre-se",
-                                  style: TextStyle(
-                                      color: Colors.grey,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18),
+                                Container(
+                                  padding: EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                      border: Border(
+                                          bottom: BorderSide(
+                                              color: Colors.grey.shade200))),
+                                  child: TextField(
+                                    controller: passwordLoginController,
+                                    obscureText: !(_passwordLoginVisible!),
+                                    decoration: InputDecoration(
+                                        prefixIcon: Icon(Icons.vpn_key),
+                                        suffixIcon: IconButton(
+                                          icon: Icon(
+                                            _passwordLoginVisible!
+                                                ? Icons.visibility
+                                                : Icons.visibility_off,
+                                            color: _passwordLoginVisible!
+                                                ? Theme.of(context)
+                                                    .primaryColorDark
+                                                : Colors.grey,
+                                            size: 20,
+                                          ),
+                                          onPressed: () {
+                                            setState(() {
+                                              _passwordLoginVisible =
+                                                  !(_passwordLoginVisible!);
+                                            });
+                                          },
+                                        ),
+                                        hintText: "Senha",
+                                        hintStyle: TextStyle(
+                                          color: Colors.grey,
+                                        ),
+                                        border: InputBorder.none),
+                                  ),
                                 )
                               ],
                             ),
                           ),
                         ),
-                      )
-                    ],
-                  )
-                ],
+                        SizedBox(
+                          height: 25,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            print('Forget working');
+                            emailLoginController.text = "";
+                            passwordLoginController.text = "";
+                            passwordSignUpController.text = "";
+                            confirmPasswordController.text = "";
+                            nameController.text = "";
+                            emailSignUpController.text = "";
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => ForgotPasswordScreen()));
+                          },
+                          child: Container(
+                            height: 30,
+                            child: FadeAnimation(
+                                delay: 1.5,
+                                child: Text(
+                                  "Esqueci minha senha",
+                                  style:
+                                      TextStyle(color: Colors.grey, fontSize: 16),
+                                )),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        FadeAnimation(
+                          delay: 1.6,
+                          child: FlatButton(
+                            onPressed: () async {
+                              setState(() {
+                                _loading = true;
+                              });
+
+                              LoginResponseModel? response =
+                                  await loginRepository.doLogin(
+                                      emailLoginController.text,
+                                      passwordLoginController.text);
+                              if (response?.userId != null) {
+                                setState(() {
+                                  _loading = false;
+                                });
+
+                                emailLoginController.text = "";
+                                passwordLoginController.text = "";
+                                passwordSignUpController.text = "";
+                                confirmPasswordController.text = "";
+                                nameController.text = "";
+                                emailSignUpController.text = "";
+
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => MainWidget(
+                                            title: 'GasOut',
+                                            username: response?.userName,
+                                            email: response?.login,
+                                        client: new MqttServerClient('aulwdm3oigmf5-ats.iot.us-east-1.amazonaws.com', ''),
+                                        isConnected: false
+                                          )),
+                                );
+                              } else {
+                                setState(() {
+                                  _loading = false;
+                                });
+                                _showLoginErrorAlertDialog(context);
+                              }
+                            },
+                            splashColor: Colors.transparent,
+                            highlightColor: Colors.transparent,
+                            child: Container(
+                              height: 50,
+                              margin: EdgeInsets.symmetric(horizontal: 50),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(50),
+                                  color: ConstantColors.primaryColor),
+                              child: Center(
+                                child: _loading
+                                    ? CircularProgressIndicator(
+                                        color: Colors.white,
+                                      )
+                                    : Text(
+                                        'Entrar',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        // Login with social media
+                        SizedBox(
+                          height: 20,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            print("sign  up working");
+                            setState(() {
+                              _pageState = 2;
+                            });
+                            emailLoginController.text = "";
+                            passwordLoginController.text = "";
+                          },
+                          child: Container(
+                            child: FadeAnimation(
+                              delay: 1.5,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "Não possui uma conta? ",
+                                    style: TextStyle(
+                                        color: Colors.grey, fontSize: 18),
+                                  ),
+                                  Text(
+                                    "Cadastre-se",
+                                    style: TextStyle(
+                                        color: Colors.grey,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    )
+                  ],
+                ),
               ),
             ),
           ),
