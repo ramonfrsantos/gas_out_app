@@ -96,6 +96,7 @@ flutter:
     - assets/images/sala.jpg
     - assets/images/banheiro.jpg
     - assets/images/quarto.jpg
+    - assets/images/garagem.jpg
     - assets/images/cozinha.jpg
     - assets/images/logoPequena.png
     - assets/images/logoPequenaBranco.png

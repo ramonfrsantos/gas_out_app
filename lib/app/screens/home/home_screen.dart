@@ -8,6 +8,9 @@ import 'package:mqtt_client/mqtt_server_client.dart';
 
 import 'package:gas_out_app/app/constants/gasout_constants.dart';
 
+import '../../../data/model/notiification/notification_firebase_model.dart';
+import '../../../data/repositories/notification/notification_repository.dart';
+import '../../../main.dart';
 import '../../helpers/global.dart';
 import '../../stores/controller/room/room_controller.dart';
 import '../detail/details_screen.dart';
@@ -32,32 +35,14 @@ class HomeScreen extends KFDrawerContent {
 
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   RoomController _roomController = RoomController();
+  NotificationModel? _notification;
+  final NotificationRepository notificationRepository =
+  NotificationRepository();
 
   @override
   void initState() {
     super.initState();
     _getUserRoons();
-    _teste();
-  }
-
-  _getUserRoons() async {
-    await _roomController.getUserRooms(widget.email);
-  }
-
-  _teste() async {
-    var snapshot = widget.client.updates;
-    if (snapshot != null) {
-      final mqttReceivedMessages =
-          snapshot as List<MqttReceivedMessage<MqttMessage>>?;
-      final recMessBytes =
-          mqttReceivedMessages![0].payload as MqttPublishMessage;
-      final recMessString = MqttPublishPayload.bytesToStringAsString(
-          recMessBytes.payload.message);
-
-      final recMessValue = json.decode(recMessString)['message'];
-
-      print(recMessValue.toInt());
-    }
   }
 
   @override
@@ -208,7 +193,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(),
           scrollDirection: Axis.vertical,
-          mainAxisSpacing: 16,
+          // crossAxisSpacing: 0,
+          // mainAxisSpacing: 0,
           crossAxisCount: 2,
           children: _roomController.roomList!
               .map((notification) => _listItem(
@@ -249,37 +235,42 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             '* Reinicia a contagem de horas totais de monitoramento.',
             style: TextStyle(fontSize: 12, color: Colors.black38),
             textAlign: TextAlign.left,
-          )
+          ),
+          _streamBuilderMqtt()
         ],
       ),
     );
   }
 
-  Widget _streamBuilder() {
-    return Container(
-      padding: EdgeInsets.only(left: 15),
-      key: UniqueKey(),
-      height: 300,
-      width: double.infinity,
-      child: StreamBuilder(
+  Widget _streamBuilderMqtt() {
+    return StreamBuilder(
         stream: widget.client.updates,
         builder: (context, snapshot) {
-          if (snapshot.hasData) {
+          if(snapshot.hasData){
             final mqttReceivedMessages =
-                snapshot.data as List<MqttReceivedMessage<MqttMessage>>?;
+            snapshot.data as List<MqttReceivedMessage<MqttMessage>>;
             final recMessBytes =
-                mqttReceivedMessages![0].payload as MqttPublishMessage;
+            mqttReceivedMessages[0].payload as MqttPublishMessage;
             final recMessString = MqttPublishPayload.bytesToStringAsString(
                 recMessBytes.payload.message);
 
             final recMessValue = json.decode(recMessString)['message'];
+            int valueMess = recMessValue.toInt();
 
-            print(recMessValue.toInt());
+            // _generateNotification(valueMess);
+
+            print("message: " + recMessValue.toString());
+          } else {
+            print("message:");
           }
+
           return Container();
         },
-      ),
-    );
+      );
+  }
+
+  _getUserRoons() async {
+    await _roomController.getUserRooms(widget.email);
   }
 
   _showLogOutAlertDialog(BuildContext context) {
@@ -314,10 +305,37 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
   }
 
+  Future<void> _generateNotification(int mqttReceivedValue) async {
+    String title = "";
+    String body = "";
+
+    if (mqttReceivedValue == 0) {
+      title = "Apenas atualização de status...";
+      body = "Tudo em paz! Sem vazamento de gás no momento.";
+    } else if (mqttReceivedValue > 0 && mqttReceivedValue <= 24) {
+      title = "Atenção! Verifique as opções de monitoramento."; // Colocar emoji de sirene
+      body = "Detectamos nível BAIXO de vazamento em seu local!";
+    } else if (mqttReceivedValue > 24 && mqttReceivedValue < 52) {
+      title = "🚨 Atenção! Verifique as opções de monitoramento 🚨 "; // Colocar emoji de sirene
+      body = "Detectamos nível MÉDIO de vazamento em seu local!";
+    } else if (mqttReceivedValue >= 52) {
+      title = "Detectamos nível ALTO de vazamento em seu local!";
+      body =
+      "Entre agora em opções de monitoramento do seu cômodo para acionamento dos SPRINKLES ou acione o SUPORTE TÉCNICO.";
+    }
+
+    final NotificationModel? notification = await notificationRepository
+        .createNotificationFirebase(title, body, widget.email, token);
+
+    setState(() {
+      _notification = notification;
+    });
+  }
+
   Widget _listItem(String imgpath, String stringPath, int averageValue,
       double maxValue, AssetImage icon) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      padding: const EdgeInsets.all(18.0),
       child: GestureDetector(
         onTap: () {
           Navigator.of(context).push(MaterialPageRoute(
@@ -332,12 +350,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         },
         child: Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(25),
+            borderRadius: BorderRadius.circular(22),
             color: ConstantColors.primaryColor.withOpacity(0.8),
           ),
           // color: ConstantColors.primaryColor.withOpacity(0.8),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 24),
+            padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 20),
             child: Column(
               children: [
                 Container(

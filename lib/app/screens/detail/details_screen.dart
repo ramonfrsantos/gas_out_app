@@ -1,11 +1,6 @@
-import 'dart:async';
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:gas_out_app/data/repositories/notification/notification_repository.dart';
-import 'package:http/http.dart' as http;
 import 'package:google_fonts/google_fonts.dart';
-import '../../../data/model/notiification/notification_firebase_model.dart';
-import '../../../main.dart';
 import '../../constants/gasout_constants.dart';
 
 class DetailsScreen extends StatefulWidget {
@@ -36,14 +31,12 @@ class _DetailsScreenState extends State<DetailsScreen> {
   bool alarmValue = false;
   bool notificationValue = false;
 
-  NotificationModel? _notification;
   final NotificationRepository notificationRepository =
       NotificationRepository();
 
   @override
   void initState() {
     setValues();
-    _generateNotification();
     super.initState();
   }
 
@@ -280,32 +273,5 @@ class _DetailsScreenState extends State<DetailsScreen> {
         return alert;
       },
     );
-  }
-
-  Future<void> _generateNotification() async {
-    String title = "";
-    String body = "";
-
-    if (widget.averageValue == 0) {
-      title = "Apenas atualização de status...";
-      body = "Tudo em paz! Sem vazamento de gás no momento.";
-    } else if (widget.averageValue > 0 && widget.averageValue <= 24) {
-      title = "Atenção! Verifique as opções de monitoramento."; // Colocar emoji de sirene
-      body = "Detectamos nível BAIXO de vazamento em seu local!";
-    } else if (widget.averageValue > 24 && widget.averageValue < 52) {
-      title = "Atenção! Verifique as opções de monitoramento."; // Colocar emoji de sirene
-      body = "Detectamos nível MÉDIO de vazamento em seu local!";
-    } else if (widget.averageValue >= 52) {
-      title = "Detectamos nível ALTO de vazamento em seu local!";
-      body =
-          "Entre agora em opções de monitoramento do seu cômodo para acionamento dos SPRINKLES ou acione o SUPORTE TÉCNICO.";
-    }
-
-    final NotificationModel? notification = await notificationRepository
-        .createNotificationFirebase(title, body, widget.email, token);
-
-    setState(() {
-      _notification = notification;
-    });
   }
 }
