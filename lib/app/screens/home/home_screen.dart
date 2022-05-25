@@ -279,15 +279,15 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             sprinklersOn = false;
           }
 
-          /*Timer(Duration(seconds: 60), () {
-            _roomController.sendRoomSensorValue(room.name, widget.email!,
+          /*_roomController.sendRoomSensorValue(room.name, widget.email!,
                 alarmOn, notificationOn, sprinklersOn, mqttSensorValue);
             _generateNotification(mqttSensorValue);
-          });*/
 
-          print("TRIGGERED: " + recMessValue.toString());
+
+           print("TRIGGERED: " + recMessValue.toString());*/
+
         }
-
+        print(snapshot.connectionState.toString());
         return Container();
       },
     );
