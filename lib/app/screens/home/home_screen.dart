@@ -56,6 +56,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         body: _body(),
       );
     });
+    // return Scaffold(
+    //   body: _body(),
+    // );
   }
 
   Widget _body() {
@@ -226,13 +229,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 style: new TextStyle(color: Colors.black87),
               ),
               Spacer(),
-              Observer(builder: (_) {
-                return Switch(
-                  value: monitoringController.activeMonitoring,
-                  onChanged: monitoringController.setValue,
-                  activeColor: ConstantColors.primaryColor,
-                );
-              })
+              Switch(
+                value: monitoringController.activeMonitoring,
+                onChanged: monitoringController.setValue,
+                activeColor: ConstantColors.primaryColor,
+              ),
             ],
           ),
           Text(
@@ -240,10 +241,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             style: TextStyle(fontSize: 12, color: Colors.black38),
             textAlign: TextAlign.left,
           ),
-          Container(
-            child: _roomController.roomList!
+          Column(
+            children: _roomController.roomList!
                 .map((room) => _streamBuilderMqtt(room))
-                .toList()[0],
+                .toList(),
           )
         ],
       ),
