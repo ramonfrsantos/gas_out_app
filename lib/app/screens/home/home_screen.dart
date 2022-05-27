@@ -10,7 +10,6 @@ import 'package:mqtt_client/mqtt_server_client.dart';
 
 import 'package:gas_out_app/app/constants/gasout_constants.dart';
 
-import '../../../data/model/notiification/notification_firebase_model.dart';
 import '../../../data/repositories/notification/notification_repository.dart';
 import '../../../main.dart';
 import '../../helpers/global.dart';
@@ -37,7 +36,7 @@ class HomeScreen extends KFDrawerContent {
 
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   RoomController _roomController = RoomController();
-  NotificationModel? _notification;
+
   final NotificationRepository notificationRepository =
       NotificationRepository();
 
@@ -46,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _getUserRoons();
+    _getUserRooms();
   }
 
   @override
@@ -56,9 +55,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         body: _body(),
       );
     });
-    // return Scaffold(
-    //   body: _body(),
-    // );
   }
 
   Widget _body() {
@@ -256,6 +252,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       stream: widget.client.updates,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
+
           final mqttReceivedMessages =
               snapshot.data as List<MqttReceivedMessage<MqttMessage>>;
           final recMessBytes =
@@ -280,21 +277,20 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             sprinklersOn = false;
           }
 
-          /*_roomController.sendRoomSensorValue(room.name, widget.email!,
-                alarmOn, notificationOn, sprinklersOn, mqttSensorValue);
-            _generateNotification(mqttSensorValue);
+          _generateNotification(mqttSensorValue);
 
+          _roomController.sendRoomSensorValue(room.name, widget.email!,
+              alarmOn, notificationOn, sprinklersOn, mqttSensorValue);
 
-           print("TRIGGERED: " + recMessValue.toString());*/
-
+           // print("TRIGGERED: " + recMessValue.toString());
         }
-        print(snapshot.connectionState.toString());
+
         return Container();
       },
     );
   }
 
-  _getUserRoons() async {
+  _getUserRooms() async {
     await _roomController.getUserRooms(widget.email);
   }
 
@@ -339,11 +335,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       body = "Tudo em paz! Sem vazamento de gás no momento.";
     } else if (mqttReceivedValue > 0 && mqttReceivedValue <= 24) {
       title =
-          "Atenção! Verifique as opções de monitoramento."; // Colocar emoji de sirene
+          "Atenção! Verifique as opções de monitoramento..."; // Colocar emoji de sirene
       body = "Detectamos nível BAIXO de vazamento em seu local!";
     } else if (mqttReceivedValue > 24 && mqttReceivedValue < 52) {
       title =
-          "🚨 Atenção! Verifique as opções de monitoramento 🚨 "; // Colocar emoji de sirene
+          "🚨 Atenção! Verifique as opções de monitoramento "; // Colocar emoji de sirene
       body = "Detectamos nível MÉDIO de vazamento em seu local!";
     } else if (mqttReceivedValue >= 52) {
       title = "Detectamos nível ALTO de vazamento em seu local!";
@@ -351,12 +347,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           "Entre agora em opções de monitoramento do seu cômodo para acionamento dos SPRINKLES ou acione o SUPORTE TÉCNICO.";
     }
 
-    final NotificationModel? notification = await notificationRepository
-        .createNotificationFirebase(title, body, widget.email, token);
+    print("Entrou no generateNotif");
 
-    setState(() {
-      _notification = notification;
-    });
+    await notificationRepository
+        .createNotificationFirebase(title, body, widget.email, token);
   }
 
   Widget _listItem(String imgpath, String stringPath, int averageValue,
