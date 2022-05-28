@@ -252,7 +252,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       stream: widget.client.updates,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-
           final mqttReceivedMessages =
               snapshot.data as List<MqttReceivedMessage<MqttMessage>>;
           final recMessBytes =
@@ -264,25 +263,29 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           bool notificationOn = false;
           bool sprinklersOn = false;
 
-          final recMessValue = json.decode(recMessString)['message'];
-          mqttSensorValue = recMessValue.toInt();
+          print(recMessString);
 
-          if (mqttSensorValue > 0 && mqttSensorValue < 52) {
-            alarmOn = false;
-            notificationOn = true;
-            sprinklersOn = false;
-          } else {
-            alarmOn = true;
-            notificationOn = true;
-            sprinklersOn = false;
+          final sensorValue =
+              json.decode(recMessString)['message']['sensorValue'];
+          final roomName = json.decode(recMessString)['message']['roomName'];
+          mqttSensorValue = sensorValue.toInt();
+
+          if (room.name.toLowerCase() == roomName.toString().toLowerCase()) {
+            if (mqttSensorValue > 0 && mqttSensorValue < 52) {
+              alarmOn = false;
+              notificationOn = true;
+              sprinklersOn = false;
+            } else {
+              alarmOn = true;
+              notificationOn = true;
+              sprinklersOn = false;
+            }
+
+            _generateNotification(mqttSensorValue);
+
+            _roomController.sendRoomSensorValue(room.name, widget.email!,
+                alarmOn, notificationOn, sprinklersOn, mqttSensorValue);
           }
-
-          _generateNotification(mqttSensorValue);
-
-          _roomController.sendRoomSensorValue(room.name, widget.email!,
-              alarmOn, notificationOn, sprinklersOn, mqttSensorValue);
-
-           // print("TRIGGERED: " + recMessValue.toString());
         }
 
         return Container();
@@ -349,8 +352,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
     print("Entrou no generateNotif");
 
-    await notificationRepository
-        .createNotificationFirebase(title, body, widget.email, token);
+    await notificationRepository.createNotificationFirebase(
+        title, body, widget.email, token);
   }
 
   Widget _listItem(String imgpath, String stringPath, int averageValue,
