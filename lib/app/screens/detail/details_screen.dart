@@ -36,6 +36,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
 
   @override
   void initState() {
+
     setValues();
     super.initState();
   }

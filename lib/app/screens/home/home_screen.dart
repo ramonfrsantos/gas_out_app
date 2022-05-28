@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:gas_out_app/data/model/room/room_response_model.dart';
@@ -249,6 +250,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   Widget _streamBuilderMqtt(RoomResponseModel room) {
     return StreamBuilder(
+      initialData: null,
       stream: widget.client.updates,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
@@ -263,14 +265,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           bool notificationOn = false;
           bool sprinklersOn = false;
 
-          print(recMessString);
-
           final sensorValue =
               json.decode(recMessString)['message']['sensorValue'];
           final roomName = json.decode(recMessString)['message']['roomName'];
           mqttSensorValue = sensorValue.toInt();
 
           if (room.name.toLowerCase() == roomName.toString().toLowerCase()) {
+            print(recMessString);
+
             if (mqttSensorValue > 0 && mqttSensorValue < 52) {
               alarmOn = false;
               notificationOn = true;
@@ -347,7 +349,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     } else if (mqttReceivedValue >= 52) {
       title = "Detectamos nível ALTO de vazamento em seu local!";
       body =
-          "Entre agora em opções de monitoramento do seu cômodo para acionamento dos SPRINKLES ou acione o SUPORTE TÉCNICO.";
+          "Entre agora em opções de monitoramento do seu cômodo para acionamento dos SPRINKLERS ou acione o SUPORTE TÉCNICO.";
     }
 
     print("Entrou no generateNotif");
