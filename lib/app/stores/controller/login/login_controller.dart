@@ -1,10 +1,15 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:mobx/mobx.dart';
+
+import '../../../../data/model/login/login_response_model.dart';
+import '../../../../data/repositories/login/login_repository.dart';
 part 'login_controller.g.dart';
 
 class LoginController = _LoginControllerBase with _$LoginController;
 
 abstract class _LoginControllerBase with Store {
+  LoginRepository _repository = LoginRepository();
+
   @observable
   String name = "";
 
@@ -35,6 +40,7 @@ abstract class _LoginControllerBase with Store {
       password.length > 0 &&
       confirmPassword.length > 0;
 
+  @action
   String? getErrorPassword(String text) {
     if (text.length == 0) {
       return null;
@@ -81,6 +87,11 @@ abstract class _LoginControllerBase with Store {
       return 'As senhas não coincidem.';
     }
     return null;
+  }
+
+  @action
+  Future<LoginResponseModel?> doLogin(String login, String password) async {
+    return await _repository.doLogin(login, password);
   }
 
   bool validateStructure(String value) {

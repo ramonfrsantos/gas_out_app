@@ -60,7 +60,6 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   UserRepository userRepository = UserRepository();
-  LoginRepository loginRepository = LoginRepository();
   LoginController loginController = LoginController();
 
   @override
@@ -292,9 +291,12 @@ class _LoginScreenState extends State<LoginScreen> {
                               });
 
                               LoginResponseModel? response =
-                                  await loginRepository.doLogin(
+                                  await loginController.doLogin(
                                       emailLoginController.text,
                                       passwordLoginController.text);
+
+                              print(response.toString());
+
                               if (response?.userId != null) {
                                 setState(() {
                                   _loading = false;

@@ -1,13 +1,9 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
-import 'package:gas_out_app/app/stores/controller/login/login_controller.dart';
 import 'package:gas_out_app/data/model/login/login_response_model.dart';
-import 'package:gas_out_app/data/model/notiification/notification_response_model.dart';
 
 import '../../../app/config/app_config.dart';
 import '../../../app/constants/gasout_constants.dart';
-import '../../model/notiification/notification_firebase_model.dart';
-import '../../model/user/UserModel.dart';
 
 class LoginRepository {
   final Dio client = Dio();
@@ -17,11 +13,7 @@ class LoginRepository {
     final String url = '${baseUrl}auth/login';
     print(url);
 
-    final bodyJSON =
-        jsonEncode({
-          "login": login,
-          "password": password
-        });
+    final bodyJSON = jsonEncode({"login": login, "password": password});
 
     print(bodyJSON);
 
@@ -38,7 +30,6 @@ class LoginRepository {
       );
 
       print(response.data);
-
       return LoginResponseModel.fromJson(response.data);
     } catch (e) {
       print(e.toString());
