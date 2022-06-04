@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -6,13 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:gas_out_app/app/screens/login/login_screen.dart';
-import 'package:gas_out_app/app/stores/controller/login/login_controller.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kf_drawer/kf_drawer.dart';
 import 'package:gas_out_app/app/helpers/dependency_injection.dart' as di;
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
-import 'package:ndialog/ndialog.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 import 'app/config/app_config.dart';
@@ -21,10 +18,8 @@ import 'app/constants/gasout_constants.dart';
 import 'app/screens/home/home_screen.dart';
 import 'app/screens/notification/notification_screen.dart';
 import 'app/screens/stats/stats_screen.dart';
-import 'app/stores/controller/room/room_controller.dart';
 import 'data/firebase_messaging/custom_firebase_messaging.dart';
 import 'data/model/class_builder_model.dart';
-import 'data/model/room/room_response_model.dart';
 import 'data/repositories/notification/notification_repository.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -70,18 +65,19 @@ class _MyAppState extends State<MyApp> {
         ),
       ),
       debugShowCheckedModeBanner: false,
-      // home: MainWidget(title: 'Gas Out',),
       home: LoginScreen(),
-
-      // MainWidget(
-      //   title: 'Gas Out',
-      // ),
     );
   }
 }
 
 class MainWidget extends StatefulWidget {
-  MainWidget({Key? key, required this.title, this.username, this.email, required this.client, required this.isConnected})
+  MainWidget(
+      {Key? key,
+      required this.title,
+      this.username,
+      this.email,
+      required this.client,
+      required this.isConnected})
       : super(key: key);
   final String title;
   final String? username;
@@ -96,26 +92,23 @@ class MainWidget extends StatefulWidget {
 class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
   String statusText = "Status Text";
   TextEditingController idTextController = TextEditingController();
-
-  int mqttSensorValue = 0;
-
   late KFDrawerController _drawerController;
-  RoomController _roomController = RoomController();
   final NotificationRepository notificationRepository =
-  NotificationRepository();
+      NotificationRepository();
 
   @override
   void initState() {
     super.initState();
     ClassBuilder.registerNotification(widget.email);
     ClassBuilder.registerStats();
-    ClassBuilder.registerHome(widget.username, widget.email, widget.client, widget.isConnected);
+    ClassBuilder.registerHome(
+        widget.username, widget.email, widget.client, widget.isConnected);
     print(widget.username);
     print(widget.email);
 
     idTextController.text = "ClientID";
 
-    if(widget.isConnected == false){
+    if (widget.isConnected == false) {
       _connect();
     }
 
@@ -198,7 +191,7 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
               SizedBox(
                 width: 150,
                 height: 125,
-              )
+              ),
             ],
           ),
         ),
@@ -212,23 +205,23 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
                   Container(
                     width: 200,
                     height: 50,
-                    child: widget.isConnected ? TextButton(
-                        onPressed: _disconnect,
-                        child: Text("Desconectar MQTT")
-                    ) : TextFormField(
-                      controller: idTextController,
-                      enabled: !widget.isConnected,
-                      decoration: InputDecoration(
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.only(left: 10, top: 5),
-                          labelText: 'MQTT Client ID',
-                          labelStyle: TextStyle(fontSize: 10),
-                          suffixIcon: IconButton(
-                              onPressed: _connect,
-                              icon: Icon(Icons.subdirectory_arrow_left)
-                          )
-                      ),
-                    ),
+                    child: widget.isConnected
+                        ? TextButton(
+                            onPressed: _disconnect,
+                            child: Text("Desconectar MQTT"))
+                        : TextFormField(
+                            controller: idTextController,
+                            enabled: !widget.isConnected,
+                            decoration: InputDecoration(
+                                border: InputBorder.none,
+                                contentPadding:
+                                    EdgeInsets.only(left: 10, top: 5),
+                                labelText: 'MQTT Client ID',
+                                labelStyle: TextStyle(fontSize: 10),
+                                suffixIcon: IconButton(
+                                    onPressed: _connect,
+                                    icon: Icon(Icons.subdirectory_arrow_left))),
+                          ),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(20)),
                       color: Colors.white,
@@ -244,96 +237,13 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
         ),
         decoration: BoxDecoration(
           color: ConstantColors.primaryColor,
-          // gradient: LinearGradient(
-          //   begin: Alignment.centerLeft,
-          //   end: Alignment.centerRight,
-          //   colors: [
-          //     ConstantColors.primaryColor,
-          //     ConstantColors.secondaryColor
-          //   ],
-          //   tileMode: TileMode.repeated,
-          // ),
         ),
       ),
     );
   }
 
-  Widget _streamBuilderMqtt(RoomResponseModel room) {
-    return StreamBuilder(
-      initialData: null,
-      stream: widget.client.updates,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          final mqttReceivedMessages =
-          snapshot.data as List<MqttReceivedMessage<MqttMessage>>;
-          final recMessBytes =
-          mqttReceivedMessages[0].payload as MqttPublishMessage;
-          final recMessString = MqttPublishPayload.bytesToStringAsString(
-              recMessBytes.payload.message);
-
-          bool alarmOn = false;
-          bool notificationOn = false;
-          bool sprinklersOn = false;
-
-          final sensorValue =
-          json.decode(recMessString)['message']['sensorValue'];
-          final roomName = json.decode(recMessString)['message']['roomName'];
-          mqttSensorValue = sensorValue.toInt();
-
-          if (room.name.toLowerCase() == roomName.toString().toLowerCase()) {
-            print("ENTROOOOOU");
-
-            if (mqttSensorValue > 0 && mqttSensorValue < 52) {
-              alarmOn = false;
-              notificationOn = true;
-              sprinklersOn = false;
-            } else {
-              alarmOn = true;
-              notificationOn = true;
-              sprinklersOn = false;
-            }
-
-            // _generateNotification(mqttSensorValue);
-
-            // _roomController.sendRoomSensorValue(room.name, widget.email!,
-            //     alarmOn, notificationOn, sprinklersOn, mqttSensorValue);
-          }
-        }
-
-        return Container();
-      },
-    );
-  }
-
-  // Future<void> _generateNotification(int mqttReceivedValue) async {
-  //   String title = "";
-  //   String body = "";
-  //
-  //   if (mqttReceivedValue == 0) {
-  //     title = "Apenas atualização de status...";
-  //     body = "Tudo em paz! Sem vazamento de gás no momento.";
-  //   } else if (mqttReceivedValue > 0 && mqttReceivedValue <= 24) {
-  //     title =
-  //     "Atenção! Verifique as opções de monitoramento..."; // Colocar emoji de sirene
-  //     body = "Detectamos nível BAIXO de vazamento em seu local!";
-  //   } else if (mqttReceivedValue > 24 && mqttReceivedValue < 52) {
-  //     title =
-  //     "🚨 Atenção! Verifique as opções de monitoramento "; // Colocar emoji de sirene
-  //     body = "Detectamos nível MÉDIO de vazamento em seu local!";
-  //   } else if (mqttReceivedValue >= 52) {
-  //     title = "Detectamos nível ALTO de vazamento em seu local!";
-  //     body =
-  //     "Entre agora em opções de monitoramento do seu cômodo para acionamento dos SPRINKLERS ou acione o SUPORTE TÉCNICO.";
-  //   }
-  //
-  //   print("Entrou no generateNotif");
-  //
-  //   await notificationRepository.createNotificationFirebase(
-  //       title, body, widget.email, token);
-  // }
-
   void _connect() async {
-    if(idTextController.text.trim().isNotEmpty){
+    if (idTextController.text.trim().isNotEmpty) {
       print(idTextController.text.trim());
       // ProgressDialog progressDialog = ProgressDialog(
       //   context,
@@ -352,7 +262,15 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
       widget.isConnected = await mqttConnect(idTextController.text.trim());
       // progressDialog.dismiss();
 
-      Navigator.push(context, MaterialPageRoute(builder: (context) => MainWidget(username: widget.username, email: widget.email, title: 'GasOut', client: widget.client, isConnected: widget.isConnected)));
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => MainWidget(
+                  username: widget.username,
+                  email: widget.email,
+                  title: 'GasOut',
+                  client: widget.client,
+                  isConnected: widget.isConnected)));
     }
   }
 
@@ -389,7 +307,8 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
     widget.client.connectionMessage = connMess;
 
     await widget.client.connect();
-    if (widget.client.connectionStatus!.state == MqttConnectionState.connected) {
+    if (widget.client.connectionStatus!.state ==
+        MqttConnectionState.connected) {
       print("Conectado ao AWS com sucesso.");
     } else {
       return false;
