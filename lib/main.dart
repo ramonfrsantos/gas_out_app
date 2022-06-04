@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -20,8 +21,11 @@ import 'app/constants/gasout_constants.dart';
 import 'app/screens/home/home_screen.dart';
 import 'app/screens/notification/notification_screen.dart';
 import 'app/screens/stats/stats_screen.dart';
+import 'app/stores/controller/room/room_controller.dart';
 import 'data/firebase_messaging/custom_firebase_messaging.dart';
 import 'data/model/class_builder_model.dart';
+import 'data/model/room/room_response_model.dart';
+import 'data/repositories/notification/notification_repository.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -93,8 +97,12 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
   String statusText = "Status Text";
   TextEditingController idTextController = TextEditingController();
 
+  int mqttSensorValue = 0;
+
   late KFDrawerController _drawerController;
-  LoginController loginController = LoginController();
+  RoomController _roomController = RoomController();
+  final NotificationRepository notificationRepository =
+  NotificationRepository();
 
   @override
   void initState() {
@@ -104,6 +112,12 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
     ClassBuilder.registerHome(widget.username, widget.email, widget.client, widget.isConnected);
     print(widget.username);
     print(widget.email);
+
+    idTextController.text = "ClientID";
+
+    if(widget.isConnected == false){
+      _connect();
+    }
 
     _drawerController = KFDrawerController(
       initialPage: ClassBuilder.fromString('HomeScreen'),
@@ -188,41 +202,45 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
             ],
           ),
         ),
-        footer: Padding(
-          padding: EdgeInsets.only(top: 30, left: 20),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                width: 200,
-                height: 50,
-                child: widget.isConnected ? TextButton(
-                    onPressed: _disconnect,
-                    child: Text("Desconectar")
-                ) : TextFormField(
-                  controller: idTextController,
-                  enabled: !widget.isConnected,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.only(left: 10, top: 5),
-                      labelText: 'MQTT Client ID',
-                      labelStyle: TextStyle(fontSize: 10),
-                      suffixIcon: IconButton(
-                          onPressed: _connect,
-                          icon: Icon(Icons.subdirectory_arrow_left)
-                      )
+        footer: Row(
+          children: [
+            Padding(
+              padding: EdgeInsets.only(top: 30, left: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    width: 200,
+                    height: 50,
+                    child: widget.isConnected ? TextButton(
+                        onPressed: _disconnect,
+                        child: Text("Desconectar MQTT")
+                    ) : TextFormField(
+                      controller: idTextController,
+                      enabled: !widget.isConnected,
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.only(left: 10, top: 5),
+                          labelText: 'MQTT Client ID',
+                          labelStyle: TextStyle(fontSize: 10),
+                          suffixIcon: IconButton(
+                              onPressed: _connect,
+                              icon: Icon(Icons.subdirectory_arrow_left)
+                          )
+                      ),
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                      color: Colors.white,
+                    ),
                   ),
-                ),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                    color: Colors.white,
-                ),
+                  SizedBox(
+                    width: 20,
+                  )
+                ],
               ),
-              SizedBox(
-                width: 20,
-              )
-            ],
-          ),
+            ),
+          ],
         ),
         decoration: BoxDecoration(
           color: ConstantColors.primaryColor,
@@ -240,25 +258,99 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
     );
   }
 
-  Future<dynamic> _connect() async {
+  Widget _streamBuilderMqtt(RoomResponseModel room) {
+    return StreamBuilder(
+      initialData: null,
+      stream: widget.client.updates,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          final mqttReceivedMessages =
+          snapshot.data as List<MqttReceivedMessage<MqttMessage>>;
+          final recMessBytes =
+          mqttReceivedMessages[0].payload as MqttPublishMessage;
+          final recMessString = MqttPublishPayload.bytesToStringAsString(
+              recMessBytes.payload.message);
+
+          bool alarmOn = false;
+          bool notificationOn = false;
+          bool sprinklersOn = false;
+
+          final sensorValue =
+          json.decode(recMessString)['message']['sensorValue'];
+          final roomName = json.decode(recMessString)['message']['roomName'];
+          mqttSensorValue = sensorValue.toInt();
+
+          if (room.name.toLowerCase() == roomName.toString().toLowerCase()) {
+            print("ENTROOOOOU");
+
+            if (mqttSensorValue > 0 && mqttSensorValue < 52) {
+              alarmOn = false;
+              notificationOn = true;
+              sprinklersOn = false;
+            } else {
+              alarmOn = true;
+              notificationOn = true;
+              sprinklersOn = false;
+            }
+
+            // _generateNotification(mqttSensorValue);
+
+            // _roomController.sendRoomSensorValue(room.name, widget.email!,
+            //     alarmOn, notificationOn, sprinklersOn, mqttSensorValue);
+          }
+        }
+
+        return Container();
+      },
+    );
+  }
+
+  // Future<void> _generateNotification(int mqttReceivedValue) async {
+  //   String title = "";
+  //   String body = "";
+  //
+  //   if (mqttReceivedValue == 0) {
+  //     title = "Apenas atualização de status...";
+  //     body = "Tudo em paz! Sem vazamento de gás no momento.";
+  //   } else if (mqttReceivedValue > 0 && mqttReceivedValue <= 24) {
+  //     title =
+  //     "Atenção! Verifique as opções de monitoramento..."; // Colocar emoji de sirene
+  //     body = "Detectamos nível BAIXO de vazamento em seu local!";
+  //   } else if (mqttReceivedValue > 24 && mqttReceivedValue < 52) {
+  //     title =
+  //     "🚨 Atenção! Verifique as opções de monitoramento "; // Colocar emoji de sirene
+  //     body = "Detectamos nível MÉDIO de vazamento em seu local!";
+  //   } else if (mqttReceivedValue >= 52) {
+  //     title = "Detectamos nível ALTO de vazamento em seu local!";
+  //     body =
+  //     "Entre agora em opções de monitoramento do seu cômodo para acionamento dos SPRINKLERS ou acione o SUPORTE TÉCNICO.";
+  //   }
+  //
+  //   print("Entrou no generateNotif");
+  //
+  //   await notificationRepository.createNotificationFirebase(
+  //       title, body, widget.email, token);
+  // }
+
+  void _connect() async {
     if(idTextController.text.trim().isNotEmpty){
       print(idTextController.text.trim());
-      ProgressDialog progressDialog = ProgressDialog(
-        context,
-        blur: 0,
-        dialogTransitionType: DialogTransitionType.Shrink,
-        dismissable: false,
-      );
-      progressDialog.setLoadingWidget(CircularProgressIndicator(
-        valueColor: AlwaysStoppedAnimation(Colors.red),
-      ));
-      progressDialog.setMessage(
-          Text("Aguarde, conectando ao AWS MQTT Broker..."));
-      progressDialog.setTitle(Text("Conectando"));
-      progressDialog.show();
+      // ProgressDialog progressDialog = ProgressDialog(
+      //   context,
+      //   blur: 0,
+      //   dialogTransitionType: DialogTransitionType.Shrink,
+      //   dismissable: false,
+      // );
+      // progressDialog.setLoadingWidget(CircularProgressIndicator(
+      //   valueColor: AlwaysStoppedAnimation(Colors.red),
+      // ));
+      // progressDialog.setMessage(
+      //     Text("Aguarde, conectando ao AWS MQTT Broker..."));
+      // progressDialog.setTitle(Text("Conectando"));
+      // progressDialog.show();
 
       widget.isConnected = await mqttConnect(idTextController.text.trim());
-      progressDialog.dismiss();
+      // progressDialog.dismiss();
 
       Navigator.push(context, MaterialPageRoute(builder: (context) => MainWidget(username: widget.username, email: widget.email, title: 'GasOut', client: widget.client, isConnected: widget.isConnected)));
     }

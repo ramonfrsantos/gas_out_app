@@ -1,18 +1,13 @@
-import 'dart:async';
-import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:gas_out_app/data/model/room/room_response_model.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kf_drawer/kf_drawer.dart';
-import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 
 import 'package:gas_out_app/app/constants/gasout_constants.dart';
 
 import '../../../data/repositories/notification/notification_repository.dart';
-import '../../../main.dart';
 import '../../helpers/global.dart';
 import '../../stores/controller/room/room_controller.dart';
 import '../detail/details_screen.dart';
@@ -40,8 +35,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   final NotificationRepository notificationRepository =
       NotificationRepository();
-
-  int mqttSensorValue = 0;
 
   @override
   void initState() {
@@ -238,60 +231,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             style: TextStyle(fontSize: 12, color: Colors.black38),
             textAlign: TextAlign.left,
           ),
-          Column(
-            children: _roomController.roomList!
-                .map((room) => _streamBuilderMqtt(room))
-                .toList(),
-          )
         ],
       ),
-    );
-  }
-
-  Widget _streamBuilderMqtt(RoomResponseModel room) {
-    return StreamBuilder(
-      initialData: null,
-      stream: widget.client.updates,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          final mqttReceivedMessages =
-              snapshot.data as List<MqttReceivedMessage<MqttMessage>>;
-          final recMessBytes =
-              mqttReceivedMessages[0].payload as MqttPublishMessage;
-          final recMessString = MqttPublishPayload.bytesToStringAsString(
-              recMessBytes.payload.message);
-
-          bool alarmOn = false;
-          bool notificationOn = false;
-          bool sprinklersOn = false;
-
-          final sensorValue =
-              json.decode(recMessString)['message']['sensorValue'];
-          final roomName = json.decode(recMessString)['message']['roomName'];
-          mqttSensorValue = sensorValue.toInt();
-
-          if (room.name.toLowerCase() == roomName.toString().toLowerCase()) {
-            print(recMessString);
-
-            if (mqttSensorValue > 0 && mqttSensorValue < 52) {
-              alarmOn = false;
-              notificationOn = true;
-              sprinklersOn = false;
-            } else {
-              alarmOn = true;
-              notificationOn = true;
-              sprinklersOn = false;
-            }
-
-            _generateNotification(mqttSensorValue);
-
-            _roomController.sendRoomSensorValue(room.name, widget.email!,
-                alarmOn, notificationOn, sprinklersOn, mqttSensorValue);
-          }
-        }
-
-        return Container();
-      },
     );
   }
 
@@ -329,33 +270,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         return alert;
       },
     );
-  }
-
-  Future<void> _generateNotification(int mqttReceivedValue) async {
-    String title = "";
-    String body = "";
-
-    if (mqttReceivedValue == 0) {
-      title = "Apenas atualização de status...";
-      body = "Tudo em paz! Sem vazamento de gás no momento.";
-    } else if (mqttReceivedValue > 0 && mqttReceivedValue <= 24) {
-      title =
-          "Atenção! Verifique as opções de monitoramento..."; // Colocar emoji de sirene
-      body = "Detectamos nível BAIXO de vazamento em seu local!";
-    } else if (mqttReceivedValue > 24 && mqttReceivedValue < 52) {
-      title =
-          "🚨 Atenção! Verifique as opções de monitoramento "; // Colocar emoji de sirene
-      body = "Detectamos nível MÉDIO de vazamento em seu local!";
-    } else if (mqttReceivedValue >= 52) {
-      title = "Detectamos nível ALTO de vazamento em seu local!";
-      body =
-          "Entre agora em opções de monitoramento do seu cômodo para acionamento dos SPRINKLERS ou acione o SUPORTE TÉCNICO.";
-    }
-
-    print("Entrou no generateNotif");
-
-    await notificationRepository.createNotificationFirebase(
-        title, body, widget.email, token);
   }
 
   Widget _listItem(String imgpath, String stringPath, int averageValue,
