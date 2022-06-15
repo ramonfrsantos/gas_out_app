@@ -40,9 +40,9 @@ mixin _$NotificationController on _NotificationControllerBase, Store {
       context: context);
 
   @override
-  Future deleteNotification(int id, String? email) {
+  Future deleteNotification(int id) {
     return _$deleteNotificationAsyncAction
-        .run(() => super.deleteNotification(id, email));
+        .run(() => super.deleteNotification(id));
   }
 
   late final _$createNotificationAsyncAction = AsyncAction(

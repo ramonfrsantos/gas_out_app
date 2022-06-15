@@ -109,7 +109,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     ),
                     onDismissed: (direction) {
                       var notificationChosen = notification;
-                      _showAlertDialog(context, notificationChosen.id, widget.email);
+                      _showAlertDialog(context, notificationChosen.id);
                     },
                     background: _deleteBgItem()
                   )
@@ -143,7 +143,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
     );
   }
 
-  _showAlertDialog(BuildContext context, int id, String? email) {
+  _showAlertDialog(BuildContext context, int id) {
     Widget cancelaButton = TextButton(
       child: Text("NÃO", style: GoogleFonts.muli(
           fontSize: 16,
@@ -157,7 +157,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
           fontSize: 16,
       )),
       onPressed: () async {
-        await _notificationController.deleteNotification(id, email);
+        await _notificationController.deleteNotification(id);
         Navigator.of(context).pop();
       },
     );

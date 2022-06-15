@@ -144,23 +144,23 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
           icon: Icon(Icons.trending_up, color: Colors.white),
           page: StatsScreen(),
         ),
-        KFDrawerItem.initWithPage(
-          text: Text(
-            'Acionar Suporte',
-            style: TextStyle(color: Colors.white, fontSize: 18),
-          ),
-          icon: Image.asset(
-            "assets/images/icWhatsApp.png",
-            color: Colors.white,
-            width: 26,
-            height: 26,
-          ),
-          onPressed: () {
-            String url =
-                'whatsapp://send?phone=${ConstantsSupport.phone}&text=${ConstantsSupport.message}';
-            launchUrlString(url);
-          },
-        ),
+        // KFDrawerItem.initWithPage(
+        //   text: Text(
+        //     'Acionar Suporte',
+        //     style: TextStyle(color: Colors.white, fontSize: 18),
+        //   ),
+        //   icon: Image.asset(
+        //     "assets/images/icWhatsApp.png",
+        //     color: Colors.white,
+        //     width: 26,
+        //     height: 26,
+        //   ),
+        //   onPressed: () {
+        //     String url =
+        //         'whatsapp://send?phone=${ConstantsSupport.phone}&text=${ConstantsSupport.message}';
+        //     launchUrlString(url);
+        //   },
+        // ),
       ],
     );
   }
@@ -262,24 +262,24 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
       widget.isConnected = await mqttConnect(idTextController.text.trim());
       // progressDialog.dismiss();
 
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => MainWidget(
-                  username: widget.username,
-                  email: widget.email,
-                  title: 'GasOut',
-                  client: widget.client,
-                  isConnected: widget.isConnected)));
+      // Navigator.push(
+      //     context,
+      //     MaterialPageRoute(
+      //         builder: (context) => MainWidget(
+      //             username: widget.username,
+      //             email: widget.email,
+      //             title: 'GasOut',
+      //             client: widget.client,
+      //             isConnected: widget.isConnected)));
     }
   }
 
-  _disconnect() {
-    setState(() {
-      widget.isConnected = false;
-    });
-    widget.client.disconnect();
-  }
+  // _disconnect() {
+  //   setState(() {
+  //     widget.isConnected = false;
+  //   });
+  //   widget.client.disconnect();
+  // }
 
   Future<bool> mqttConnect(String uniqueId) async {
     setStatus("Conectando ao MQTT Broker...");
@@ -321,9 +321,7 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
   }
 
   void setStatus(String content) {
-    setState(() {
       statusText = content;
-    });
   }
 
   void onConnected() {
