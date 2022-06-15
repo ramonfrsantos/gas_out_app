@@ -135,8 +135,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   Widget _streamBuilderMqtt(RoomResponseModel room) {
+    List<MqttReceivedMessage<MqttMessage>>? list;
+    
     return StreamBuilder(
-      initialData: null,
+      initialData: list,
       stream: widget.client.updates,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
@@ -169,6 +171,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               sprinklersOn = false;
             }
 
+            print("GEROOOOOOU NOTIFICAÇÃAAAAAAAAOOOOOO!!!!!!!!!!!");
             _generateNotification(mqttSensorValue);
 
             _roomController.sendRoomSensorValue(room.name, widget.email!,
@@ -201,8 +204,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       body =
           "Entre agora em opções de monitoramento do seu cômodo para acionamento dos SPRINKLERS ou acione o SUPORTE TÉCNICO.";
     }
-
-    print("Entrou no generateNotif");
 
     await notificationRepository.createNotificationFirebase(
         title, body, widget.email, token);
