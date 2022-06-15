@@ -195,46 +195,46 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
             ],
           ),
         ),
-        footer: Row(
-          children: [
-            Padding(
-              padding: EdgeInsets.only(top: 30, left: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    width: 200,
-                    height: 50,
-                    child: widget.isConnected
-                        ? TextButton(
-                            onPressed: _disconnect,
-                            child: Text("Desconectar MQTT"))
-                        : TextFormField(
-                            controller: idTextController,
-                            enabled: !widget.isConnected,
-                            decoration: InputDecoration(
-                                border: InputBorder.none,
-                                contentPadding:
-                                    EdgeInsets.only(left: 10, top: 5),
-                                labelText: 'MQTT Client ID',
-                                labelStyle: TextStyle(fontSize: 10),
-                                suffixIcon: IconButton(
-                                    onPressed: _connect,
-                                    icon: Icon(Icons.subdirectory_arrow_left))),
-                          ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(20)),
-                      color: Colors.white,
-                    ),
-                  ),
-                  SizedBox(
-                    width: 20,
-                  )
-                ],
-              ),
-            ),
-          ],
-        ),
+        // footer: Row(
+        //   children: [
+        //     Padding(
+        //       padding: EdgeInsets.only(top: 30, left: 20),
+        //       child: Row(
+        //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //         children: [
+        //           Container(
+        //             width: 200,
+        //             height: 50,
+        //             child: widget.isConnected
+        //                 ? TextButton(
+        //                     onPressed: _disconnect,
+        //                     child: Text("Desconectar MQTT"))
+        //                 : TextFormField(
+        //                     controller: idTextController,
+        //                     enabled: !widget.isConnected,
+        //                     decoration: InputDecoration(
+        //                         border: InputBorder.none,
+        //                         contentPadding:
+        //                             EdgeInsets.only(left: 10, top: 5),
+        //                         labelText: 'MQTT Client ID',
+        //                         labelStyle: TextStyle(fontSize: 10),
+        //                         suffixIcon: IconButton(
+        //                             onPressed: _connect,
+        //                             icon: Icon(Icons.subdirectory_arrow_left))),
+        //                   ),
+        //             decoration: BoxDecoration(
+        //               borderRadius: BorderRadius.all(Radius.circular(20)),
+        //               color: Colors.white,
+        //             ),
+        //           ),
+        //           SizedBox(
+        //             width: 20,
+        //           )
+        //         ],
+        //       ),
+        //     ),
+        //   ],
+        // ),
         decoration: BoxDecoration(
           color: ConstantColors.primaryColor,
         ),

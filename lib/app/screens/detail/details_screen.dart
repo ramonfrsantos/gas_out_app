@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:gas_out_app/data/repositories/notification/notification_repository.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../constants/gasout_constants.dart';
+import '../../stores/controller/notification/notification_controller.dart';
+import '../../stores/controller/room/room_controller.dart';
 
 class DetailsScreen extends StatefulWidget {
   final imgPath;
@@ -18,8 +21,7 @@ class DetailsScreen extends StatefulWidget {
       required this.maxValue,
       required this.totalHours,
       required this.email,
-      required this.roomName
-      })
+      required this.roomName})
       : super(key: key);
 
   @override
@@ -27,39 +29,42 @@ class DetailsScreen extends StatefulWidget {
 }
 
 class _DetailsScreenState extends State<DetailsScreen> {
-  bool sprinklersValue = false;
   bool alarmValue = false;
   bool notificationValue = false;
 
-  final NotificationRepository notificationRepository =
-      NotificationRepository();
+  final RoomController _roomController = RoomController();
 
   @override
   void initState() {
-
+    _roomController.getUserRooms(widget.email);
     setValues();
+
+    print("SPRINKLERS: ${_roomController.sprinklersValue}");
+
     super.initState();
   }
 
   setValues() {
-    widget.averageValue > 0 ? alarmValue = true : alarmValue = false;
-    widget.averageValue > 0
-        ? notificationValue = true
-        : notificationValue = false;
+    setState(() {
+      widget.averageValue > 0 ? alarmValue = true : alarmValue = false;
+      widget.averageValue > 0
+          ? notificationValue = true
+          : notificationValue = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    var valorMedioDiarioPorCento = ((100 * widget.averageValue) / 400);
     return Scaffold(
       body: Stack(
         children: <Widget>[
           new Container(
-            height: MediaQuery.of(context).size.height-300,
+            height: MediaQuery.of(context).size.height - 300,
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
                 image: DecorationImage(
-                    image: AssetImage(widget.imgPath), fit: BoxFit.cover)
-            ),
+                    image: AssetImage(widget.imgPath), fit: BoxFit.cover)),
           ),
           new Padding(
             padding: EdgeInsets.only(top: 40),
@@ -123,18 +128,20 @@ class _DetailsScreenState extends State<DetailsScreen> {
                           listItemStats(
                             imgpath: 'assets/images/sprinkler.png',
                             name: "Sprinklers",
-                            value: sprinklersValue,
+                            value: _roomController.sprinklersValue,
                             onChanged: (value) {
-                              if (widget.averageValue >= 50) {
-                                sprinklersValue == false
-                                    ? _showAlertDialog(context, () {
-                                        setState(() {
-                                          sprinklersValue = value;
-                                        });
-                                      })
+                              print("VALUE: $value");
+
+                              // VERIFICA SE OS SPRINKLERS ESTÃO OU NÃO ATIVOS
+                              if (valorMedioDiarioPorCento >= 50) {
+                                _roomController.sprinklersValue == false
+                                    ? _showAlertDialog(context)
                                     : setState(() {
-                                        sprinklersValue = value;
+                                        _roomController.sprinklersValue = value;
                                       });
+
+                                print(
+                                    "SPRINKLERS: ${_roomController.sprinklersValue}");
                               } else {
                                 value = false;
                               }
@@ -143,40 +150,43 @@ class _DetailsScreenState extends State<DetailsScreen> {
                         ],
                       ),
                       Padding(
-                          padding: EdgeInsets.only(top: 10, left: 20, right: 20),
+                          padding:
+                              EdgeInsets.only(top: 10, left: 20, right: 20),
                           child: Divider(
                             color: Colors.black26,
                           )),
                       SizedBox(height: 5),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 20, right: 20),
-                        child: Row(
-                          children: <Widget>[
-                            Text(
-                              "Valor Máximo Atingido",
-                              style: new TextStyle(color: Colors.black87,fontSize: 18),
-                            ),
-                            Spacer(),
-                            Text(
-                              widget.maxValue.toString() + "%",
-                              style: new TextStyle(color: Colors.black87,fontSize: 18),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 5),
+                      // Padding(
+                      //   padding: const EdgeInsets.only(left: 20, right: 20),
+                      //   child: Row(
+                      //     children: <Widget>[
+                      //       Text(
+                      //         "Valor Máximo Atingido",
+                      //         style: new TextStyle(color: Colors.black87,fontSize: 18),
+                      //       ),
+                      //       Spacer(),
+                      //       Text(
+                      //         widget.maxValue.toString() + "%",
+                      //         style: new TextStyle(color: Colors.black87,fontSize: 18),
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
+                      // SizedBox(height: 5),
                       Padding(
                         padding: const EdgeInsets.only(left: 20, right: 20),
                         child: Row(
                           children: <Widget>[
                             Text(
                               "Total de Horas Monitoradas",
-                              style: new TextStyle(color: Colors.black87,fontSize: 18),
+                              style: new TextStyle(
+                                  color: Colors.black87, fontSize: 18),
                             ),
                             Spacer(),
                             Text(
                               widget.totalHours.toString(),
-                              style: new TextStyle(color: Colors.black87,fontSize: 18),
+                              style: new TextStyle(
+                                  color: Colors.black87, fontSize: 18),
                             ),
                           ],
                         ),
@@ -188,12 +198,15 @@ class _DetailsScreenState extends State<DetailsScreen> {
                           children: <Widget>[
                             Text(
                               "Valor Médio Diário",
-                              style: new TextStyle(color: Colors.black87,fontSize: 18),
+                              style: new TextStyle(
+                                  color: Colors.black87, fontSize: 18),
                             ),
                             Spacer(),
                             Text(
-                              widget.averageValue.toString() + "%",
-                              style: new TextStyle(color: Colors.black87,fontSize: 18),
+                              valorMedioDiarioPorCento.toString() +
+                                  "%",
+                              style: new TextStyle(
+                                  color: Colors.black87, fontSize: 18),
                             ),
                           ],
                         ),
@@ -244,24 +257,34 @@ class _DetailsScreenState extends State<DetailsScreen> {
     );
   }
 
-  _showAlertDialog(BuildContext context, Function funcao) {
+  _showAlertDialog(BuildContext context) {
     Widget cancelaButton = TextButton(
       child: Text("Cancelar", style: GoogleFonts.muli(fontSize: 16)),
       onPressed: () {
+        // SE NÃO CONFIRMA, SPRINKLERS DESLIGADOS
+        setState(() {
+          _roomController.sprinklersValue =
+          false;
+        });
         Navigator.of(context).pop();
       },
     );
     Widget continuaButton = TextButton(
       child: Text("Continuar", style: GoogleFonts.muli(fontSize: 16)),
       onPressed: () {
+        // SE CONFIRMA, SPRINKLERS LIGADOS
+        setState(() {
+          _roomController.sprinklersValue =
+          true;
+        });
         Navigator.of(context).pop();
-        funcao();
       },
     );
     //configura o AlertDialog
     AlertDialog alert = AlertDialog(
       title: Text("Atenção!", style: GoogleFonts.muli(fontSize: 24)),
-      content: Text("Deseja realmente acionar os sprinklers? Isso possivelmente causará alagamento do local.",
+      content: Text(
+          "Deseja realmente acionar os sprinklers? Isso possivelmente causará alagamento do local.",
           style: GoogleFonts.muli(fontSize: 20)),
       actions: [
         cancelaButton,

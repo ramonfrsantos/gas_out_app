@@ -10,6 +10,14 @@ abstract class _RoomControllerBase with Store {
   RoomRepository _repository = RoomRepository();
 
   @observable
+  bool sprinklersValue = false;
+
+  @action
+  setSprinklersValue(bool value) {
+    sprinklersValue = value;
+  }
+
+  @observable
   List<RoomResponseModel>? roomList = [];
 
   @action
