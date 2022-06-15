@@ -136,7 +136,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   Widget _streamBuilderMqtt(RoomResponseModel room) {
     List<MqttReceivedMessage<MqttMessage>>? list;
-    
+
     return StreamBuilder(
       initialData: list,
       stream: widget.client.updates,

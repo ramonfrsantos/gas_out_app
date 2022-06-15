@@ -40,7 +40,9 @@ class _DetailsScreenState extends State<DetailsScreen> {
     roomController.roomList!;
 
     // COLOCA O VALOR DO SENSOR QUE RETORNA DA API NA VARIÁVEL
-    widget.averageValue = roomController.roomList![0].sensorValue;
+    if(roomController.roomList!.isNotEmpty){
+      widget.averageValue = roomController.roomList![0].sensorValue;
+    }
 
     print(widget.averageValue);
 
