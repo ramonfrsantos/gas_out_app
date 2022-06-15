@@ -3,6 +3,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:gas_out_app/data/repositories/notification/notification_repository.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../constants/gasout_constants.dart';
+import '../../helpers/global.dart';
 import '../../stores/controller/notification/notification_controller.dart';
 import '../../stores/controller/room/room_controller.dart';
 
@@ -32,14 +33,12 @@ class _DetailsScreenState extends State<DetailsScreen> {
   bool alarmValue = false;
   bool notificationValue = false;
 
-  final RoomController _roomController = RoomController();
-
   @override
   void initState() {
-    _roomController.getUserRooms(widget.email);
+    roomController.getUserRooms(widget.email);
     setValues();
 
-    print("SPRINKLERS: ${_roomController.sprinklersValue}");
+    print("SPRINKLERS: ${roomController.sprinklersValue}");
 
     super.initState();
   }
@@ -55,7 +54,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var valorMedioDiarioPorCento = ((100 * widget.averageValue) / 400);
+    var valorMedioDiarioPorCento = ((100 * widget.averageValue) / 100);
     return Scaffold(
       body: Stack(
         children: <Widget>[
@@ -128,20 +127,20 @@ class _DetailsScreenState extends State<DetailsScreen> {
                           listItemStats(
                             imgpath: 'assets/images/sprinkler.png',
                             name: "Sprinklers",
-                            value: _roomController.sprinklersValue,
+                            value: roomController.sprinklersValue,
                             onChanged: (value) {
                               print("VALUE: $value");
 
                               // VERIFICA SE OS SPRINKLERS ESTÃO OU NÃO ATIVOS
                               if (valorMedioDiarioPorCento >= 50) {
-                                _roomController.sprinklersValue == false
+                                roomController.sprinklersValue == false
                                     ? _showAlertDialog(context)
                                     : setState(() {
-                                        _roomController.sprinklersValue = value;
+                                        roomController.sprinklersValue = value;
                                       });
 
                                 print(
-                                    "SPRINKLERS: ${_roomController.sprinklersValue}");
+                                    "SPRINKLERS: ${roomController.sprinklersValue}");
                               } else {
                                 value = false;
                               }
@@ -263,7 +262,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
       onPressed: () {
         // SE NÃO CONFIRMA, SPRINKLERS DESLIGADOS
         setState(() {
-          _roomController.sprinklersValue =
+          roomController.sprinklersValue =
           false;
         });
         Navigator.of(context).pop();
@@ -274,7 +273,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
       onPressed: () {
         // SE CONFIRMA, SPRINKLERS LIGADOS
         setState(() {
-          _roomController.sprinklersValue =
+          roomController.sprinklersValue =
           true;
         });
         Navigator.of(context).pop();
