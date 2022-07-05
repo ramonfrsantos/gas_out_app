@@ -1,7 +1,7 @@
 ## GasOut APP 🔥
 
 - Aplicativo Flutter de detecção de gás;
-- Integração com Java Spring no back-end e com AWS IoT Core, utilizando MQTT, sensores MQ-4 + ESP32 ou ESP8266;
+- Integração com Java Spring no back-end e com AWS IoT Core, utilizando MQTT, sensores MQ-4 e ESP32 ou ESP8266;
 - Desenvolvido, a princípio, para fins educativos 📚
 
 ##
